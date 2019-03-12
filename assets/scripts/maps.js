@@ -13,7 +13,7 @@ function initialize() {
 	marker = new google.maps.Marker({
 	    position : latlng,
 	    map : map,
-	    icon : "./assets/img/drone.png",
+	    icon : "./assets/images/drone.png",
 	    title : "Latitude:" + position[0] + " | Longitude:" + position[1]
 	});
 
