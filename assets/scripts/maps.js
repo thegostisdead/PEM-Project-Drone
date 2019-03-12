@@ -27,7 +27,12 @@ function initialize() {
 	let marker = new google.maps.Marker({
 	    position : latlng,
 	    map : map,
-	    icon : "./assets/images/drone.png"
+	    icon : {
+	        url: "./assets/images/drone-marker.png",
+	        scaledSize: new google.maps.Size(50, 50),
+	        origin: new google.maps.Point(0,0),
+	        anchor: new google.maps.Point(25,50)
+	    }
 	});
 
 	google.maps.event.addListener(map, 'click', function(event) {
