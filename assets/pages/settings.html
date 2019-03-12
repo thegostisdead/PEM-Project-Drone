@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>settings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" media="screen" href="../styles/style.css">
+    <link rel="stylesheet" href="../libraries/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="../libraries/fontawesome/fontawesome-all.min.css">
+    <link rel="stylesheet" href="../styles/settings.css">
+<body>
+    <div class="container">
+        <div class="left-fixed-navbar">
+            <a href="#remote">
+                <i class="fas fa-gamepad"></i>
+            </a>
+            <a href="#settings">
+                <i class="fas fa-cog"></i>
+            </a>
+            <a href="#stats">
+                <i class="fas fa-chart-line"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="settings-item small">
+            <div class="form-group">
+                <form>
+                    <label class="label-beautiful" for="">
+                        <p>Google API Key</p>
+                    </label>
+                    <input class="form-control" style="background-color:#1d1d1d;" id="apiKeyInput" placeholder="0226sq2d6sq2d6s20qd6sq2d6qs2d602qs6d2">
+                </form>
+            </div>
+        </div>
+        <div class="settings-item big">
+            <div class="form-group">
+                <form>
+                    <label class="label-beautiful" for="">
+                        <p>Type of Google Maps View</p>
+                    </label>
+                    <div class="images-selector">
+                        <div class="container">
+                            <div class="row">
+                                <div class="img-zone col">
+                                    <p>Roadmap View</p>
+                                    <img src="https://via.placeholder.com/150" class="map-type" id="roadmapView">
+                                    <p></p>
+                                </div>
+                                <div class="img-zone col">
+                                    <p>Satellite View</p>
+                                    <img src="https://via.placeholder.com/150" class="map-type" id="satellite">
+                                    <p></p>
+                                </div>
+                                <div class="img-zone col">
+                                    <p>Hybrid View</p>
+                                    <img src="https://via.placeholder.com/150" class="map-type" id="hybrid">
+                                    <p></p>
+                                </div>
+                                <div class="img-zone col">
+                                    <p>Terrain View</p>
+                                    <img src="https://via.placeholder.com/150" class="map-type" id="terrain">
+                                    <p></p>
+                                </div>
+                            </div>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="settings-item small">
+        <div class="form-group">
+            <form>
+                <label class="label-beautiful" for="">
+                    <p>Google API Key</p>
+                </label>
+                <input class="form-control" style="background-color:#1d1d1d;" id="apiKeyInput" placeholder="0226sq2d6sq2d6s20qd6sq2d6qs2d602qs6d2">
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="button-action">
+            <button type="button" class="btn btn-success">Apply changes</button>
+        </div>
+
+    </div>
+    </div>
+    <!-- <script>
+$('img').click(function(){
+    $('.selected').removeClass('selected');
+    $(this).addClass('selected');
+});
+
+</script> -->
+    <script>
+        var elementHtml = document.getElementsByClassName('map-type');
+        for (let img of elementHtml) {
+            console.log(img)
+            img.addEventListener('click', function () {
+                deselect()
+                this.classList.add("selected")
+            });
+        }
+
+        function deselect() {
+            for (let img of elementHtml) {
+                img.classList.remove("selected");
+            }
+        }
+    </script>
+</body>
+
+</html>

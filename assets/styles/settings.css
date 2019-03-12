@@ -1,0 +1,56 @@
+html {
+    margin: 0px;
+}
+
+body {
+    overflow:hidden; /* hiding scroll bar */
+    background-color: #181818;
+}
+
+.content {
+    margin: 70px;
+}
+
+.label-beautiful {
+    border-radius: 5px;
+}
+
+.label-beautiful p {
+    padding-left: 10px;
+    padding-top: 10px;
+    color: #ffffff;
+}
+
+.settings-item {
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    border-radius: 5px;
+    background-color: #202020;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+}
+.small{
+    width: 30%;
+}
+.big{
+    width: 80%;
+}
+.images-selector {
+
+}
+
+.img-zone {
+    
+}
+
+.img-zone p {
+    color: #ffffff;
+}
+.button-action{
+    padding: 20px 20px 20px 20px
+}
+.selected{
+    border:solid 2px red;
+}
