@@ -12,14 +12,9 @@ public class PictureWebInterface {
 		this.socketServerThread = new SocketServerThread();
 	}
 	
+	/** Start the {@link SocketServerThread}. */
 	public void start() {
 		socketServerThread.start();
-		try {
-			socketServerThread.join();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 }
