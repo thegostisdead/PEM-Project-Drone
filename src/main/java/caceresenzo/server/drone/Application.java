@@ -22,7 +22,7 @@ public class Application implements CommandLineRunner {
 	public static void main(String[] args) {
 		Config.initialize();
 		
-		new PictureWebInterface();
+		new PictureWebInterface().start();
 		
 		SpringApplication application = new SpringApplication(Application.class);
 		application.setDefaultProperties(Collections.singletonMap("server.port", Config.API_PORT));

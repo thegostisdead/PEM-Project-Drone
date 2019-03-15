@@ -16,6 +16,9 @@ public class Config extends Configuration {
 	@ConfigProperty(defaultValue = "8080", type = ConfigProperty.PropertyType.INTEGER, file = "config", key = "api.port")
 	public static int API_PORT;
 	
+	@ConfigProperty(defaultValue = "8081", type = ConfigProperty.PropertyType.INTEGER, file = "config", key = "webinterface.picture.port")
+	public static int WEB_INTERFACE_PICTURE_PORT;
+	
 	@ConfigProperty(defaultValue = "storage/web_settings.json", file = "config", key = "websettings.storage.file")
 	public static String WEB_SETTINGS_STORAGE_FILE;
 	
