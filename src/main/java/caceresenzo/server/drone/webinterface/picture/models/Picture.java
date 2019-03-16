@@ -77,14 +77,12 @@ public class Picture {
 	public static Picture fromHeader(String header) {
 		Objects.requireNonNull(header, "Header can't be null.");
 		
+		LOGGER.info("Trying to create a Picture object from header \"{}\"...", header);
+		
 		Picture picture = new Picture();
 		
 		for (String part : header.split(HEADER_SEPARATOR)) {
 			String[] arguments = part.split(ARGUMENT_SEPARATOR);
-			
-			if (arguments.length == 0) {
-				continue;
-			}
 			
 			switch (arguments[0].toUpperCase()) {
 				case "ID": {

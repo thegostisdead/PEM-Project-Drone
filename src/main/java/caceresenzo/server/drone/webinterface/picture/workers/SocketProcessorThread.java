@@ -9,6 +9,7 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import caceresenzo.libs.stream.StreamUtils;
 import caceresenzo.server.drone.Config;
 import caceresenzo.server.drone.webinterface.picture.models.Picture;
 
@@ -27,6 +28,9 @@ public class SocketProcessorThread extends Thread {
 	
 	@Override
 	public void run() {
+		final String ipAdress = socket.getInetAddress().getHostAddress();
+		
+		OutputStream outStream = null;
 		try {
 			InputStream inputStream = socket.getInputStream();
 			
@@ -52,20 +56,27 @@ public class SocketProcessorThread extends Thread {
 			targetFile.delete();
 			targetFile.createNewFile();
 			
-			LOGGER.info("Starting download... (file = \"{}\", size = {} bytes)", targetFile.getName(), picture.getFileLength());
+			LOGGER.info("Starting download... (file = \"{}\", size = {} bytes, from = {})", targetFile.getName(), picture.getFileLength(), ipAdress);
 			
 			/* Start transfer */
-			OutputStream outStream = new FileOutputStream(targetFile);
+			outStream = new FileOutputStream(targetFile);
 			
-			while (inputStream.available() != 0) {
-				outStream.write(inputStream.read());
+			long received = 0;
+			while (++received != picture.getFileLength()) {
+				int next = inputStream.read();
+				
+				if (next == -1 && socket.isConnected()) {
+					throw new IllegalStateException("Failed to fully read stream.");
+				}
+				
+				outStream.write(next);
 			}
 			
 			LOGGER.info("Downloaded image \"{}\".", targetFile.getName());
-			
-			outStream.close();
 		} catch (Exception exception) {
-			LOGGER.error("Failed to process socket. (ip = " + socket.getInetAddress().getHostAddress() + ")", exception);
+			LOGGER.error("Failed to process socket. (ip = " + ipAdress + ")", exception);
+		} finally {
+			StreamUtils.close(outStream);
 		}
 		
 		try {
