@@ -1,0 +1,41 @@
+<html>
+
+<head>
+
+<script type="text/javascript">
+	const HOST = "localhost";
+    const PORT = 8082;
+
+    var socket = null;
+
+    function connect() {
+	    socket = new WebSocket("ws://" + HOST + ":" + PORT);
+	    
+	    socket.onopen = function() {
+		    console.log("Connected");
+	    };
+
+	    socket.onmessage = function(event) {
+		    console.log("Message:", event.data);
+	    };
+
+	    socket.onclose = function(event) {
+		    console.log("Socket is closed. Reconnect will be attempted in 1 second.", event.reason);
+
+		    setTimeout(function() {
+			    connect();
+		    }, 1000);
+	    };
+
+	    socket.onerror = function(error) {
+		    console.error("Socket encountered error: ", error.message, "Closing socket");
+		    ws.close();
+	    };
+    }
+
+    connect();
+</script>
+</head>
+
+
+</html>

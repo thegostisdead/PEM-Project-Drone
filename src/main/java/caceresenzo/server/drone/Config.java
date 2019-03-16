@@ -18,6 +18,9 @@ public class Config extends Configuration {
 	
 	@ConfigProperty(defaultValue = "8081", type = ConfigProperty.PropertyType.INTEGER, file = "config", key = "webinterface.picture.port")
 	public static int WEB_INTERFACE_PICTURE_PORT;
+	
+	@ConfigProperty(defaultValue = "8082", type = ConfigProperty.PropertyType.INTEGER, file = "config", key = "websocket.port")
+	public static int WEB_SOCKET_PORT;
 
 	@ConfigProperty(defaultValue = "storage/pictures/", file = "config", key = "webinterface.picture.storage.directory")
 	public static String WEB_INTERFACE_PICTURE_STORAGE_DIRECTORY;
@@ -33,6 +36,9 @@ public class Config extends Configuration {
 	
 	@ConfigProperty(defaultValue = "60", type = ConfigProperty.PropertyType.INTEGER, file = "config", key = "api.physical-quantities.request.max-value-size")
 	public static int API_PHYSICAL_QUALITIES_REQUEST_MAX_VALUE_SIZE;
+	
+	@ConfigProperty(defaultValue = "100", type = ConfigProperty.PropertyType.INTEGER, file = "config", key = "websocket.server.connection.lost.timeout")
+	public static int WEB_SOCKET_SERVER_CONNECTION_LOST_TIMEOUT;
 	
 	/** Initialize config file. */
 	public static void initialize() {
