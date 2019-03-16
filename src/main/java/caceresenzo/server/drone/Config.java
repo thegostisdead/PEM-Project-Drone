@@ -25,6 +25,15 @@ public class Config extends Configuration {
 	@ConfigProperty(defaultValue = "storage/web_settings.json", file = "config", key = "websettings.storage.file")
 	public static String WEB_SETTINGS_STORAGE_FILE;
 	
+	@ConfigProperty(defaultValue = "storage/qualities/values.db", file = "config", key = "api.physical-quantities.storage.database.file")
+	public static String API_PHYSICAL_QUALITIES_STORAGE_DATABASE_FILE;
+	
+	@ConfigProperty(defaultValue = "storage/qualities/list.json", file = "config", key = "api.physical-quantities.list")
+	public static String API_PHYSICAL_QUALITIES_LIST;
+	
+	@ConfigProperty(defaultValue = "60", type = ConfigProperty.PropertyType.INTEGER, file = "config", key = "api.physical-quantities.request.max-value-size")
+	public static int API_PHYSICAL_QUALITIES_REQUEST_MAX_VALUE_SIZE;
+	
 	/** Initialize config file. */
 	public static void initialize() {
 		CONFIG = (Config) initialize(Config.class);
