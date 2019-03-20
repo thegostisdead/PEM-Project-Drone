@@ -1,0 +1,36 @@
+.html {
+    margin: 0px;
+
+}
+
+body {
+    background-image: url("../images/forest4.jpg");
+}
+
+.container {
+    top: 300px;
+    width: 400px;
+    height: 600px;
+    border-radius: 6px;
+
+}
+
+.middle {
+    margin: auto;
+    text-align: center;
+}
+
+.login-pannel {
+    margin-top: 150px;
+}
+
+input[type=text],
+input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-radius: 10px;
+}

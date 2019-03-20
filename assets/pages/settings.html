@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../libraries/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="../libraries/fontawesome/fontawesome-all.min.css">
     <link rel="stylesheet" href="../styles/settings.css">
+
 <body>
     <div class="container">
         <div class="left-fixed-navbar">
@@ -47,22 +48,22 @@
                             <div class="row">
                                 <div class="img-zone col">
                                     <p>Roadmap View</p>
-                                    <img src="https://via.placeholder.com/150" class="map-type" id="roadmapView">
+                                    <img src="../images/roadmap.png" class="map-type images-selector" id="roadmapView">
                                     <p></p>
                                 </div>
                                 <div class="img-zone col">
                                     <p>Satellite View</p>
-                                    <img src="https://via.placeholder.com/150" class="map-type" id="satellite">
+                                    <img src="../images/satellite.png" class="map-type images-selector" id="satellite">
                                     <p></p>
                                 </div>
                                 <div class="img-zone col">
                                     <p>Hybrid View</p>
-                                    <img src="https://via.placeholder.com/150" class="map-type" id="hybrid">
+                                    <img src="../images/hybrid.png" class="map-type images-selector" id="hybrid">
                                     <p></p>
                                 </div>
                                 <div class="img-zone col">
                                     <p>Terrain View</p>
-                                    <img src="https://via.placeholder.com/150" class="map-type" id="terrain">
+                                    <img src="../images/terrain.png" class="map-type images-selector" id="terrain">
                                     <p></p>
                                 </div>
                             </div>
@@ -72,22 +73,33 @@
         </div>
     </div>
     <div class="settings-item small">
-        <div class="form-group">
-            <form>
-                <label class="label-beautiful" for="">
-                    <p>Google API Key</p>
-                </label>
-                <input class="form-control" style="background-color:#1d1d1d;" id="apiKeyInput" placeholder="0226sq2d6sq2d6s20qd6sq2d6qs2d602qs6d2">
-            </form>
-        </div>
+        <form>
+            <div class="form-row align-items-center">
+                <div class="col-auto">
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text" style="background-color: #28a745; color: white;border-color: #28a745;">Server IP</div>
+                        </div>
+                        <input type="text" class="form-control" style="background-color:#1d1d1d;" id="inlineFormInputGroup" placeholder="198.168.167.253">
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text" style="background-color: #28a745;color: white;border-color: #28a745;">Server Port</div>
+                        </div>
+                        <input type="text" class="form-control" style="background-color:#1d1d1d;" id="inlineFormInputGroup"
+                            placeholder="35847">
+                    </div>
+                </div>
+        </form>
     </div>
 
+    </div>
     <div class="row">
         <div class="button-action">
             <button type="button" class="btn btn-success">Apply changes</button>
         </div>
-
-    </div>
     </div>
     <!-- <script>
 $('img').click(function(){

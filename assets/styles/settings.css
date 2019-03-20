@@ -3,7 +3,8 @@ html {
 }
 
 body {
-    overflow:hidden; /* hiding scroll bar */
+    overflow: hidden;
+    /* hiding scroll bar */
     background-color: #181818;
 }
 
@@ -31,26 +32,40 @@ body {
     margin-bottom: 20px;
     padding-bottom: 20px;
 }
-.small{
+
+.small {
     width: 30%;
 }
-.big{
+
+.big {
     width: 80%;
 }
+
 .images-selector {
-
+    border-radius: 6px;
 }
 
-.img-zone {
-    
-}
+.img-zone {}
 
 .img-zone p {
     color: #ffffff;
 }
-.button-action{
+
+.button-action {
     padding: 20px 20px 20px 20px
 }
-.selected{
-    border:solid 2px red;
+
+.selected {
+    border: solid 2px red;
+}
+
+.green-btn-network {
+    background-color: #28a745;
+    color: white;
+    border-color: #28a745;
+}
+.img-zone img{
+    width: 150px;
+    height: 150px;
+    text-align: center;
 }
