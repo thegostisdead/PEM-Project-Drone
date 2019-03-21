@@ -10,7 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import caceresenzo.libs.stream.StreamUtils;
-import caceresenzo.server.drone.Config;
+import caceresenzo.libs.string.StringUtils;
+import caceresenzo.server.drone.webinterface.picture.PictureWebInterface;
 import caceresenzo.server.drone.webinterface.picture.models.Picture;
 
 public class SocketProcessorThread extends Thread {
@@ -20,9 +21,11 @@ public class SocketProcessorThread extends Thread {
 	
 	/* Variables */
 	private final Socket socket;
+	private final PictureWebInterface pictureWebInterface;
 	
 	/* Constructor */
-	private SocketProcessorThread(Socket socket) {
+	private SocketProcessorThread(PictureWebInterface pictureWebInterface, Socket socket) {
+		this.pictureWebInterface = pictureWebInterface;
 		this.socket = socket;
 	}
 	
@@ -50,8 +53,12 @@ public class SocketProcessorThread extends Thread {
 			
 			Picture picture = Picture.fromHeader(header);
 			
+			if (!StringUtils.validate(picture.getName())) {
+				throw new IllegalStateException("The image name is null.");
+			}
+			
 			/* Creating target */
-			File targetFile = new File(Config.WEB_INTERFACE_PICTURE_STORAGE_DIRECTORY, picture.getName() + ".jpg");
+			File targetFile = picture.toFile();;
 			targetFile.mkdirs();
 			targetFile.delete();
 			targetFile.createNewFile();
@@ -73,12 +80,14 @@ public class SocketProcessorThread extends Thread {
 			}
 			
 			LOGGER.info("Downloaded image \"{}\".", targetFile.getName());
+			
+			pictureWebInterface.onPictureDownloadFinished(picture);
 		} catch (Exception exception) {
 			LOGGER.error("Failed to process socket. (ip = " + ipAdress + ")", exception);
 		} finally {
 			StreamUtils.close(outStream);
 		}
-		
+
 		try {
 			if (!socket.isClosed()) {
 				socket.close();
@@ -94,12 +103,12 @@ public class SocketProcessorThread extends Thread {
 	 * @param socket
 	 *            Target {@link Socket}, will do nothing if null.
 	 */
-	public static void create(Socket socket) {
+	public static void create(PictureWebInterface pictureWebInterface, Socket socket) {
 		if (socket == null) {
 			return;
 		}
 		
-		new SocketProcessorThread(socket).start();
+		new SocketProcessorThread(pictureWebInterface, socket).start();
 	}
 	
 }

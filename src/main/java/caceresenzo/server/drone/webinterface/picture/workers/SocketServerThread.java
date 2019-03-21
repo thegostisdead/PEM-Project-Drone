@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import caceresenzo.libs.stream.StreamUtils;
 import caceresenzo.server.drone.Config;
+import caceresenzo.server.drone.webinterface.picture.PictureWebInterface;
 
 public class SocketServerThread extends Thread {
 	
@@ -15,15 +16,17 @@ public class SocketServerThread extends Thread {
 	private static Logger LOGGER = LoggerFactory.getLogger(SocketServerThread.class);
 	
 	/* Variables */
+	private final PictureWebInterface pictureWebInterface;
 	private final int port;
 	
 	/* Constructor */
-	public SocketServerThread() {
-		this(Config.WEB_INTERFACE_PICTURE_PORT);
+	public SocketServerThread(PictureWebInterface pictureWebInterface) {
+		this(pictureWebInterface, Config.WEB_INTERFACE_PICTURE_PORT);
 	}
 	
 	/* Constructor */
-	public SocketServerThread(int port) {
+	public SocketServerThread(PictureWebInterface pictureWebInterface, int port) {
+		this.pictureWebInterface = pictureWebInterface;
 		this.port = port;
 	}
 	
@@ -38,7 +41,7 @@ public class SocketServerThread extends Thread {
 			
 			while (true) {
 				try {
-					SocketProcessorThread.create(serverSocket.accept());
+					SocketProcessorThread.create(pictureWebInterface, serverSocket.accept());
 				} catch (Exception exception) {
 					LOGGER.error("Failed accept incoming socket.", exception);
 				}

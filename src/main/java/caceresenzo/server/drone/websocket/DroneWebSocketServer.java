@@ -8,6 +8,7 @@ import org.java_websocket.server.WebSocketServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import caceresenzo.libs.json.JsonObject;
 import caceresenzo.server.drone.Config;
 
 public class DroneWebSocketServer extends WebSocketServer {
@@ -40,11 +41,15 @@ public class DroneWebSocketServer extends WebSocketServer {
 	@Override
 	public void onOpen(WebSocket socket, ClientHandshake handshake) {
 		LOGGER.info("Socket {}({}) connected.", ip(socket), port(socket));
+		
+		exchangeManager.send(ExchangeManager.IDENTIFIER_STATISTICS_ONLY, new JsonObject());
 	}
 	
 	@Override
 	public void onClose(WebSocket socket, int code, String reason, boolean remote) {
 		LOGGER.info("Socket {}({}) has been disconnected. (reason = \"{}\", remote = {})", ip(socket), port(socket), reason, remote);
+		
+		exchangeManager.send(ExchangeManager.IDENTIFIER_STATISTICS_ONLY, new JsonObject());
 	}
 	
 	@Override

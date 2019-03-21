@@ -16,7 +16,7 @@ gps_latitude = 1.23456
 gps_longitude = 6.54321
 
 header = ""
-header += "id " + str(picture_id) + ","
+#header += "id " + str(picture_id) + "," # disabled to use an random name
 header += "length " + str(picture_size) + ","
 header += "gps " + str(gps_latitude) + " " + str(gps_longitude)
 header += "\n"

@@ -2,21 +2,64 @@
 
 <head>
 
-<script type="text/javascript">
-	const HOST = "localhost";
-    const PORT = 8082;
 
-    var socket = null;
+<!-- Constants -->
+<script type="text/javascript">
+	const API_URL = "localhost:8080";
+    const HOST = "localhost";
+    const PORT = 8082;
+</script>
+
+<!-- Utils -->
+<script type="text/javascript">
+	function formatApiUrl(sub) {
+	    return "http://" + API_URL + "/" + sub;
+    }
+</script>
+
+<!-- Web Sockets -->
+<script type="text/javascript">
+	var socket = null;
 
     function connect() {
 	    socket = new WebSocket("ws://" + HOST + ":" + PORT);
-	    
+
 	    socket.onopen = function() {
 		    console.log("Connected");
 	    };
 
 	    socket.onmessage = function(event) {
 		    console.log("Message:", event.data);
+
+		    let json = JSON.parse(event.data);
+		    let div = document.getElementById("received-pictures");
+
+		    switch (json.identifier) {
+			    case "picture.download.finished": {
+				    let html = "";
+
+				    html += "<img src=\"" + formatApiUrl(json.data.file.remote) + "\">";
+				    html += "<br>";
+				    html += "<p>name: " + json.data.file.name + "</p>";
+				    html += "<p>position (lat/lon): " + json.data.file.position.latitude + "/" + json.data.file.position.longitude + " (<a href=\"https://www.google.com/maps?q=" + json.data.file.position.latitude + "," + json.data.file.position.longitude + "\">gmap</a>)</p>";
+				    html += "<hr>";
+
+				    div.innerHTML += html;
+				    break;
+			    }
+
+			    case "statistics.only": {
+				    /* Handled but special handling */
+				    break;
+			    }
+
+			    default: {
+				    console.error("Not handled identifier: " + json.identifier);
+				    break;
+			    }
+		    }
+
+		    processStatistics(json.statistics);
 	    };
 
 	    socket.onclose = function(event) {
@@ -33,9 +76,21 @@
 	    };
     }
 
+    function processStatistics(statistics) {
+		document.getElementById("connected-count").innerHTML = "connected: " + statistics.connected;
+    }
+
     connect();
 </script>
 </head>
+
+<body>
+
+	<div id="statistics"><p id="connected-count"></p></div>
+	<hr>
+	<div id="received-pictures"></div>
+
+</body>
 
 
 </html>

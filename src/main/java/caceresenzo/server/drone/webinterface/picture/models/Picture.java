@@ -1,11 +1,15 @@
 package caceresenzo.server.drone.webinterface.picture.models;
 
+import java.io.File;
 import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import caceresenzo.libs.parse.ParseUtils;
+import caceresenzo.libs.random.RandomString;
+import caceresenzo.libs.string.StringUtils;
+import caceresenzo.server.drone.Config;
 
 public class Picture {
 	
@@ -41,7 +45,7 @@ public class Picture {
 	public long getFileLength() {
 		return fileLength;
 	}
-
+	
 	/** Set new picture's file length in byte. */
 	private void setFileLength(long fileLength) {
 		this.fileLength = fileLength;
@@ -51,7 +55,7 @@ public class Picture {
 	public String getLatitude() {
 		return latitude;
 	}
-
+	
 	/** Set new picture's GPS latitude position. */
 	private void setLatitude(String latitude) {
 		this.latitude = latitude;
@@ -61,10 +65,18 @@ public class Picture {
 	public String getLongitude() {
 		return longitude;
 	}
-
+	
 	/** Set new picture's GPS longitude position. */
 	private void setLongitude(String longitude) {
 		this.longitude = longitude;
+	}
+	
+	public File toFile() {
+		return new File(Config.WEB_INTERFACE_PICTURE_STORAGE_DIRECTORY, getName() + ".jpg");
+	}
+	
+	public File toPropertyFile() {
+		return new File(Config.WEB_INTERFACE_PICTURE_STORAGE_DIRECTORY, getName() + ".json");
 	}
 	
 	/**
@@ -106,8 +118,19 @@ public class Picture {
 					break;
 				}
 			}
-			
 		}
+		
+		if (!StringUtils.validate(picture.getName())) {
+			picture.setName(new RandomString(50).nextString());
+		}
+		
+		return picture;
+	}
+	
+	public static Picture fromName(String name) {
+		Picture picture = new Picture();
+		
+		picture.setName(name);
 		
 		return picture;
 	}

@@ -4,11 +4,20 @@ import caceresenzo.libs.json.JsonObject;
 
 public class ExchangeManager {
 	
+	/* Constants */
+	public static final String IDENTIFIER_STATISTICS_ONLY = "statistics.only";
+	public static final String IDENTIFIER_PICTURE_DOWNLOA_FINISHED = "picture.download.finished";
+	
+	/* Instance */
+	private static ExchangeManager EXCHANGER;
+	
 	/* Variables */
 	private final DroneWebSocketServer webSocketServer;
 	
 	/* Contructor */
 	public ExchangeManager(DroneWebSocketServer webSocketServer) {
+		EXCHANGER = this;
+		
 		this.webSocketServer = webSocketServer;
 	}
 	
@@ -31,6 +40,10 @@ public class ExchangeManager {
 		encapsuled.put("statistics", statisticsPart);
 		
 		webSocketServer.broadcast(encapsuled.toJsonString());
+	}
+	
+	public static ExchangeManager getExchangerManager() {
+		return EXCHANGER;
 	}
 	
 }
