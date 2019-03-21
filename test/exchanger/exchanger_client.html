@@ -15,6 +15,10 @@
 	function formatApiUrl(sub) {
 	    return "http://" + API_URL + "/" + sub;
     }
+
+    function log(message) {
+	    document.getElementById("logs").innerHTML = "<p>" + message + "</p>" + document.getElementById("logs").innerHTML;
+    }
 </script>
 
 <!-- Web Sockets -->
@@ -45,6 +49,8 @@
 				    html += "<hr>";
 
 				    div.innerHTML += html;
+
+				    log("Pictures: New picture available: " + json.data.file.name);
 				    break;
 			    }
 
@@ -53,8 +59,21 @@
 				    break;
 			    }
 
+			    case "flight.starting": {
+				    log("Flight: Started");
+				    break;
+			    }
+
+			    case "flight.point.new": {
+				    log("Flight: received new position (lat/lon): " + json.data.position.latitude + "/" + json.data.position.longitude + " (" + new Date(json.data.position.time) + ")");
+				    break;
+			    }
+
 			    default: {
-				    console.error("Not handled identifier: " + json.identifier);
+				    let message = "Not handled identifier: " + json.identifier;
+
+				    log(message);
+				    console.error(message);
 				    break;
 			    }
 		    }
@@ -77,7 +96,7 @@
     }
 
     function processStatistics(statistics) {
-		document.getElementById("connected-count").innerHTML = "connected: " + statistics.connected;
+	    document.getElementById("connected-count").innerHTML = "connected: " + statistics.connected;
     }
 
     connect();
@@ -86,9 +105,13 @@
 
 <body>
 
-	<div id="statistics"><p id="connected-count"></p></div>
+	<div id="statistics">
+		<p id="connected-count"></p>
+	</div>
 	<hr>
 	<div id="received-pictures"></div>
+	<hr>
+	<div id="logs"></div>
 
 </body>
 

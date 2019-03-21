@@ -7,6 +7,8 @@ public class ExchangeManager {
 	/* Constants */
 	public static final String IDENTIFIER_STATISTICS_ONLY = "statistics.only";
 	public static final String IDENTIFIER_PICTURE_DOWNLOA_FINISHED = "picture.download.finished";
+	public static final String IDENTIFIER_FLIGHT_STARTING = "flight.starting";
+	public static final String IDENTIFIER_FLIGHT_NEW_POINT = "flight.point.new";
 	
 	/* Instance */
 	private static ExchangeManager EXCHANGER;
