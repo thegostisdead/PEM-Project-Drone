@@ -1,5 +1,6 @@
 package caceresenzo.server.drone;
 
+import java.io.File;
 import java.util.Collections;
 
 import org.springframework.boot.SpringApplication;
@@ -7,6 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import caceresenzo.libs.comparator.Version;
 import caceresenzo.libs.comparator.VersionType;
+import caceresenzo.server.drone.api.flight.FlightController;
+import caceresenzo.server.drone.api.flight.models.Flight;
 import caceresenzo.server.drone.webinterface.picture.PictureWebInterface;
 import caceresenzo.server.drone.websocket.DroneWebSocketServer;
 
@@ -26,6 +29,8 @@ public class Application {
 		this.pictureWebInterface = new PictureWebInterface();
 		
 		start();
+		
+		FlightController.getFlightController().start(new Flight(new File("hello"), "test"));
 	}
 	
 	/** Start the local servers. */

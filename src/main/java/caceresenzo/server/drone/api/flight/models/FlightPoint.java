@@ -7,8 +7,13 @@ import caceresenzo.libs.json.JsonObject;
 public class FlightPoint {
 	
 	/* Variables */
-	private double latitude, longitude;
-	private long time;
+	private final double latitude, longitude;
+	private final long time;
+	
+	/* Constructor */
+	public FlightPoint() {
+		this(0, 0);
+	}
 	
 	/* Constructor */
 	public FlightPoint(double latitude, double longitude) {
