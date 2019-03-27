@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import caceresenzo.libs.stream.StreamUtils;
 import caceresenzo.libs.string.StringUtils;
+import caceresenzo.server.drone.Config;
 import caceresenzo.server.drone.webinterface.picture.PictureWebInterface;
 import caceresenzo.server.drone.webinterface.picture.models.Picture;
 
@@ -47,6 +48,10 @@ public class SocketProcessorThread extends Thread {
 				}
 				
 				builder.append((char) next);
+				
+				if (builder.length() > Config.WEB_INTERFACE_HEADER_MAX_SIZE) {
+					throw new IllegalStateException("Header too long. (max = " + Config.WEB_INTERFACE_HEADER_MAX_SIZE + ")");
+				}
 			}
 			
 			String header = builder.toString();
@@ -58,7 +63,8 @@ public class SocketProcessorThread extends Thread {
 			}
 			
 			/* Creating target */
-			File targetFile = picture.toFile();;
+			File targetFile = picture.toFile();
+			;
 			targetFile.mkdirs();
 			targetFile.delete();
 			targetFile.createNewFile();
@@ -87,7 +93,7 @@ public class SocketProcessorThread extends Thread {
 		} finally {
 			StreamUtils.close(outStream);
 		}
-
+		
 		try {
 			if (!socket.isClosed()) {
 				socket.close();

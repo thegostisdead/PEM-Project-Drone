@@ -21,9 +21,12 @@ public class Config extends Configuration {
 	
 	@ConfigProperty(defaultValue = "8082", type = ConfigProperty.PropertyType.INTEGER, file = "config", key = "websocket.port")
 	public static int WEB_SOCKET_PORT;
-
+	
 	@ConfigProperty(defaultValue = "storage/pictures/", file = "config", key = "webinterface.picture.storage.directory")
 	public static String WEB_INTERFACE_PICTURE_STORAGE_DIRECTORY;
+	
+	@ConfigProperty(defaultValue = "1000", type = ConfigProperty.PropertyType.INTEGER, file = "config", key = "webinterface.header.size.max")
+	public static int WEB_INTERFACE_HEADER_MAX_SIZE;
 	
 	@ConfigProperty(defaultValue = "storage/web_settings.json", file = "config", key = "websettings.storage.file")
 	public static String WEB_SETTINGS_STORAGE_FILE;
