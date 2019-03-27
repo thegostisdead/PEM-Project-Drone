@@ -3,6 +3,8 @@ package caceresenzo.server.drone;
 import java.io.File;
 import java.util.Collections;
 
+import javax.annotation.PreDestroy;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -62,6 +64,12 @@ public class Application implements WebMvcConfigurer {
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**");
+	}
+	
+	@PreDestroy
+	public void destroy() {
+		droneWebSocketServer.end();
+		pictureWebInterface.getSocketServerThread().end();
 	}
 	
 	/* Main */

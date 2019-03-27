@@ -84,4 +84,8 @@ public class PictureWebInterface {
 		pictureManager.satisfy(picture.toReference(), picture, flight);
 	}
 	
+	public SocketServerThread getSocketServerThread() {
+		return socketServerThread;
+	}
+	
 }

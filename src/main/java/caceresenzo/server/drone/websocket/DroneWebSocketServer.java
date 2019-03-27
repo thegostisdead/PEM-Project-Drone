@@ -1,5 +1,6 @@
 package caceresenzo.server.drone.websocket;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import org.java_websocket.WebSocket;
@@ -63,6 +64,16 @@ public class DroneWebSocketServer extends WebSocketServer {
 			LOGGER.warn("WebSocket with ip " + socket.getRemoteSocketAddress().getAddress().getHostAddress() + " generated an exception.", exception);
 		} else {
 			LOGGER.warn("An error append with the WebSocket Server.", exception);
+		}
+	}
+	
+	public void end() {
+		LOGGER.info("Stopping WebSocket server...");
+		
+		try {
+			stop();
+		} catch (IOException | InterruptedException exception) {
+			LOGGER.warn("Failed to stop the WebSocket server.", exception);
 		}
 	}
 	

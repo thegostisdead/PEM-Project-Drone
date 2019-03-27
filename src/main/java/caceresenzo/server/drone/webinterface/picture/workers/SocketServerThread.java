@@ -18,6 +18,8 @@ public class SocketServerThread extends Thread {
 	/* Variables */
 	private final PictureWebInterface pictureWebInterface;
 	private final int port;
+	private ServerSocket serverSocket;
+	private boolean ended;
 	
 	/* Constructor */
 	public SocketServerThread(PictureWebInterface pictureWebInterface) {
@@ -32,25 +34,29 @@ public class SocketServerThread extends Thread {
 	
 	@Override
 	public void run() {
-		ServerSocket serverSocket = null;
-		
 		try {
 			serverSocket = new ServerSocket(port);
 			
 			LOGGER.info("Picture WebInterface is running!");
 			
-			while (true) {
+			while (!serverSocket.isClosed()) {
 				try {
 					SocketProcessorThread.create(pictureWebInterface, serverSocket.accept());
 				} catch (Exception exception) {
-					LOGGER.error("Failed accept incoming socket.", exception);
+					if (!ended) {
+						LOGGER.error("Failed accept incoming socket.", exception);
+					}
 				}
 			}
-			
 		} catch (IOException exception) {
 			LOGGER.error("Failed to run socket server.", exception);
 		}
+	}
+	
+	public void end() {
+		LOGGER.info("Stopping WebInterface SocketListener server...");
 		
+		ended = true;
 		StreamUtils.close(serverSocket);
 	}
 	

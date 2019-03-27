@@ -1,6 +1,7 @@
 package caceresenzo.server.drone.webinterface.picture;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,6 +11,7 @@ import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import caceresenzo.libs.filesystem.FileUtils;
 import caceresenzo.libs.json.JsonObject;
 import caceresenzo.libs.json.parser.JsonParser;
 import caceresenzo.libs.string.StringUtils;
@@ -42,36 +44,45 @@ public class PictureManager {
 		this.flightController = FlightController.getFlightController();
 		
 		File directory = new File(Config.WEB_INTERFACE_PICTURE_STORAGE_DIRECTORY);
-		File[] files = directory.listFiles((filepath) -> filepath.getName().endsWith(".json"));
 		
-		JsonParser parser = new JsonParser();
+		try {
+			FileUtils.forceDirectoryCreation(directory);
+		} catch (IOException exception) {
+			;
+		}
 		
-		for (File file : files) {
-			try {
-				JsonObject jsonObject = (JsonObject) parser.parse(StringUtils.fromFile(file));
-				
-				JsonObject filePart = jsonObject.getJsonObject("file");
-				JsonObject flightPart = jsonObject.getJsonObject("flight");
-				
-				String flightLocalFileName = flightPart.getString("local_file");
-				if (!StringUtils.validate(flightLocalFileName)) {
-					continue;
-				}
-				
-				Picture picture = Picture.fromJsonObject(filePart);
-				
-				if (picture != null) {
-					PictureReference pictureReference = picture.toReference();
+		File[] files = directory.listFiles(filepath -> filepath.getName().endsWith(".json"));
+		
+		if (files != null) {
+			JsonParser parser = new JsonParser();
+			
+			for (File file : files) {
+				try {
+					JsonObject jsonObject = (JsonObject) parser.parse(StringUtils.fromFile(file));
 					
-					pictureReferencesMap.put(pictureReference.getReference(), picture);
+					JsonObject filePart = jsonObject.getJsonObject("file");
+					JsonObject flightPart = jsonObject.getJsonObject("flight");
 					
-					Flight flight = flightController.getFlightByLocalFileName(flightLocalFileName);
-					if (flight != null) {
-						picture.attachFlight(flight);
+					String flightLocalFileName = flightPart.getString("local_file");
+					if (!StringUtils.validate(flightLocalFileName)) {
+						continue;
 					}
+					
+					Picture picture = Picture.fromJsonObject(filePart);
+					
+					if (picture != null) {
+						PictureReference pictureReference = picture.toReference();
+						
+						pictureReferencesMap.put(pictureReference.getReference(), picture);
+						
+						Flight flight = flightController.getFlightByLocalFileName(flightLocalFileName);
+						if (flight != null) {
+							picture.attachFlight(flight);
+						}
+					}
+				} catch (Exception exception) {
+					LOGGER.error("Failed to read picture data file. (file = " + file.getName() + ")", exception);
 				}
-			} catch (Exception exception) {
-				LOGGER.error("Failed to read picture data file. (file = " + file.getName() + ")", exception);
 			}
 		}
 	}
