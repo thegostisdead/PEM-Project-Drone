@@ -75,15 +75,19 @@ public class SocketProcessorThread extends Thread {
 			outStream = new FileOutputStream(targetFile);
 			
 			long received = 0;
-			while (++received != picture.getFileLength()) {
+			do {
 				int next = inputStream.read();
 				
 				if (next == -1 && socket.isConnected()) {
 					throw new IllegalStateException("Failed to fully read stream.");
 				}
 				
+				if (socket.isClosed()) {
+					throw new IllegalStateException("Socket closed before fully reading.");
+				}
+				
 				outStream.write(next);
-			}
+			} while (++received != picture.getFileLength());
 			
 			LOGGER.info("Downloaded image \"{}\".", targetFile.getName());
 			
