@@ -7,6 +7,7 @@ import java.util.Random;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import caceresenzo.libs.json.JsonArray;
 import caceresenzo.libs.json.JsonObject;
 import caceresenzo.libs.random.RandomString;
 import caceresenzo.libs.thread.ThreadUtils;
@@ -22,6 +24,7 @@ import caceresenzo.server.drone.api.flight.FlightController;
 import caceresenzo.server.drone.api.flight.models.Flight;
 import caceresenzo.server.drone.api.flight.models.FlightPoint;
 
+@CrossOrigin(origins = "*")
 @RestController
 public class DroneApi {
 	
@@ -36,27 +39,39 @@ public class DroneApi {
 		this.flightController = FlightController.getFlightController();
 	}
 	
-	@GetMapping(value = "/flight")
+	@GetMapping(value = "/flights")
 	@ResponseBody
-	public ResponseEntity<Map<String, Object>> flight() {
+	public ResponseEntity<Map<String, Object>> flights() {
 		Map<String, Object> response = new HashMap<>();
 		
-		response.put("active", flightController.isFlightActive());
+		JsonObject currentPart = new JsonObject();
+		currentPart.put("active", flightController.isFlightActive());
 		
 		if (flightController.isFlightActive()) {
-			JsonObject flightPart = new JsonObject();
-			
-			Flight flight = flightController.getCurrentFlight();
-			
-			flightPart.put("name", flight.getName());
-			flightPart.put("local_file", flight.getLocalFile().getName());
-			flightPart.put("start", flight.getStart());
-			flightPart.put("points", flight.getPoints());
-			
-			response.put("flight", flightPart);
+			currentPart.put("flight", flightController.getCurrentFlight().toMoreDetailedJsonObject());
 		}
 		
+		JsonArray allFlightJsonArray = new JsonArray();
+		for (Flight flight : flightController.getAllFlight().values()) {
+			allFlightJsonArray.add(flight.toMoreDetailedJsonObject());
+		}
+		
+		response.put("current", currentPart);
+		response.put("all", allFlightJsonArray);
+		
 		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/flights/actual")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> actualFlight() {
+		return null;
+	}
+	
+	@GetMapping(value = "/flights/detail/{local_file}")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> detailFlight() {
+		return null;
 	}
 	
 	@PostMapping(value = "/flight/position/add")
@@ -96,7 +111,7 @@ public class DroneApi {
 					flightController.start(flight);
 					
 					while (!testThread.isInterrupted()) {
-						flight.addPoint(new FlightPoint(random.nextFloat(), random.nextFloat()));
+						flight.addPoint(new FlightPoint(String.valueOf(random.nextFloat()), String.valueOf(random.nextFloat())));
 						
 						ThreadUtils.sleep(2000);
 					}

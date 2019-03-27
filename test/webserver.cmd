@@ -1,0 +1,3 @@
+echo warning, this webserver is very slow.....
+
+python -m http.server 80

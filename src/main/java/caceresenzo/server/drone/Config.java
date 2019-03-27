@@ -43,6 +43,9 @@ public class Config extends Configuration {
 	@ConfigProperty(defaultValue = "100", type = ConfigProperty.PropertyType.INTEGER, file = "config", key = "websocket.server.connection.lost.timeout")
 	public static int WEB_SOCKET_SERVER_CONNECTION_LOST_TIMEOUT;
 	
+	@ConfigProperty(defaultValue = "storage/flights/", file = "config", key = "flights.directory")
+	public static String FLIGHTS_DIRECTORY;
+	
 	/** Initialize config file. */
 	public static void initialize() {
 		CONFIG = (Config) initialize(Config.class);

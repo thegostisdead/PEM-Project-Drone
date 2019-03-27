@@ -6,10 +6,12 @@ import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import caceresenzo.libs.json.JsonObject;
 import caceresenzo.libs.parse.ParseUtils;
 import caceresenzo.libs.random.RandomString;
 import caceresenzo.libs.string.StringUtils;
 import caceresenzo.server.drone.Config;
+import caceresenzo.server.drone.api.flight.models.Flight;
 
 public class Picture {
 	
@@ -22,6 +24,7 @@ public class Picture {
 	private static Logger LOGGER = LoggerFactory.getLogger(Picture.class);
 	
 	/* Variables */
+	private Flight attachedFlight;
 	private String name;
 	private long fileLength;
 	private String latitude, longitude;
@@ -29,6 +32,12 @@ public class Picture {
 	/* Constructor */
 	private Picture() {
 		;
+	}
+	
+	public Picture attachFlight(Flight flight) {
+		this.attachedFlight = flight;
+		
+		return this;
 	}
 	
 	/** @return Picture's name. */
@@ -71,12 +80,41 @@ public class Picture {
 		this.longitude = longitude;
 	}
 	
+	public Flight getAttachedFlight() {
+		return attachedFlight;
+	}
+	
 	public File toFile() {
 		return new File(Config.WEB_INTERFACE_PICTURE_STORAGE_DIRECTORY, getName() + ".jpg");
 	}
 	
 	public File toPropertyFile() {
 		return new File(Config.WEB_INTERFACE_PICTURE_STORAGE_DIRECTORY, getName() + ".json");
+	}
+	
+	public PictureReference toReference() {
+		return new PictureReference(getName());
+	}
+	
+	public JsonObject toJsonObject() {
+		JsonObject jsonObject = new JsonObject();
+		
+		JsonObject filePositionPart = new JsonObject();
+		
+		jsonObject.put("name", getName());
+		jsonObject.put("length", getFileLength());
+		jsonObject.put("position", filePositionPart);
+		
+		filePositionPart.put("latitude", getLatitude());
+		filePositionPart.put("longitude", getLongitude());
+		
+		return jsonObject;
+	}
+	
+	public static JsonObject includeRemote(Picture picture, JsonObject jsonObject) {
+		jsonObject.put("remote", String.format("/storage/pictures/%s", picture.getName()));
+		
+		return jsonObject;
 	}
 	
 	/**
@@ -131,6 +169,20 @@ public class Picture {
 		Picture picture = new Picture();
 		
 		picture.setName(name);
+		
+		return picture;
+	}
+	
+	public static Picture fromJsonObject(JsonObject jsonObject) {
+		Picture picture = new Picture();
+		
+		picture.setName(jsonObject.getString("name"));
+		picture.setFileLength(jsonObject.getLong("length"));
+		
+		JsonObject positionPart = jsonObject.getJsonObject("position");
+		
+		picture.setLatitude(positionPart.getString("latitude"));
+		picture.setLongitude(positionPart.getString("longitude"));
 		
 		return picture;
 	}

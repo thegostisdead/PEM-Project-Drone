@@ -22,6 +22,7 @@ public class PictureWebInterface {
 	/* Managers */
 	private ExchangeManager exchangeManager;
 	private FlightController flightController;
+	private PictureManager pictureManager;
 	
 	/* Variables */
 	private SocketServerThread socketServerThread;
@@ -30,6 +31,7 @@ public class PictureWebInterface {
 	public PictureWebInterface() {
 		this.exchangeManager = ExchangeManager.getExchangerManager();
 		this.flightController = FlightController.getFlightController();
+		this.pictureManager = PictureManager.getPictureManager();
 		
 		this.socketServerThread = new SocketServerThread(this);
 	}
@@ -47,16 +49,9 @@ public class PictureWebInterface {
 	 */
 	public void onPictureDownloadFinished(Picture picture) {
 		JsonObject jsonObject = new JsonObject();
+		Flight flight = null;
 		
-		JsonObject filePart = new JsonObject();
-		JsonObject filePositionPart = new JsonObject();
-		
-		filePart.put("name", picture.getName());
-		filePart.put("length", picture.getFileLength());
-		filePart.put("position", filePositionPart);
-		
-		filePositionPart.put("latitude", picture.getLatitude());
-		filePositionPart.put("longitude", picture.getLongitude());
+		JsonObject filePart = picture.toJsonObject();
 		
 		jsonObject.put("file", filePart);
 		
@@ -64,12 +59,14 @@ public class PictureWebInterface {
 		if (flightController.isFlightActive()) {
 			JsonObject flightPart = new JsonObject();
 			
-			Flight flight = flightController.getCurrentFlight();
+			flight = flightController.getCurrentFlight();
 			
 			flightPart.put("name", flight.getName());
 			flightPart.put("local_file", flight.getLocalFile().getName());
 			
 			jsonObject.put("flight", flightPart);
+			
+			picture.attachFlight(flight);
 		}
 		
 		try {
@@ -80,9 +77,11 @@ public class PictureWebInterface {
 			return; /* Can't continue */
 		}
 		
-		filePart.put("remote", String.format("/storage/pictures/%s", picture.getName()));
+		Picture.includeRemote(picture, filePart);
 		
 		exchangeManager.send(ExchangeManager.IDENTIFIER_PICTURE_DOWNLOA_FINISHED, jsonObject);
+		
+		pictureManager.satisfy(picture.toReference(), picture, flight);
 	}
 	
 }

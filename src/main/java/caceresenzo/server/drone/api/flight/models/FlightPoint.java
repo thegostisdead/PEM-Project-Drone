@@ -1,39 +1,55 @@
 package caceresenzo.server.drone.api.flight.models;
 
+import static caceresenzo.server.drone.api.flight.models.Flight.JSON_KEY_POSITIONS_ITEM_ID;
+import static caceresenzo.server.drone.api.flight.models.Flight.JSON_KEY_POSITIONS_ITEM_LATITUDE;
+import static caceresenzo.server.drone.api.flight.models.Flight.JSON_KEY_POSITIONS_ITEM_LONGITUDE;
+import static caceresenzo.server.drone.api.flight.models.Flight.JSON_KEY_POSITIONS_ITEM_TIME;
+
 import java.util.Date;
 
 import caceresenzo.libs.json.JsonObject;
+import caceresenzo.server.drone.api.flight.FlightController;
 
-public class FlightPoint {
+public class FlightPoint implements Comparable<FlightPoint> {
 	
 	/* Variables */
-	private final double latitude, longitude;
-	private final long time;
+	private final String latitude, longitude;
+	private final long time, id;
 	
 	/* Constructor */
 	public FlightPoint() {
-		this(0, 0);
+		this(null, null);
 	}
 	
 	/* Constructor */
-	public FlightPoint(double latitude, double longitude) {
-		this(latitude, longitude, new Date().getTime());
+	public FlightPoint(String latitude, String longitude) {
+		this(latitude, longitude, new Date().getTime(), FlightController.getFlightController().getCurrentFlight().getPoints().size() + 1);
 	}
 	
 	/* Constructor */
-	public FlightPoint(double latitude, double longitude, long time) {
+	public FlightPoint(String latitude, String longitude, long time, long id) {
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.time = time;
+		this.id = id;
+	}
+	
+	@Override
+	public int compareTo(FlightPoint other) {
+		if (getId() != other.getId()) {
+			return Long.signum(getId() - other.getId());
+		}
+		
+		return Long.signum(getTime() - other.getTime());
 	}
 	
 	/** @return Point's latitude. */
-	public double getLatitude() {
+	public String getLatitude() {
 		return latitude;
 	}
 	
 	/** @return Point's longitude. */
-	public double getLongitude() {
+	public String getLongitude() {
 		return longitude;
 	}
 	
@@ -42,13 +58,19 @@ public class FlightPoint {
 		return time;
 	}
 	
+	/** @return Point's supposed id. */
+	public long getId() {
+		return id;
+	}
+	
 	/** @return A {@link JsonObject} version of this object. */
 	public JsonObject toJsonObject() {
 		JsonObject jsonObject = new JsonObject();
 		
-		jsonObject.put("latitude", latitude);
-		jsonObject.put("longitude", longitude);
-		jsonObject.put("time", time);
+		jsonObject.put(JSON_KEY_POSITIONS_ITEM_LATITUDE, latitude);
+		jsonObject.put(JSON_KEY_POSITIONS_ITEM_LONGITUDE, longitude);
+		jsonObject.put(JSON_KEY_POSITIONS_ITEM_TIME, time);
+		jsonObject.put(JSON_KEY_POSITIONS_ITEM_ID, id);
 		
 		return jsonObject;
 	}

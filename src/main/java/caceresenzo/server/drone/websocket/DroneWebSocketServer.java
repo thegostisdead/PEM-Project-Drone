@@ -28,7 +28,7 @@ public class DroneWebSocketServer extends WebSocketServer {
 	public DroneWebSocketServer(int port) {
 		super(new InetSocketAddress(port));
 		
-		this.exchangeManager = new ExchangeManager(this);
+		this.exchangeManager = ExchangeManager.getExchangerManager();
 	}
 	
 	@Override
