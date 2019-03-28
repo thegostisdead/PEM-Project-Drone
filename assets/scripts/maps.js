@@ -10,16 +10,16 @@ function initialize() {
 	    zoom : 16,
 	    center : latlng,
 	    mapTypeId : google.maps.MapTypeId.HYBRID,
-	    keyboardShortcuts : false,
-	    scrollwheel : false,
-	    gestureHandling : "none",
-	    panControl : false,
+	    keyboardShortcuts : false //,
+//	    scrollwheel : false,
+//	    gestureHandling : "none",
+//	    panControl : false,
 
 	    /* The enabled/disabled state of the Fullscreen control. */
-	    fullscreenControl : false,
+//	    fullscreenControl : false,
 
 	    /* The enabled/disabled state of the Zoom control. */
-	    zoomControl : false
+//	    zoomControl : false
 	});
 	
 	mapper = new Mapper(map);
@@ -46,6 +46,32 @@ function initialize() {
 		event = event || window.event;
 
 		console.log(event.keyCode);
+	});
+	
+	initializeSockets(function(data) {
+		let json = JSON.parse(event.data);
+	    let div = document.getElementById("received-pictures");
+
+	    switch (json.identifier) {
+		    case "flight.point.new": {
+		    	let latLng = new google.maps.LatLng(json.data.position.latitude, json.data.position.longitude);
+		    	
+				map.setCenter(latLng);
+				marker.setPosition(latLng);
+				
+				mapper.appendFlightPlanCoordinates(latLng);
+		    	
+			    console.log("Flight: received new position (lat/lon): " + json.data.position.latitude + "/" + json.data.position.longitude + " (" + new Date(json.data.position.time) + ")");
+			    break;
+		    }
+
+		    default: {
+		    	let message = "Not handled identifier: " + json.identifier;
+		    	
+			    console.error(message);
+			    break;
+		    }
+	    }
 	});
 }
 
@@ -87,4 +113,28 @@ class Mapper {
 	}
 	
 	
+}
+
+function initializeSockets(messageCallback) {
+    const HOST = "localhost";
+    const PORT = 8082;
+    socket = new WebSocket("ws://" + HOST + ":" + PORT);
+
+    socket.onopen = function() {
+	    console.log("Connected");
+    };
+
+    socket.onmessage = function(event) {
+	    console.log("Message:", event.data);
+	    messageCallback(event.data);
+    };
+
+    socket.onclose = function(event) {
+	    console.log("Socket is closed.", event.reason);
+    };
+
+    socket.onerror = function(error) {
+	    console.error("Socket encountered error: ", error.message, "Closing socket");
+	    socket.close();
+    };
 }

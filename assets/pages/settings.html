@@ -2,113 +2,82 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>settings</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="../styles/style.css">
-    <link rel="stylesheet" href="../libraries/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="../libraries/fontawesome/fontawesome-all.min.css">
-    <link rel="stylesheet" href="../styles/settings.css">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>settings</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" media="screen" href="../styles/style.css">
+<link rel="stylesheet" href="../libraries/bootstrap/bootstrap.min.css">
+<link rel="stylesheet" href="../libraries/fontawesome/fontawesome-all.min.css">
+<link rel="stylesheet" href="../styles/settings.css">
+
+<script type="text/javascript" src="../scripts/constants.js"></script>
+<script type="text/javascript" src="../scripts/utils.js"></script>
 
 <body>
-    <div class="container">
-        <div class="left-fixed-navbar">
-            <a href="#remote">
-                <i class="fas fa-gamepad"></i>
-            </a>
-            <a href="#settings">
-                <i class="fas fa-cog"></i>
-            </a>
-            <a href="#stats">
-                <i class="fas fa-chart-line"></i>
-            </a>
-        </div>
-    </div>
+	<div class="container">
+		<div class="left-fixed-navbar">
+			<a href="#remote">
+				<i class="fas fa-gamepad"></i>
+			</a>
+			<a href="#settings">
+				<i class="fas fa-cog"></i>
+			</a>
+			<a href="#stats">
+				<i class="fas fa-chart-line"></i>
+			</a>
+		</div>
+	</div>
 
-    <div class="content">
-        <div class="settings-item small">
-            <div class="form-group">
-                <form>
-                    <label class="label-beautiful" for="">
-                        <p>Google API Key</p>
-                    </label>
-                    <input class="form-control" style="background-color:#1d1d1d;" id="apiKeyInput" placeholder="0226sq2d6sq2d6s20qd6sq2d6qs2d602qs6d2">
-                </form>
-            </div>
-        </div>
-        <div class="settings-item big">
-            <div class="form-group">
-                <form>
-                    <label class="label-beautiful" for="">
-                        <p>Type of Google Maps View</p>
-                    </label>
-                    <div class="images-selector">
-                        <div class="container">
-                            <div class="row">
-                                <div class="img-zone col">
-                                    <p>Roadmap View</p>
-                                    <img src="../images/roadmap.png" class="map-type images-selector" id="roadmapView">
-                                    <p></p>
-                                </div>
-                                <div class="img-zone col">
-                                    <p>Satellite View</p>
-                                    <img src="../images/satellite.png" class="map-type images-selector" id="satellite">
-                                    <p></p>
-                                </div>
-                                <div class="img-zone col">
-                                    <p>Hybrid View</p>
-                                    <img src="../images/hybrid.png" class="map-type images-selector" id="hybrid">
-                                    <p></p>
-                                </div>
-                                <div class="img-zone col">
-                                    <p>Terrain View</p>
-                                    <img src="../images/terrain.png" class="map-type images-selector" id="terrain">
-                                    <p></p>
-                                </div>
-                            </div>
-                        </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="settings-item small">
-        <form>
-            <div class="form-row align-items-center">
-                <div class="col-auto">
-                    <div class="input-group mb-2">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text" style="background-color: #28a745; color: white;border-color: #28a745;">Server IP</div>
-                        </div>
-                        <input type="text" class="form-control" style="background-color:#1d1d1d;" id="inlineFormInputGroup" placeholder="198.168.167.253">
-                    </div>
-                </div>
-                <div class="col-auto">
-                    <div class="input-group mb-2">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text" style="background-color: #28a745;color: white;border-color: #28a745;">Server Port</div>
-                        </div>
-                        <input type="text" class="form-control" style="background-color:#1d1d1d;" id="inlineFormInputGroup"
-                            placeholder="35847">
-                    </div>
-                </div>
-        </form>
-    </div>
+	<div class="content">
+		<div class="settings-item small" id="google-api-key-container">
+			<div class="form-group">
+				<label class="label-beautiful" for="apiKeyInput">Google API Key</label>
+				<input class="form-control" style="background-color: #1d1d1d;color: white;" id="apiKeyInput" placeholder="0226sq2d6sq2d6s20qd6sq2d6qs2d602qs6d2">
+			</div>
+		</div>
+		<div class="settings-item big">
+			<div class="form-group">
+				<label class="label-beautiful" for="">Google Maps View Style</label>
+				<div class="images-selector">
+					<div class="container">
+						<div class="row">
+							<div class="img-zone col">
+								<p>Roadmap</p>
+								<img src="../images/roadmap.png" class="map-type images-selector" data-style="ROADMAP">
+							</div>
+							<div class="img-zone col">
+								<p>Satellite</p>
+								<img src="../images/satellite.png" class="map-type images-selector" data-style="SATELLITE">
+							</div>
+							<div class="img-zone col">
+								<p>Hybrid</p>
+								<img src="../images/hybrid.png" class="map-type images-selector" data-style="HYBRID">
+							</div>
+							<div class="img-zone col">
+								<p>Terrain</p>
+								<img src="../images/terrain.png" class="map-type images-selector" data-style="TERRAIN">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-    </div>
-    <div class="row">
-        <div class="button-action">
-            <button type="button" class="btn btn-success">Apply changes</button>
-        </div>
-    </div>
-    <!-- <script>
+	<div class="row">
+		<div class="button-action">
+			<button type="button" class="btn btn-success" onclick="pushChanges();">Apply changes</button>
+		</div>
+	</div>
+	<!-- <script>
 $('img').click(function(){
     $('.selected').removeClass('selected');
     $(this).addClass('selected');
 });
 
 </script> -->
-    <script>
+	<script>
         var elementHtml = document.getElementsByClassName('map-type');
         for (let img of elementHtml) {
             console.log(img)
@@ -125,5 +94,6 @@ $('img').click(function(){
         }
     </script>
 </body>
+<script type="text/javascript" src="../scripts/settings.js"></script>
 
 </html>
