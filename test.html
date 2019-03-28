@@ -1,0 +1,21 @@
+<html>
+<head>
+
+
+
+<script type="text/javascript" src="assets/scripts/constants.js"></script>
+<script type="text/javascript" src="assets/scripts/utils.js"></script>
+<script type="text/javascript" src="assets/scripts/socket.js"></script>
+
+<script type="text/javascript">
+	DroneSocket.addListener("onmessage", function(data) {
+	    console.log("onmessage");
+	    console.log(data);
+    });
+</script>
+</head>
+
+<body>
+
+</body>
+</html>
