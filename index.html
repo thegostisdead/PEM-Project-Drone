@@ -81,13 +81,24 @@
 			<div class="modal-body">
 				<div>
 					<h3>Flight</h3>
-					<button onclick="prompt(&quot;Flight name ?&quot;, randomText(50));" type="button" class="btn btn-primary">Start</button>
+					<button onclick="DroneDebug.startFlight(&quot;debug-flight-start-response&quot;);" type="button" class="btn btn-primary">Start</button>
+					<p>response: <a id="debug-flight-start-response">-/-</a></p>
+					<button onclick="DroneDebug.stopFlight(&quot;debug-flight-stop-response&quot;);" type="button" class="btn btn-primary">Stop</button>
+					<p>response: <a id="debug-flight-stop-response">-/-</a></p>
 				</div>
 				<br>
 				<div>
 					<h3>Start flight</h3>
 					<button type="button" class="btn btn-primary">Primary</button>
 				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal" id="modal-disconnected">
+		<div class="modal-box">
+			<div class="modal-body">
+				<h1>Socket Disconnected. :/</h1>
 			</div>
 		</div>
 	</div>

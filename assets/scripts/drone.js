@@ -33,6 +33,8 @@ class DroneSocket {
 	    socket.onerror = function(error) {
 		    console.error("Socket encountered error: ", error.message, "Closing socket");
 		    socket.close();
+		    
+		    DroneSocket.fire("onerror", error);
 	    };
 	}
 	

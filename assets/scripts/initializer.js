@@ -24,3 +24,10 @@ $(".close-modal, .modal-sandbox").click(function() {
 	
 	// $("body").css({"overflow-y": "auto"}); //Prevent double scrollbar.
 });
+
+DroneSocket.addListener("onopen", function() {
+	document.getElementById("modal-disconnected").style.display = "none";
+})
+DroneSocket.addListener("onerror", function(error) {
+	document.getElementById("modal-disconnected").style.display = "block";
+})
