@@ -14,6 +14,9 @@ body {
 
 .label-beautiful {
     border-radius: 5px;
+}
+
+.label-beautiful p {
     padding-left: 10px;
     padding-top: 10px;
     color: #ffffff;

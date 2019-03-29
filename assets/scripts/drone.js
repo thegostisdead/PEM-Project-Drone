@@ -63,5 +63,25 @@ class DroneSocket {
 	
 }
 
-DroneSocket.initialize();
-DroneSocket.connect();
+class DroneApi {
+	
+	static initialize() {
+		
+	}
+	
+	static call(endpoint, callback, payload = null) {
+		let request = new XMLHttpRequest();
+
+		request.onreadystatechange = function(event) {
+			if (this.readyState === XMLHttpRequest.DONE) {
+				let json = JSON.parse(this.responseText);
+				
+				callback(json, this.status === 200);
+			}
+		};
+
+		request.open("GET", API_URL + "/" + endpoint, true);
+		request.send(payload);
+	}
+	
+}
