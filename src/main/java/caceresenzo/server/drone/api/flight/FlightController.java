@@ -2,15 +2,13 @@ package caceresenzo.server.drone.api.flight;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import javax.annotation.PreDestroy;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import caceresenzo.libs.json.JsonObject;
 import caceresenzo.server.drone.Config;
@@ -18,7 +16,6 @@ import caceresenzo.server.drone.api.flight.models.Flight;
 import caceresenzo.server.drone.api.flight.models.FlightPoint;
 import caceresenzo.server.drone.websocket.ExchangeManager;
 
-@Component
 public class FlightController {
 	
 	/* Static */
@@ -89,9 +86,11 @@ public class FlightController {
 	public void stop() {
 		checkActiveFlight();
 		
-		currentFlight.finish();
+		allFlights.put(currentFlight.getLocalFile().getName(), currentFlight.finish());
 		
 		exchangeManager.send(ExchangeManager.IDENTIFIER_FLIGHT_FINISHED, new JsonObject());
+		
+		currentFlight = null;
 	}
 	
 	/**
@@ -137,7 +136,7 @@ public class FlightController {
 		
 		return currentFlight;
 	}
-
+	
 	public Flight getFlightByLocalFileName(String flightLocalFileName) {
 		return allFlights.get(flightLocalFileName);
 	}
@@ -146,13 +145,24 @@ public class FlightController {
 		return allFlights;
 	}
 	
-	@PreDestroy
-	public void destroy() {
+	public void end() {
+		LOGGER.info("Ending flight controller...");
+		
 		if (isFlightActive()) {
 			try {
 				currentFlight.rush().save();
 			} catch (Exception exception) {
 				LOGGER.error("Failed to properly save current flight.", exception);
+			}
+		}
+		
+		System.out.println(allFlights.values());
+		
+		for (Flight flight : allFlights.values()) {
+			try {
+				flight.save();
+			} catch (IOException exception) {
+				LOGGER.warn("Failed to save flight. (file = " + flight.getLocalFile().getName() + ")", exception);
 			}
 		}
 	}

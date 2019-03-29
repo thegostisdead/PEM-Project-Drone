@@ -2,11 +2,13 @@ package caceresenzo.server.drone;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.Scanner;
 
 import javax.annotation.PreDestroy;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -27,6 +29,9 @@ public class Application implements WebMvcConfigurer {
 	
 	/* Constants */
 	public static final Version VERSION = new Version("0.1", VersionType.BETA);
+	
+	/* Static */
+	public static ConfigurableApplicationContext CONTEXT;
 	
 	/* Variables */
 	private ExchangeManager exchangeManager;
@@ -68,6 +73,7 @@ public class Application implements WebMvcConfigurer {
 	
 	@PreDestroy
 	public void destroy() {
+		flightController.end();
 		droneWebSocketServer.end();
 		pictureWebInterface.getSocketServerThread().end();
 	}
@@ -78,7 +84,19 @@ public class Application implements WebMvcConfigurer {
 		
 		SpringApplication application = new SpringApplication(Application.class);
 		application.setDefaultProperties(Collections.singletonMap("server.port", Config.API_PORT));
-		application.run(args);
+		CONTEXT = application.run(args);
+
+        Scanner scanner = new Scanner(System.in);
+		while (true) {
+			String input = scanner.nextLine();
+			
+			if ("exit".equals(input)) {
+				CONTEXT.close();
+				break;
+			}
+		}
+        scanner.close();
+		
 	}
 	
 }

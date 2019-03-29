@@ -1,7 +1,10 @@
 package caceresenzo.server.drone.api;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -51,10 +54,24 @@ public class DroneApi {
 			currentPart.put("flight", flightController.getCurrentFlight().toMoreDetailedJsonObject());
 		}
 		
+		List<Flight> sortedFlights = new ArrayList<>(flightController.getAllFlight().values());
+		sortedFlights.sort(new Comparator<Flight>() {
+			@Override
+			public int compare(Flight o1, Flight o2) {
+				return Long.signum(o2.getStart() - o1.getStart());
+			}
+		});
+		
 		JsonArray allFlightJsonArray = new JsonArray();
-		for (Flight flight : flightController.getAllFlight().values()) {
+		for (Flight flight : sortedFlights) {
 			allFlightJsonArray.add(flight.toMoreDetailedJsonObject());
 		}
+		allFlightJsonArray.sort(new Comparator<Object>() {
+			@Override
+			public int compare(Object object1, Object object2) {
+				return 0;
+			}
+		});
 		
 		response.put("current", currentPart);
 		response.put("all", allFlightJsonArray);
@@ -84,6 +101,37 @@ public class DroneApi {
 		
 		if (flightController.isFlightActive()) {
 			flightController.getCurrentFlight().addPoint(body);
+		}
+		
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/flight/start/{name}")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> flightStart(@PathVariable("name") String name) {
+		Map<String, Object> response = new HashMap<>();
+		
+		if (flightController.isFlightActive()) {
+			flightController.stop();
+		}
+		
+		flightController.start(new Flight(name));
+		
+		response.put("result", "ok");
+		
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@GetMapping(value = "/flight/stop")
+	@ResponseBody
+	public ResponseEntity<Map<String, Object>> flightStop() {
+		Map<String, Object> response = new HashMap<>();
+
+		response.put("result", "failed");
+		
+		if (flightController.isFlightActive()) {
+			flightController.stop();
+			response.put("result", "ok");
 		}
 		
 		return new ResponseEntity<>(response, HttpStatus.OK);

@@ -10,7 +10,9 @@ import caceresenzo.libs.filesystem.FileUtils;
 import caceresenzo.libs.json.JsonObject;
 import caceresenzo.libs.json.parser.JsonParser;
 import caceresenzo.libs.parse.ParseUtils;
+import caceresenzo.libs.random.RandomString;
 import caceresenzo.libs.string.StringUtils;
+import caceresenzo.server.drone.Config;
 import caceresenzo.server.drone.api.flight.FlightController;
 import caceresenzo.server.drone.webinterface.picture.PictureManager;
 
@@ -39,6 +41,11 @@ public class Flight {
 	private final List<FlightPoint> points;
 	
 	/* Constructor */
+	public Flight(String name) {
+		this(new File(Config.FLIGHTS_DIRECTORY, new RandomString().nextString().concat(".json")), name);
+	}
+	
+	/* Constructor */
 	public Flight(File file, String name) {
 		this.file = file;
 		this.name = name;
@@ -52,7 +59,7 @@ public class Flight {
 	 *             If any I/O error append.
 	 */
 	public void save() throws IOException {
-		FileUtils.writeStringToFile(getLocalFile().getAbsolutePath(), toJsonObject().toJsonString());
+		FileUtils.writeStringToFile(toJsonObject().toJsonString(), getLocalFile().getAbsolutePath());
 	}
 	
 	/**
@@ -64,7 +71,7 @@ public class Flight {
 		this.controller = controller;
 		
 		this.active = true;
-		this.start = new Date().getTime();
+		this.start = System.currentTimeMillis();
 		
 		return this;
 	}
@@ -82,7 +89,7 @@ public class Flight {
 	 */
 	public Flight finish() {
 		this.active = false;
-		this.end = new Date().getTime();
+		this.end = System.currentTimeMillis();
 		
 		return this;
 	}
