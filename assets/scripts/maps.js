@@ -3,6 +3,7 @@ var mapper;
 var position = [ 47.1920857, 2.3766726 ];
 var map;
 var marker;
+var pictureMarker;
 
 function initialize() {
 	var latlng = new google.maps.LatLng(position[0], position[1]);
@@ -30,6 +31,17 @@ function initialize() {
 	    map : map,
 	    icon : {
 	        url: "./assets/images/drone-marker.png",
+	        scaledSize: new google.maps.Size(50, 50),
+	        origin: new google.maps.Point(0,0),
+	        anchor: new google.maps.Point(25,50)
+	    }
+	});
+
+	pictureMarker = new google.maps.Marker({
+	    position : latlng,
+	    map : map,
+	    icon : {
+	        url: "https://www.pilotpen.fr/pub/media/catalog/product/cache/image/755x566/beff4985b56e3afdbeabfc89641a4582/4/9/4902505511097-4902505511097_zoom_01.jpg",
 	        scaledSize: new google.maps.Size(50, 50),
 	        origin: new google.maps.Point(0,0),
 	        anchor: new google.maps.Point(25,50)

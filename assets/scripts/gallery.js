@@ -167,7 +167,7 @@ class Gallery {
 		
 		// TODO
 		map.setCenter(new google.maps.LatLng(latitude, longitude));
-		marker.setPosition(new google.maps.LatLng(latitude, longitude));
+		pictureMarker.setPosition(new google.maps.LatLng(latitude, longitude));
 		
 		Gallery.display(false);
 	}
