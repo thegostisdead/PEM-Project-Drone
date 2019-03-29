@@ -2,6 +2,7 @@ var mapper;
 
 var position = [ 47.1920857, 2.3766726 ];
 var map;
+var marker;
 
 function initialize() {
 	var latlng = new google.maps.LatLng(position[0], position[1]);
@@ -24,7 +25,7 @@ function initialize() {
 	
 	mapper = new Mapper(map);
 
-	let marker = new google.maps.Marker({
+	marker = new google.maps.Marker({
 	    position : latlng,
 	    map : map,
 	    icon : {

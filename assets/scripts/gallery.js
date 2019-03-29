@@ -146,9 +146,41 @@ class Gallery {
 			html = "";
 		}
 		
-		html = "<img src=\"" + API_URL + picture.remote + "\" alt=\"\" class=\"image\" style=\"height: 250px; width: 250px\">\n" + html;
+		let elementHtml = "";
+		elementHtml += "<div class=\"picture-container\">\n";
+		elementHtml += "	<img class=\"picture\" src=\"" + API_URL + picture.remote + "\">\n";
+		elementHtml += "	<div class=\"middle\">\n";
+		elementHtml += "		<a data-latitude=\"" + picture.position.latitude + "\" data-longitude=\"" + picture.position.longitude + "\" onclick=\"Gallery.showOnMap(this);\" href=\"#\">\n";
+		elementHtml += "			<div class=\"text\">GPS</div>\n";
+		elementHtml += "		</a>\n";
+		elementHtml += "	</div>\n";
+		elementHtml += "</div>\n";
+		
+		html = elementHtml + html;
 		
 		Gallery.DIVS.PICTURES.innerHTML = html;
+	}
+	
+	static showOnMap(element) {
+		let latitude = element.dataset.latitude;
+		let longitude = element.dataset.longitude;
+		
+		// TODO
+		map.setCenter(new google.maps.LatLng(latitude, longitude));
+		marker.setPosition(new google.maps.LatLng(latitude, longitude));
+		
+		Gallery.display(false);
+	}
+	
+	static display(state) {
+		let modal = document.getElementById("modal-gallery");
+		let display = "none";
+		
+		if (state === true) {
+			display = "block";
+		}
+		
+		modal.style.display = display;
 	}
 	
 }
