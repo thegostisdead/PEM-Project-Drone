@@ -1,7 +1,6 @@
 package caceresenzo.server.drone.api.flight;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,13 +9,18 @@ import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import caceresenzo.libs.filesystem.FileUtils;
+import caceresenzo.libs.filesystem.FilenameUtils;
 import caceresenzo.libs.json.JsonObject;
 import caceresenzo.server.drone.Config;
 import caceresenzo.server.drone.api.flight.models.Flight;
 import caceresenzo.server.drone.api.flight.models.FlightPoint;
+import caceresenzo.server.drone.api.qualities.QualityManager;
+import caceresenzo.server.drone.utils.Destroyable;
+import caceresenzo.server.drone.utils.Initializable;
 import caceresenzo.server.drone.websocket.ExchangeManager;
 
-public class FlightController {
+public class FlightController implements Initializable, Destroyable {
 	
 	/* Static */
 	private static Logger LOGGER = LoggerFactory.getLogger(FlightController.class);
@@ -26,46 +30,45 @@ public class FlightController {
 	
 	/* Managers */
 	private ExchangeManager exchangeManager;
+	private QualityManager qualityManager;
 	
 	/* Variables */
-	private Map<String, Flight> allFlights;
+	private final Map<String, Flight> allFlights;
 	private Flight currentFlight;
 	
 	/* Constructor */
 	private FlightController() {
-		this.exchangeManager = ExchangeManager.getExchangerManager();
-		
 		this.allFlights = new HashMap<>();
 	}
 	
 	public void initialize() {
+		exchangeManager = ExchangeManager.getExchangerManager();
+		qualityManager = QualityManager.getQualityManager();
+		
 		File directory = new File(Config.FLIGHTS_DIRECTORY);
 		
-		if (!directory.exists()) {
-			directory.mkdirs();
-		} else if (directory.isFile()) {
-			directory.delete();
-			directory.mkdirs();
-		} else {
-			File[] files = directory.listFiles(new FileFilter() {
-				@Override
-				public boolean accept(File pathname) {
-					return pathname.getName().endsWith(".json");
-				}
-			});
-			
-			for (File file : files) {
-				try {
-					Flight flight = Flight.fromJsonObject(file);
-					
-					if (flight != null) {
-						allFlights.put(file.getName(), flight);
+		try {
+			if (!directory.exists() || directory.isFile()) {
+				FileUtils.forceDirectoryCreation(directory);
+			} else {
+				File[] files = directory.listFiles(FilenameUtils.createFilter("json"));
+				
+				for (File file : files) {
+					try {
+						Flight flight = Flight.fromJsonObject(file);
+						
+						if (flight != null) {
+							allFlights.put(file.getName(), flight);
+							qualityManager.load(flight);
+						}
+					} catch (Exception exception) {
+						LOGGER.warn("Failed to load flight file, deleting. (file = " + file.getName() + ")", exception);
+						file.delete();
 					}
-				} catch (Exception exception) {
-					LOGGER.warn("Failed to load flight file, deleting. (file = " + file.getName() + ")", exception);
-					file.delete();
 				}
 			}
+		} catch (IOException exception) {
+			LOGGER.error("Failed to initialize flight controller.", exception);
 		}
 	}
 	
@@ -80,6 +83,7 @@ public class FlightController {
 		
 		flight.activate(this);
 		
+		qualityManager.prepareCurrentFlight(currentFlight);
 		exchangeManager.send(ExchangeManager.IDENTIFIER_FLIGHT_STARTING, new JsonObject());
 	}
 	
@@ -145,7 +149,8 @@ public class FlightController {
 		return allFlights;
 	}
 	
-	public void end() {
+	@Override
+	public void destroy() {
 		LOGGER.info("Ending flight controller...");
 		
 		if (isFlightActive()) {
@@ -155,8 +160,6 @@ public class FlightController {
 				LOGGER.error("Failed to properly save current flight.", exception);
 			}
 		}
-		
-		System.out.println(allFlights.values());
 		
 		for (Flight flight : allFlights.values()) {
 			try {

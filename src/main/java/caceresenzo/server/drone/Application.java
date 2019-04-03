@@ -1,7 +1,8 @@
 package caceresenzo.server.drone;
 
-import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 import javax.annotation.PreDestroy;
@@ -16,8 +17,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import caceresenzo.libs.comparator.Version;
 import caceresenzo.libs.comparator.VersionType;
 import caceresenzo.server.drone.api.flight.FlightController;
-import caceresenzo.server.drone.api.flight.models.Flight;
-import caceresenzo.server.drone.api.flight.models.FlightPoint;
+import caceresenzo.server.drone.api.qualities.QualityManager;
+import caceresenzo.server.drone.utils.Destroyable;
+import caceresenzo.server.drone.utils.Initializable;
 import caceresenzo.server.drone.webinterface.picture.PictureManager;
 import caceresenzo.server.drone.webinterface.picture.PictureWebInterface;
 import caceresenzo.server.drone.websocket.DroneWebSocketServer;
@@ -33,49 +35,59 @@ public class Application implements WebMvcConfigurer {
 	/* Static */
 	public static ConfigurableApplicationContext CONTEXT;
 	
+	/* *-ables */
+	private List<Object> instanced;
+	
 	/* Variables */
-	private ExchangeManager exchangeManager;
-	private FlightController flightController;
-	private PictureManager pictureManager;
 	private DroneWebSocketServer droneWebSocketServer;
 	private PictureWebInterface pictureWebInterface;
 	
 	/* Constructor */
 	public Application() {
-		this.exchangeManager = ExchangeManager.create();
-		this.flightController = FlightController.create();
-		this.pictureManager = PictureManager.create();
+		this.instanced = new ArrayList<>();
+
+		this.instanced.add(FlightController.create());
+		this.instanced.add(ExchangeManager.create());
+		this.instanced.add(PictureManager.create());
+		this.instanced.add(QualityManager.create());
+		
 		this.droneWebSocketServer = new DroneWebSocketServer();
 		this.pictureWebInterface = new PictureWebInterface();
 		
+		initialize();
 		start();
-		
-		Flight flight = new Flight(new File("hello"), "test");
-		
-		flightController.start(flight);
-		
-		flight.addPoint(new FlightPoint("0.123", "3.210", System.currentTimeMillis(), 1));
+	}
+	
+	/** Initialize instanced objects. */
+	private void initialize() {
+		instanced.forEach(object -> {
+			if (object instanceof Initializable) {
+				((Initializable) object).initialize();
+			}
+		});
 	}
 	
 	/** Start the local servers. */
-	private void start() {
-		flightController.initialize();
-		pictureManager.initialize();
-		
+	private void start() {		
 		droneWebSocketServer.start();
 		pictureWebInterface.start();
+	}
+	
+	@PreDestroy
+	public void destroy() {
+		droneWebSocketServer.end();
+		pictureWebInterface.getSocketServerThread().end();
+		
+		instanced.forEach(object -> {
+			if (object instanceof Destroyable) {
+				((Destroyable) object).destroy();
+			}
+		});
 	}
 	
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**");
-	}
-	
-	@PreDestroy
-	public void destroy() {
-		flightController.end();
-		droneWebSocketServer.end();
-		pictureWebInterface.getSocketServerThread().end();
 	}
 	
 	/* Main */
@@ -85,8 +97,8 @@ public class Application implements WebMvcConfigurer {
 		SpringApplication application = new SpringApplication(Application.class);
 		application.setDefaultProperties(Collections.singletonMap("server.port", Config.API_PORT));
 		CONTEXT = application.run(args);
-
-        Scanner scanner = new Scanner(System.in);
+		
+		Scanner scanner = new Scanner(System.in);
 		while (true) {
 			String input = scanner.nextLine();
 			
@@ -95,8 +107,8 @@ public class Application implements WebMvcConfigurer {
 				break;
 			}
 		}
-        scanner.close();
 		
+		scanner.close();
 	}
 	
 }

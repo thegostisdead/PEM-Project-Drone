@@ -18,10 +18,11 @@ import caceresenzo.libs.string.StringUtils;
 import caceresenzo.server.drone.Config;
 import caceresenzo.server.drone.api.flight.FlightController;
 import caceresenzo.server.drone.api.flight.models.Flight;
+import caceresenzo.server.drone.utils.Initializable;
 import caceresenzo.server.drone.webinterface.picture.models.Picture;
 import caceresenzo.server.drone.webinterface.picture.models.PictureReference;
 
-public class PictureManager {
+public class PictureManager implements Initializable {
 	
 	/* Static */
 	private static Logger LOGGER = LoggerFactory.getLogger(PictureManager.class);
@@ -40,6 +41,7 @@ public class PictureManager {
 		this.pictureReferencesMap = new HashMap<>();
 	}
 	
+	@Override
 	public void initialize() {
 		this.flightController = FlightController.getFlightController();
 		

@@ -31,8 +31,8 @@ public class Config extends Configuration {
 	@ConfigProperty(defaultValue = "storage/web_settings.json", file = "config", key = "websettings.storage.file")
 	public static String WEB_SETTINGS_STORAGE_FILE;
 	
-	@ConfigProperty(defaultValue = "storage/qualities/values.db", file = "config", key = "api.physical-quantities.storage.database.file")
-	public static String API_PHYSICAL_QUALITIES_STORAGE_DATABASE_FILE;
+	@ConfigProperty(defaultValue = "storage/qualities/databases/", file = "config", key = "api.physical-quantities.storage.databases.folder")
+	public static String API_PHYSICAL_QUALITIES_STORAGE_DATABASES_FOLDER;
 	
 	@ConfigProperty(defaultValue = "storage/qualities/list.json", file = "config", key = "api.physical-quantities.list")
 	public static String API_PHYSICAL_QUALITIES_LIST;

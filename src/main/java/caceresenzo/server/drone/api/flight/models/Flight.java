@@ -3,7 +3,6 @@ package caceresenzo.server.drone.api.flight.models;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import caceresenzo.libs.filesystem.FileUtils;
@@ -137,6 +136,11 @@ public class Flight {
 	/** @return {@link Flight}'s local storage file. */
 	public File getLocalFile() {
 		return file;
+	}
+	
+	/** @return {@link Flight}'s local storage file's name. */
+	public String getLocalFileName() {
+		return file.getName().substring(0, file.getName().lastIndexOf('.'));
 	}
 	
 	/** @return {@link Flight}'s point list. */

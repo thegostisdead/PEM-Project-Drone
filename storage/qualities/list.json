@@ -1,1 +1,14 @@
-[{"name":"temperature","unit":"°C"}]
+[
+	{
+		"name": "temperature",
+		"unit": "°C"
+	},
+	{
+		"name": "humidity",
+		"unit": "%RH"
+	},
+	{
+		"name": "pressure",
+		"unit": "hPa"
+	}
+]

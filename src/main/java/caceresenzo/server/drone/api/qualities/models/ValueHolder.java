@@ -10,7 +10,7 @@ public class ValueHolder {
 	
 	/** Serializer only constructor */
 	public ValueHolder() {
-		this(0, null);
+		this(null);
 	}
 	
 	/** Constructor */

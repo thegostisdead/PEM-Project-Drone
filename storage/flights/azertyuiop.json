@@ -1,13 +1,1 @@
-{
-	"name": "hello",
-	"start": 123456,
-	"end": 123456,
-	"positions": [
-		{
-			"id": 1,
-			"time": 123456798,
-			"longitude": "1.23456",
-			"latitude": "6.54321"
-		}
-	]
-}
+{"name":"hello","rushed":false,"start":123456,"end":123456,"positions":[{"latitude":"6.54321","longitude":"1.23456","time":123456798,"id":1}]}
