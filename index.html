@@ -1,112 +1,136 @@
 <html>
 
 <head>
-<title>Hello</title>
-<meta charset="UTF-8">
+    <title>Hello</title>
+    <meta charset="UTF-8">
 
-<!-- Libraries -->
-<link rel="stylesheet" href="assets/libraries/bootstrap/bootstrap.min.css">
-<link rel="stylesheet" href="assets/libraries/fontawesome/fontawesome-all.min.css">
+    <!-- Libraries -->
+    <link rel="stylesheet" href="assets/libraries/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/libraries/fontawesome/fontawesome-all.min.css">
+    <!-- <link rel="stylesheet" href="assets/libraries/chart.js/Chart.min.css">-->
 
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.16.1/TweenMax.min.js"></script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyBTBT9HqdZF0xrAqY3lYmJISVYK65EN0cY"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyBTBT9HqdZF0xrAqY3lYmJISVYK65EN0cY"></script>
 
-<!-- Project -->
-<link rel="stylesheet" href="assets/styles/style.css">
-<link rel="stylesheet" href="assets/styles/modal.css">
-<link rel="stylesheet" href="assets/styles/gallery.css">
-<link rel="stylesheet" href="assets/styles/loader.css">
+    <script type="text/javascript" src="assets/libraries/chart.js/Chart.min.js"></script>
 
-<script type="text/javascript" src="assets/scripts/constants.js"></script>
-<script type="text/javascript" src="assets/scripts/utils.js"></script>
-<script type="text/javascript" src="assets/scripts/maps.js"></script>
-<script type="text/javascript" src="assets/scripts/drone.js"></script>
-<script type="text/javascript" src="assets/scripts/gallery.js"></script>
+    <!-- Project -->
+    <link rel="stylesheet" href="assets/styles/style.css">
+    <link rel="stylesheet" href="assets/styles/modal.css">
+    <link rel="stylesheet" href="assets/styles/gallery.css">
+    <link rel="stylesheet" href="assets/styles/loader.css">
+
+    <script type="text/javascript" src="assets/scripts/constants.js"></script>
+    <script type="text/javascript" src="assets/scripts/utils.js"></script>
+    <script type="text/javascript" src="assets/scripts/maps.js"></script>
+    <script type="text/javascript" src="assets/scripts/drone.js"></script>
+
+    <!-- Parts -->
+    <script type="text/javascript" src="assets/scripts/gallery.js"></script>
+    <script type="text/javascript" src="assets/scripts/statistics.js"></script>
 </head>
 
 <body>
-	<div id="container">
-		<div class="left-fixed-navbar">
-			<a href="#remote">
-				<i class="fas fa-gamepad"></i>
-			</a>
-			<a href="#settings">
-				<i class="fas fa-cog"></i>
-			</a>
-			<a href="#stats">
-				<i class="fas fa-chart-line"></i>
-			</a>
-			<a href="#" class="modal-trigger" data-modal="modal-gallery">
-				<i class="fas fa-camera"></i>
-			</a>
-			<a href="#" class="modal-trigger" data-modal="modal-debug">
-				<i class="fas fa-check"></i>
-			</a>
-		</div>
-		<div class="right-fixed-overview">
-			<a href="">blavla</a>
-			<a href="">blavla</a>
-			<a href="">blavla</a>
-			<a href="">blavla</a>
-			<a href="">blavla</a>
-			<a href="">blavla</a>
-		</div>
-	</div>
+    <div id="container">
+        <div class="left-fixed-navbar">
+            <a href="#remote">
+                <i class="fas fa-gamepad"></i>
+            </a>
+            <a href="#settings">
+                <i class="fas fa-cog"></i>
+            </a>
+            <a href="#" class="modal-trigger" data-modal="modal-statistics">
+                <i class="fas fa-chart-line"></i>
+            </a>
+            <a href="#" class="modal-trigger" data-modal="modal-gallery">
+                <i class="fas fa-camera"></i>
+            </a>
+            <a href="#" class="modal-trigger" data-modal="modal-debug">
+                <i class="fas fa-check"></i>
+            </a>
+        </div>
+        <div class="right-fixed-overview">
+            <a href="">blavla</a>
+            <a href="">blavla</a>
+            <a href="">blavla</a>
+            <a href="">blavla</a>
+            <a href="">blavla</a>
+            <a href="">blavla</a>
+        </div>
+    </div>
 
-	<div id="map-canvas"></div>
+    <div id="map-canvas"></div>
 
-	<div class="modal" id="modal-gallery">
-		<div class="modal-sandbox"></div>
-		<div class="modal-box">
-			<div class="modal-header">
-				<!--  <img src="assets/images/close.png"> -->
-			</div>
-			<div class="modal-body">
-				<div class="row no-gutters">
-					<div class="col-6 col-md-4">
-						<div id="gallery-flights" class="list-group" style="height: 80vh; overflow-y: scroll;"></div>
-					</div>
-					<div class="col-12 col-sm-6 col-md-8" style="height: 80vh; overflow-y: scroll;">
-						<div id="gallery-pictures" class="zone-preview"></div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="modal" id="modal-statistics">
+        <div class="modal-sandbox"></div>
+        <div class="modal-box">
+            <div class="modal-header">
+                <!--  <img src="assets/images/close.png"> -->
+            </div>
+            <div class="modal-body">
+                <div class="row no-gutters">
+                    <div class="col-6 col-md-4">
+                        <div id="statistics-flights" class="list-group" style="height: 80vh; overflow-y: scroll;"></div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-8" style="height: 80vh; overflow-y: scroll;">
+                        <div id="statistics-graphs" class="zone-preview"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<div class="modal" id="modal-debug">
-		<div class="modal-sandbox"></div>
-		<div class="modal-box">
-			<div class="modal-body">
-				<div>
-					<h3>Flight</h3>
-					<button onclick="DroneDebug.startFlight(&quot;debug-flight-start-response&quot;);" type="button" class="btn btn-primary">Start</button>
-					<p>
-						response:
-						<a id="debug-flight-start-response">-/-</a>
-					</p>
-					<button onclick="DroneDebug.stopFlight(&quot;debug-flight-stop-response&quot;);" type="button" class="btn btn-primary">Stop</button>
-					<p>
-						response:
-						<a id="debug-flight-stop-response">-/-</a>
-					</p>
-				</div>
-				<br>
-			</div>
-		</div>
-	</div>
+    <div class="modal" id="modal-gallery">
+        <div class="modal-sandbox"></div>
+        <div class="modal-box">
+            <div class="modal-header">
+                <!--  <img src="assets/images/close.png"> -->
+            </div>
+            <div class="modal-body">
+                <div class="row no-gutters">
+                    <div class="col-6 col-md-4">
+                        <div id="gallery-flights" class="list-group" style="height: 80vh; overflow-y: scroll;"></div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-8" style="height: 80vh; overflow-y: scroll;">
+                        <div id="gallery-pictures" class="zone-preview"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<div class="modal" id="modal-disconnected">
-		<div class="modal-box">
-			<div class="modal-body">
-				<h1>Socket Disconnected. :/</h1>
-			</div>
-		</div>
-	</div>
+    <div class="modal" id="modal-debug">
+        <div class="modal-sandbox"></div>
+        <div class="modal-box">
+            <div class="modal-body">
+                <div>
+                    <h3>Flight</h3>
+                    <button onclick="DroneDebug.startFlight(&quot;debug-flight-start-response&quot;);" type="button" class="btn btn-primary">Start</button>
+                    <p>
+                        response:
+                        <a id="debug-flight-start-response">-/-</a>
+                    </p>
+                    <button onclick="DroneDebug.stopFlight(&quot;debug-flight-stop-response&quot;);" type="button" class="btn btn-primary">Stop</button>
+                    <p>
+                        response:
+                        <a id="debug-flight-stop-response">-/-</a>
+                    </p>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
 
-	<script type="text/javascript" src="assets/scripts/initializer.js"></script>
-	<script type="text/javascript" src="assets/scripts/debug.js"></script>
+    <div class="modal" id="modal-disconnected">
+        <div class="modal-box">
+            <div class="modal-body">
+                <h1>Socket Disconnected. :/</h1>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="assets/scripts/initializer.js"></script>
+    <script type="text/javascript" src="assets/scripts/debug.js"></script>
 </body>
 
 </html>
