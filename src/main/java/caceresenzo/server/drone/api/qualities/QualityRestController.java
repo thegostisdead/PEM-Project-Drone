@@ -76,6 +76,19 @@ public class QualityRestController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	@GetMapping(value = "/qualities/current")
+	public ResponseEntity<Map<String, Object>> qualitiesCurrentGet() {
+		Map<String, Object> response = new HashMap<>();
+		
+		boolean active = flightController.isFlightActive();
+		response.put("active", active);
+		if (active) {
+			response.put("flight", createQualityMap(flightController.getCurrentFlight()));
+		}
+		
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
 	@PostMapping(value = "/qualities/push")
 	public ResponseEntity<Object> qualitiesPost(@RequestBody Map<String, List<ValueHolder>> body) {
 		Map<String, Object> response = new HashMap<>();
@@ -110,6 +123,8 @@ public class QualityRestController {
 			
 			response.put("added_entries_count", addedEntriesCount);
 			response.put("success", true);
+			
+			qualityManager.sendToSocket(body);
 		} else {
 			return new ResponseEntity<>(response, HttpStatus.NOT_ACCEPTABLE);
 		}

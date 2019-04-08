@@ -12,6 +12,7 @@ public class ExchangeManager {
 	public static final String IDENTIFIER_FLIGHT_STARTING = "flight.starting";
 	public static final String IDENTIFIER_FLIGHT_NEW_POINT = "flight.point.new";
 	public static final String IDENTIFIER_FLIGHT_FINISHED = "flight.finished";
+	public static final String IDENTIFIER_QUALITY_NEW_VALUE = "qualities.new";
 	
 	/* Instance */
 	private static ExchangeManager EXCHANGER;

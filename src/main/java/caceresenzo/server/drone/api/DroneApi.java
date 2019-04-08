@@ -126,7 +126,7 @@ public class DroneApi {
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> flightStop() {
 		Map<String, Object> response = new HashMap<>();
-
+		
 		response.put("result", "failed");
 		
 		if (flightController.isFlightActive()) {
@@ -145,30 +145,39 @@ public class DroneApi {
 	public ResponseEntity<Map<String, Object>> flightTest(@PathVariable("eta") String eta) {
 		Map<String, Object> response = new HashMap<>();
 		
-		if (eta.equalsIgnoreCase("stop")) {
-			testThread = null; /* Make it crash */
-			
-			response.put("result", "stop");
-		} else {
-			testThread = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					Random random = new Random();
-					Flight flight = new Flight(new File(new RandomString().nextString()), "hello");
-					
-					flightController.start(flight);
-					
-					while (!testThread.isInterrupted()) {
-						flight.addPoint(new FlightPoint(String.valueOf(random.nextFloat()), String.valueOf(random.nextFloat())));
-						
-						ThreadUtils.sleep(2000);
-					}
+		if (flightController.isFlightActive()) {
+			if (eta.equalsIgnoreCase("stop")) {
+				if (testThread != null) {
+					testThread.interrupt();
+					testThread = null; /* Make it crash */
 				}
-			});
-			
-			testThread.start();
-			
-			response.put("result", "start");
+				
+				response.put("result", "stop");
+			} else {
+				testThread = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						Random random = new Random();
+						final Flight flight = flightController.getCurrentFlight();
+						
+						while (!testThread.isInterrupted()) {
+							if (flight != flightController.getCurrentFlight()) {
+								break;
+							}
+							
+							flight.addPoint(new FlightPoint(String.valueOf(random.nextFloat()), String.valueOf(random.nextFloat())));
+							
+							ThreadUtils.sleep(2000);
+						}
+					}
+				});
+				
+				testThread.start();
+				
+				response.put("result", "start");
+			}
+		} else {
+			response.put("result", "not start");
 		}
 		
 		return new ResponseEntity<>(response, HttpStatus.OK);

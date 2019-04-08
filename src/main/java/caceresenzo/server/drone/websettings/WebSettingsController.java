@@ -136,7 +136,7 @@ public class WebSettingsController {
 		Map<String, Object> response = new HashMap<>();
 		response.put(JSON_KEY_UPDATED_ITEMS, updatedItems);
 		
-		return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 }

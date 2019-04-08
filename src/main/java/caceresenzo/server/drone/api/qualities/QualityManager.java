@@ -7,11 +7,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import caceresenzo.libs.json.JsonArray;
+import caceresenzo.libs.json.JsonObject;
 import caceresenzo.server.drone.Config;
 import caceresenzo.server.drone.api.flight.FlightController;
 import caceresenzo.server.drone.api.flight.models.Flight;
@@ -19,6 +22,7 @@ import caceresenzo.server.drone.api.qualities.models.PhysicalQuality;
 import caceresenzo.server.drone.api.qualities.models.ValueHolder;
 import caceresenzo.server.drone.storage.SqliteStorage;
 import caceresenzo.server.drone.utils.Initializable;
+import caceresenzo.server.drone.websocket.ExchangeManager;
 
 public class QualityManager implements Initializable {
 	
@@ -31,6 +35,7 @@ public class QualityManager implements Initializable {
 	/* Managers */
 	private QualityRegistry qualityRegistry;
 	private FlightController flightController;
+	private ExchangeManager exchangeManager;
 	
 	/* Variables */
 	private final Map<Flight, Map<PhysicalQuality, List<ValueHolder>>> cache;
@@ -46,6 +51,7 @@ public class QualityManager implements Initializable {
 	@Override
 	public void initialize() {
 		flightController = FlightController.getFlightController();
+		exchangeManager = ExchangeManager.getExchangerManager();
 	}
 	
 	/**
@@ -164,8 +170,39 @@ public class QualityManager implements Initializable {
 		if (currentFlightSqliteStorage != null && currentFlightSqliteStorage.isConnected()) {
 			currentFlightSqliteStorage.execute(String.format("INSERT INTO `%s` (date, content) VALUES (%s, \"%s\");", physicalQuality.getName(), valueHolder.getDate(), valueHolder.getContent()));
 			
-			getCache(flightController.getCurrentFlight()).get(physicalQuality).add(valueHolder);
+			List<ValueHolder> cache = getCache(flightController.getCurrentFlight()).get(physicalQuality);
+			
+			cache.add(valueHolder);
+			
+			while (cache.size() > Config.API_PHYSICAL_QUALITIES_REQUEST_MAX_VALUE_SIZE) {
+				cache.remove(0);
+			}
 		}
+	}
+	
+	public void sendToSocket(Map<String, List<ValueHolder>> body) {
+		JsonObject jsonObject = new JsonObject();
+		
+		jsonObject.put("max_size", Config.API_PHYSICAL_QUALITIES_REQUEST_MAX_VALUE_SIZE);
+		jsonObject.put("flight", flightController.getCurrentFlight().toMoreDetailedJsonObject());
+		
+		JsonObject newValuesPart = new JsonObject();
+		jsonObject.put("new_values", newValuesPart);
+		
+		for (Entry<String, List<ValueHolder>> entry : body.entrySet()) {
+			String physicalQuality = entry.getKey();
+			List<ValueHolder> valueHolders = entry.getValue();
+			
+			JsonArray valueArray = new JsonArray();
+			
+			for (ValueHolder valueHolder : valueHolders) {
+				valueArray.add(valueHolder.toJsonObject());
+			}
+			
+			newValuesPart.put(physicalQuality, valueArray);
+		}
+		
+		exchangeManager.send(ExchangeManager.IDENTIFIER_QUALITY_NEW_VALUE, jsonObject);
 	}
 	
 	public Map<PhysicalQuality, List<ValueHolder>> getCache(Flight flight) {

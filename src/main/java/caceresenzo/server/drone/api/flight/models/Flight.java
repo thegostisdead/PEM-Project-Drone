@@ -197,7 +197,7 @@ public class Flight {
 		
 		JsonObject jsonObject = toJsonObject();
 		
-		jsonObject.put("local_file", getLocalFile().getName());
+		jsonObject.put("local_file", getLocalFileName());
 		
 		List<String> pictureReferences = new ArrayList<>();
 		pictureManager.getPicturesByFlight(this).forEach(picture -> pictureReferences.add(picture.toReference().getReference()));

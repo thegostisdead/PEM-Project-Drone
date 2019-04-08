@@ -2,6 +2,8 @@ package caceresenzo.server.drone.api.qualities.models;
 
 import java.util.Date;
 
+import caceresenzo.libs.json.JsonObject;
+
 public class ValueHolder {
 	
 	/* Variables */
@@ -37,6 +39,15 @@ public class ValueHolder {
 	/** @return The content of this holder. */
 	public String getContent() {
 		return content;
+	}
+
+	public JsonObject toJsonObject() {
+		JsonObject jsonObject = new JsonObject();
+		
+		jsonObject.put("date", getDate());
+		jsonObject.put("content", getContent());
+		
+		return jsonObject;
 	}
 	
 }
