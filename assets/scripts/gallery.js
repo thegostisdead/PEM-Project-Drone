@@ -56,6 +56,10 @@ class Gallery {
                 let mutedClassPart = !active ? " class=\"text-muted\"" : "";
                 let durationPart = flight.end == 0 ? "toujours en cours" : new Date(flight.end - flight.start).toSimpleHourString();
 
+                if (flight.rushed) {
+                    durationPart = "Terminé prématurément";
+                }
+
                 html += "<a data-flight=\"" + flight.local_file + "\" onclick=\"Gallery.selectFlight(this);\" href=\"#\" class=\"gallery-flight-item list-group-item list-group-item-action\">";
                 html += "	<div class=\"d-flex w-100 justify-content-between\">\n";
                 html += "		<h5 class=\"mb-1\">" + flight.name + "</h5>\n";

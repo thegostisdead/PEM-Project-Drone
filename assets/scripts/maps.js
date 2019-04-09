@@ -61,7 +61,7 @@ function initialize() {
         console.log(event.keyCode);
     });
 
-    DroneSocket.subscribe("flight.point.new", function(identifier, json) {
+    DroneSocket.subscribe(["flight.point.new"], function(identifier, json) {
         let latLng = new google.maps.LatLng(json.position.latitude, json.position.longitude);
 
         map.setCenter(latLng);

@@ -53,8 +53,6 @@ class Statistics {
         Statistics.DIVS.FLIGHTS.innerHTML = HTML_PART_LOADER;
 
         DroneApi.call(ENDPOINT_FLIGHTS, function(json, success) {
-            //console.log(json);
-
             if (!success) {
                 log("Failed to fetch flights.");
                 return true;
@@ -103,8 +101,6 @@ class Statistics {
     }
 
     static selectFlight(div) {
-        console.log(div);
-
         Statistics.unselectAllFlights();
         Statistics.DIVS.GRAPHS.innerHTML = HTML_PART_LOADER;
 
@@ -113,8 +109,6 @@ class Statistics {
         let endpoint = isCurrent ? ENDPOINT_QUALITIES_DATA_CURRENT : ENDPOINT_QUALITIES_DATA_ALL;
 
         DroneApi.call(endpoint, function(json, success) {
-            //console.log(json);
-
             if (!success) {
                 log("Failed to fetch qualities data.");
                 return true;
@@ -131,14 +125,14 @@ class Statistics {
                 for (let quality in loaded) {
                     quality = loaded[quality];
                     let name = quality.name;
-                    let values = qualities[name];
+                    let valueHolders = qualities[name];
 
-                    callback(quality, name, values);
+                    callback(quality, name, valueHolders);
                 }
             };
 
             let html = "";
-            forEach(function(quality, name, values) {
+            forEach(function(quality, name, valueHolders) {
                 let unit = quality.unit;
 
                 html += "<div class=\"chart-container\" style=\"width:400px; height:200px; float:left; display: inline-block; margin: 12px;\">";
@@ -149,48 +143,30 @@ class Statistics {
             Statistics.DIVS.GRAPHS.innerHTML = html;
 
             Statistics.currentFlightCharts = isCurrent ? {} : null;
-            forEach(function(quality, name, values) {
-                let dayMap = new Map();
-
+            forEach(function(quality, name, valueHolders) {
                 let labels = [];
-                for (let value of values) {
-                    let date = new Date(value.date).rounded().getTime();
-                    let valueArray;
+                let values = [];
 
-                    labels.unshift(new Date(value.date).toSimpleHourString());
-
-                    if (dayMap.has(date)) {
-                        valueArray = dayMap.get(date);
-                    } else {
-                        dayMap.set(date, valueArray = []);
-                    }
-
-                    valueArray.unshift(value.content);
+                for (let valueHolder of valueHolders) {
+                    labels.unshift(new Date(valueHolder.date).toSimpleHourString());
+                    values.unshift(valueHolder.content);
                 }
-
-                let datasets = [];
-
-                dayMap.forEach(function(value, key, map) {
-                    console.log(value);
-
-                    datasets.push({
-                        "label": name,
-                        "data": value,
-                        "fill": false,
-                        "borderColor": "" + ("rgb(" + random(0, 255) + ", " + random(0, 255) + ", " + random(0, 255) + ")"),
-                        "lineTension": 0.1
-                    });
-                });
 
                 let chart = new Chart(document.getElementById("statistics-chart-" + name), {
                     "type": "line",
                     "data": {
                         "labels": labels,
-                        "datasets": datasets
+                        "datasets": [{
+                            "label": name,
+                            "data": values,
+                            "fill": false,
+                            "borderColor": "" + ("rgb(" + random(0, 255) + ", " + random(0, 255) + ", " + random(0, 255) + ")"),
+                            "lineTension": 0.1
+                        }]
                     },
                     "options": {
                         "legend": {
-                            "display": true
+                            "display": false
                         },
                         "scales": {
                             "yAxes": [{
@@ -207,15 +183,10 @@ class Statistics {
                     Statistics.currentFlightCharts[name] = chart;
                 }
             });
-
-
-            console.log(qualities);
         });
     }
 
     static updateCurrentFlightGraphs(data) {
-        console.log(data);
-
         let newValues = data.new_values;
         let maxValueSize = data.max_size;
 
@@ -228,10 +199,6 @@ class Statistics {
             if (values == null) {
                 continue;
             }
-
-            //console.log(values)
-            //console.log(quality);
-            //console.log(chart);
 
             for (let valueHolder of values) {
                 let labels = chart.data.labels;
