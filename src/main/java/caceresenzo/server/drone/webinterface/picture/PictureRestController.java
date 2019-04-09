@@ -54,7 +54,7 @@ public class PictureRestController {
 			
 			String group = "unknown";
 			if (flight != null) {
-				group = flight.getLocalFile().getName();
+				group = flight.getLocalFileName();
 			}
 			
 			response.put(group, picturesJsonArray);
