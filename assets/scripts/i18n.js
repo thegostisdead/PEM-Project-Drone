@@ -8,10 +8,16 @@ class i18n {
             "SETTINGS_SECTION": document.getElementById("settings-section-i18n")
         }
 
+        i18n.COOKIES = {
+            "LANGUAGE": {
+                name: "language",
+                default: LANGUAGE_DEFAULT
+            }
+        }
+
         i18n.registerHardcodedLanguages();
         i18n.prepareSettingsSection();
-
-        i18n.selectLanguage(LANGUAGE_DEFAULT);
+        i18n.restoreLanguageFromCookies();
     }
 
     static registerHardcodedLanguages() {
@@ -72,11 +78,23 @@ class i18n {
         i18n.DIVS.SETTINGS_SECTION.innerHTML = html;
     }
 
+    static restoreLanguageFromCookies() {
+        let cookieLanguage = Cookies.get(i18n.COOKIES.LANGUAGE.name);
+        let correspondingLanguage = i18n.translation[cookieLanguage];
+
+        if (cookieLanguage == null || correspondingLanguage == null) {
+            correspondingLanguage = i18n.translation[i18n.COOKIES.LANGUAGE.default];
+        }
+
+        i18n.selectLanguage(correspondingLanguage.code);
+    }
+
     static registerLanguage(code, name) {
         return i18n.translation[code] = new LanguageMap(code, name);
     }
 
     static selectLanguage(code, sourceElement) {
+        Cookies.set(i18n.COOKIES.LANGUAGE.name, code);
         i18n.language = i18n.translation[code];
 
         let elements = document.getElementsByClassName("translatable");
