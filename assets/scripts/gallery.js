@@ -54,10 +54,10 @@ class Gallery {
 
                 let active = index == 0 && firstIsCurrent;
                 let mutedClassPart = !active ? " class=\"text-muted\"" : "";
-                let durationPart = flight.end == 0 ? "toujours en cours" : new Date(flight.end - flight.start).toSimpleHourString();
+                let durationPart = flight.end == 0 ? i18n.get("flight.list.lasted.running") : new Date(flight.end - flight.start).toSimpleHourString();
 
                 if (flight.rushed) {
-                    durationPart = "Terminé prématurément";
+                    durationPart = i18n.get("flight.list.lasted.rushed");
                 }
 
                 html += "<a data-flight=\"" + flight.local_file + "\" onclick=\"Gallery.selectFlight(this);\" href=\"#\" class=\"gallery-flight-item list-group-item list-group-item-action\">";
@@ -65,7 +65,7 @@ class Gallery {
                 html += "		<h5 class=\"mb-1\">" + flight.name + "</h5>\n";
                 html += "		<small>" + new Date(flight.start).toLocaleString() + "</small>\n";
                 html += "	</div>\n";
-                html += "	<p class=\"mb-1\">Durée de vol : " + durationPart + ".</p>";
+                html += "	<p class=\"mb-1\">" + i18n.get("flight.list.lasted") + " : " + durationPart + ".</p>";
                 // html += " <small" + mutedClassPart + ">Nombre de photo prises:</small>\n";
                 // html += " <span class=\"badge badge-primary badge-pill\">" + flight.pictures.length + "</span>\n";
                 html += "</a>\n";
@@ -73,7 +73,7 @@ class Gallery {
 
             html += "<a data-flight=\"unknown\" onclick=\"Gallery.selectFlight(this);\" href=\"#\" class=\"gallery-flight-item list-group-item list-group-item-action\">";
             html += "	<div class=\"d-flex w-100 justify-content-between\">\n";
-            html += "		<h5 class=\"mb-1\">Autres</h5>\n";
+            html += "		<h5 class=\"mb-1\">" + i18n.get("flight.list.item.others") + "</h5>\n";
             html += "	</div>\n";
             html += "</a>\n";
 
@@ -133,7 +133,7 @@ class Gallery {
                     Gallery.addPicture(picture);
                 }
             } else {
-                Gallery.DIVS.PICTURES.innerHTML = "Aucune image.";
+                Gallery.DIVS.PICTURES.innerHTML = i18n.get("gallery.text.no-picture");
             }
         });
     }
@@ -141,7 +141,8 @@ class Gallery {
     static addPicture(picture) {
         let html = Gallery.DIVS.PICTURES.innerHTML;
 
-        if (html == "Aucune image.") {
+        let nodes = Gallery.DIVS.PICTURES.childNodes;
+        if (nodes.length == 1 && nodes[0].tagName != "DIV") {
             html = "";
         }
 

@@ -1,4 +1,6 @@
 window.addEventListener("load", function(event) {
+    i18n.initialize();
+
     DroneSocket.initialize();
     DroneSocket.connect();
 
@@ -38,6 +40,6 @@ window.addEventListener("load", function(event) {
     DroneSocket.addListener("onerror", function(error) {
         document.getElementById("modal-disconnected").style.display = "block";
     });
-    
+
     DroneDebug.tryToRemoveGoogleMapDialog();
 });

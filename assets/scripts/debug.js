@@ -30,11 +30,18 @@ class DroneDebug {
         let count = 0;
         let id = setInterval(function() {
             if (nodes.length > 1) {
-                element.removeChild(nodes[1]);
+                try {
+                    element.removeChild(nodes[1]);
+                    console.log("Debug: Removed Google Map error dialog.");
+                } catch (error) {
+                    console.error("Debug: Failed to remove Google Map error dialog.", error);
+                }
+                
                 clearInterval(id);
             }
 
             if(++count > 40) {
+                console.log("Debug: Cancelled interval, limit reached.");
                 clearInterval(id);
             }
         }, 250);

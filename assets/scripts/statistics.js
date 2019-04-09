@@ -153,26 +153,35 @@ class Statistics {
                 }
 
                 let chart = new Chart(document.getElementById("statistics-chart-" + name), {
-                    "type": "line",
-                    "data": {
-                        "labels": labels,
-                        "datasets": [{
-                            "label": name,
-                            "data": values,
-                            "fill": false,
-                            "borderColor": "" + ("rgb(" + random(0, 255) + ", " + random(0, 255) + ", " + random(0, 255) + ")"),
-                            "lineTension": 0.1
+                    type: "line",
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: name,
+                            data: values,
+                            fill: false,
+                            borderColor: "" + ("rgb(" + random(0, 255) + ", " + random(0, 255) + ", " + random(0, 255) + ")"),
+                            lineTension: 0.1
                         }]
                     },
-                    "options": {
-                        "legend": {
-                            "display": false
+                    options: {
+                        legend: {
+                            display: false
                         },
-                        "scales": {
-                            "yAxes": [{
-                                "ticks": {
-                                    "suggestedMin": 0,
-                                    "suggestedMax": 50
+                        tooltips: {
+                            callbacks: {
+                                label: function(tooltipItem, data) {
+                                    let quality = data.datasets[0].label;
+                                    
+                                    return i18n.get("quality." + quality) + ": " + tooltipItem.yLabel + " " + Statistics.loadedPhysicalQualities[quality].unit;
+                                }
+                            }
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    suggestedMin: 0,
+                                    suggestedMax: 50
                                 }
                             }]
                         }
