@@ -5,7 +5,9 @@
 }
 
  .tooltiptext {
- 	z-index: 100000;
+ 	z-index: 10;
+    margin-left: 40px;
+    margin-top: -40px;
  }
 
 .tooltip-container .tooltiptext {

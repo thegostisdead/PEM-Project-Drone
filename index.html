@@ -36,24 +36,25 @@
 <body>
     <div id="container">
         <div class="left-fixed-navbar">
-            <a href="#remote" class="tooltip-container">
-                <i class="fas fa-gamepad"></i>
-            </a>
-            <a href="#settings" class="tooltip-container">
-                <i class="fas fa-cog"></i>
-            </a>
-            <a href="#" class="modal-trigger" data-modal="modal-statistics" class="tooltip-container">
+            <a href="#" class="modal-trigger tooltip-container" data-modal="modal-statistics">
                 <i class="fas fa-chart-line"></i>
+                <div data-i18n="section.tooltip.statistics" class="tooltiptext translatable">?</div>
             </a>
-            <a href="#" class="modal-trigger" data-modal="modal-gallery" class="tooltip-container">
+            <a href="#" class="modal-trigger tooltip-container" data-modal="modal-gallery">
                 <i class="fas fa-camera"></i>
+                <div data-i18n="section.tooltip.gallery" class="tooltiptext translatable">?</div>
             </a>
-            <a href="#" class="modal-trigger" data-modal="modal-debug" class="tooltip-container">
+            <a href="#" class="modal-trigger tooltip-container" data-modal="modal-debug">
                 <i class="fas fa-check"></i>
+                <div data-i18n="section.tooltip.debug" class="tooltiptext translatable">?</div>
+            </a>
+            <a href="#" class="modal-trigger tooltip-container" data-modal="modal-settings">
+                <i class="fas fa-cog"></i>
+                <div data-i18n="section.tooltip.settings" class="tooltiptext translatable">?</div>
             </a>
             <a href="#" onclick="DroneMap.toggleLock();" class="tooltip-container">
                 <i id="map-lock-toggle-icon" class="fas fa-lock"></i>
-                <div class="tooltiptext ">Activer/désactiver le controle de la carte</div>
+                <div data-i18n="section.tooltip.map-lock-toggle" class="tooltiptext translatable">?</div>
             </a>
         </div>
         <div class="right-fixed-overview">
@@ -122,6 +123,21 @@
                         response:
                         <a id="debug-flight-stop-response">-/-</a>
                     </p>
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="modal-settings">
+        <div class="modal-sandbox"></div>
+        <div class="modal-box">
+            <div class="modal-body">
+                <div>
+                    <h3 class="translatable" data-i18n="section.modal.settings.header">Settings v0</h3>
+                    <div id="settings-section-i18n">
+                        <!-- Replaced with JS code -->
+                    </div>
                 </div>
                 <br>
             </div>
