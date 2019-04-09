@@ -135,8 +135,10 @@ class Statistics {
             forEach(function(quality, name, valueHolders) {
                 let unit = quality.unit;
 
+                let i18nKey = "quality." + name;
+
                 html += "<div class=\"chart-container\" style=\"width:400px; height:200px; float:left; display: inline-block; margin: 12px;\">";
-                html += "	<h2>" + name + " (" + unit + ")</h2>";
+                html += "	<h2 class=\"translatable\" data-i18n=\"" + i18nKey + "\">" + i18n.get(i18nKey) + "</h2><h6>(" + unit + ")</h6>";
                 html += "	<canvas id=\"statistics-chart-" + name + "\"></canvas>";
                 html += "</div>";
             });

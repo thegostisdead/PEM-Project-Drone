@@ -54,18 +54,27 @@ class Gallery {
 
                 let active = index == 0 && firstIsCurrent;
                 let mutedClassPart = !active ? " class=\"text-muted\"" : "";
-                let durationPart = flight.end == 0 ? i18n.get("flight.list.lasted.running") : new Date(flight.end - flight.start).toSimpleHourString();
+                let durationPart, durationTranslatablePart;
+                
+                if (flight.end == 0) {
+                    durationTranslatablePart = "flight.list.lasted.running";
 
-                if (flight.rushed) {
-                    durationPart = i18n.get("flight.list.lasted.rushed");
+                    if (flight.rushed) {
+                        durationTranslatablePart = "flight.list.lasted.rushed";
+                    }
+
+                    durationPart = i18n.get(durationTranslatablePart);
+                } else {
+                    durationPart = new Date(flight.end - flight.start).toSimpleHourString();
                 }
+               
 
                 html += "<a data-flight=\"" + flight.local_file + "\" onclick=\"Gallery.selectFlight(this);\" href=\"#\" class=\"gallery-flight-item list-group-item list-group-item-action\">";
                 html += "	<div class=\"d-flex w-100 justify-content-between\">\n";
                 html += "		<h5 class=\"mb-1\">" + flight.name + "</h5>\n";
                 html += "		<small>" + new Date(flight.start).toLocaleString() + "</small>\n";
                 html += "	</div>\n";
-                html += "	<p class=\"mb-1\">" + i18n.get("flight.list.lasted") + " : " + durationPart + ".</p>";
+                html += "	<p class=\"same-line translatable\" data-i18n=\"flight.list.lasted\">" + i18n.get("flight.list.lasted") + "</p> : <p class=\"same-line" + (durationTranslatablePart != null ? " translatable" : "") + "\"" + (durationTranslatablePart != null ? " data-i18n=\"" + durationTranslatablePart + "\"" : "") + ">" + durationPart + "</p>.";
                 // html += " <small" + mutedClassPart + ">Nombre de photo prises:</small>\n";
                 // html += " <span class=\"badge badge-primary badge-pill\">" + flight.pictures.length + "</span>\n";
                 html += "</a>\n";
@@ -73,7 +82,7 @@ class Gallery {
 
             html += "<a data-flight=\"unknown\" onclick=\"Gallery.selectFlight(this);\" href=\"#\" class=\"gallery-flight-item list-group-item list-group-item-action\">";
             html += "	<div class=\"d-flex w-100 justify-content-between\">\n";
-            html += "		<h5 class=\"mb-1\">" + i18n.get("flight.list.item.others") + "</h5>\n";
+            html += "		<h5 class=\"mb-1 translatable\" data-i18n=\"flight.list.item.others\">" + i18n.get("flight.list.item.others") + "</h5>\n";
             html += "	</div>\n";
             html += "</a>\n";
 

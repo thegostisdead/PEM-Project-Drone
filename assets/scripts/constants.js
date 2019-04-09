@@ -18,5 +18,7 @@ const ENDPOINT_PICTURE_LIST = "storage/pictures"
 const WEB_SOCKET_HOST = REMOTE_URL;
 const WEB_SOCKET_PORT = "8082";
 
+const LANGUAGE_DEFAULT = "en";
+
 const HTML_PART_LOADER = "<div class=\"lds-ellipsis\"><div></div><div></div><div></div><div></div></div>";
 const MAP_START_POSITION = [47.1920857, 2.3766726];

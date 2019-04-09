@@ -11,7 +11,7 @@ class i18n {
         i18n.registerHardcodedLanguages();
         i18n.prepareSettingsSection();
 
-        i18n.selectLanguage("en");
+        i18n.selectLanguage(LANGUAGE_DEFAULT);
     }
 
     static registerHardcodedLanguages() {
@@ -60,13 +60,14 @@ class i18n {
         for (let language in i18n.translation) {
             language = i18n.translation[language];
 
-            html += "<a onclick=\"i18n.selectLanguage('" + language.code + "', this);\" href=\"#\" class=\"settings-item-language list-group-item list-group-item-action\">";
+            let activePart = language.code == LANGUAGE_DEFAULT ? "active " : "";
+
+            html += "<a onclick=\"i18n.selectLanguage('" + language.code + "', this);\" href=\"#\" class=\"" + activePart + "settings-item-language list-group-item list-group-item-action\">";
             html += "	<div class=\"d-flex w-100 justify-content-between\">\n";
             html += "		<h5 class=\"mb-1\">" + language.name + "</h5>\n";
             html += "	</div>\n";
             html += "</a>\n";
         }
-
 
         i18n.DIVS.SETTINGS_SECTION.innerHTML = html;
     }
