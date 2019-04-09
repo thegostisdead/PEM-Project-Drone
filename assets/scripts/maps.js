@@ -3,20 +3,12 @@ var map;
 class DroneMap {
 
     static initialize() {
+        DroneMap.locked = true;
+
         DroneMap.map = map = new google.maps.Map(document.getElementById("map-canvas"), {
             zoom: 16,
             center: new google.maps.LatLng(MAP_START_POSITION[0], MAP_START_POSITION[1]),
-            mapTypeId: google.maps.MapTypeId.HYBRID//,
-            //keyboardShortcuts: false,
-            //scrollwheel: false,
-            //gestureHandling: "none",
-            //panControl: false,
-    
-            /* The enabled/disabled state of the Fullscreen control. */
-            //fullscreenControl: false,
-    
-            /* The enabled/disabled state of the Zoom control. */
-            //zoomControl: false
+            mapTypeId: google.maps.MapTypeId.HYBRID
         });
 
         DroneMap.MARKERS = {
@@ -39,12 +31,29 @@ class DroneMap {
                     origin: new google.maps.Point(0, 0),
                     anchor: new google.maps.Point(25, 50)
                 }
-            })
+            }),
         };
+
+        DroneMap.DIVS = {
+            "LOCK_TOGGLE_ICON": document.getElementById("map-lock-toggle-icon")
+        }
+
+        DroneMap.COOKIES = {
+            "LOCKED_STATE": {
+                name: "map-locked-state",
+                default: true
+            }
+        }
+
+        DroneMap.ICONS = {
+            "LOCK": "fas fa-lock",
+            "UNLOCK": "fas fa-unlock",
+        }
 
         DroneMap.initializeFlighPlan();
         DroneMap.registerListeners();
         DroneMap.subscribeToSocket();
+        DroneMap.restoreLockState();
     }
 
     static initializeFlighPlan() {
@@ -87,14 +96,24 @@ class DroneMap {
         });
     }
 
+    static restoreLockState() {
+        let cookieLockedState = Cookies.get(DroneMap.COOKIES.LOCKED_STATE.name);
+
+        if (cookieLockedState == null) {
+            cookieLockedState = DroneMap.COOKIES.LOCKED_STATE.default;
+        } else {
+            cookieLockedState = cookieLockedState.toBoolean();
+        }
+
+        console.log("Map: Restored lock state to: " + cookieLockedState);
+
+        DroneMap.lockMapControls(cookieLockedState);
+    }
+
     static appendFlightPlanCoordinates(latLng) {
         DroneMap.flightPath.getPath().push(latLng);
 
         console.log("Added point to flight plan (" + latLng.lat() + " , " + latLng.lng() + ")");
-    }
-
-    static attachGoogleMap(map) {
-        DroneMap.map = map;
     }
 
     static displayCoordinates(position) {
@@ -102,6 +121,32 @@ class DroneMap {
         var lng = position.lng().toFixed(4);
 
         console.log("Latitude: " + lat + " // Longitude: " + lng);
+    }
+
+    static toggleLock() {
+        DroneMap.lockMapControls(!DroneMap.locked);
+    }
+
+    static lockMapControls(lockState) {
+        Cookies.set(DroneMap.COOKIES.LOCKED_STATE.name, lockState);
+        DroneMap.locked = lockState;
+
+        let iconElement = DroneMap.DIVS.LOCK_TOGGLE_ICON;
+        iconElement.removeAttribute("class");
+        iconElement.setAttribute("class", DroneMap.ICONS[lockState ? "LOCK" : "UNLOCK"]);
+        
+        DroneMap.map.setOptions({
+            keyboardShortcuts: !lockState,
+            scrollwheel: !lockState,
+            gestureHandling: lockState ? "none" : "auto",
+            panControl: !lockState,
+
+            /* The enabled/disabled state of the Fullscreen control. */
+            fullscreenControl: !lockState,
+
+            /* The enabled/disabled state of the Zoom control. */
+            zoomControl: !lockState
+        });
     }
 
 }

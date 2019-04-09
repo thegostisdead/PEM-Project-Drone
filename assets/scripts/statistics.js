@@ -160,7 +160,7 @@ class Statistics {
                             label: name,
                             data: values,
                             fill: false,
-                            borderColor: "" + ("rgb(" + random(0, 255) + ", " + random(0, 255) + ", " + random(0, 255) + ")"),
+                            borderColor: "rgb(84, 110, 122)",
                             lineTension: 0.1
                         }]
                     },

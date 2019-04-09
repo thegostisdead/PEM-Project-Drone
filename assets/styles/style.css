@@ -39,8 +39,7 @@ body {
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #111;
-    opacity: 0.5;
+    background-color: rgba(17, 17, 17, 0.5);
     /* opacity IMPORTANT*/
     overflow-x: hidden;
     padding-top: 20px;

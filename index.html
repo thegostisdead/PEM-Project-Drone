@@ -12,6 +12,7 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyBTBT9HqdZF0xrAqY3lYmJISVYK65EN0cY"></script>
 
+    <script type="text/javascript" src="assets/libraries/js-cookie/js.cookie.min.js"></script>
     <script type="text/javascript" src="assets/libraries/chart.js/Chart.min.js"></script>
 
     <!-- Project -->
@@ -19,6 +20,7 @@
     <link rel="stylesheet" href="assets/styles/modal.css">
     <link rel="stylesheet" href="assets/styles/gallery.css">
     <link rel="stylesheet" href="assets/styles/loader.css">
+    <link rel="stylesheet" href="assets/styles/tooltips.css">
 
     <script type="text/javascript" src="assets/scripts/constants.js"></script>
     <script type="text/javascript" src="assets/scripts/utils.js"></script>
@@ -34,20 +36,24 @@
 <body>
     <div id="container">
         <div class="left-fixed-navbar">
-            <a href="#remote">
+            <a href="#remote" class="tooltip-container">
                 <i class="fas fa-gamepad"></i>
             </a>
-            <a href="#settings">
+            <a href="#settings" class="tooltip-container">
                 <i class="fas fa-cog"></i>
             </a>
-            <a href="#" class="modal-trigger" data-modal="modal-statistics">
+            <a href="#" class="modal-trigger" data-modal="modal-statistics" class="tooltip-container">
                 <i class="fas fa-chart-line"></i>
             </a>
-            <a href="#" class="modal-trigger" data-modal="modal-gallery">
+            <a href="#" class="modal-trigger" data-modal="modal-gallery" class="tooltip-container">
                 <i class="fas fa-camera"></i>
             </a>
-            <a href="#" class="modal-trigger" data-modal="modal-debug">
+            <a href="#" class="modal-trigger" data-modal="modal-debug" class="tooltip-container">
                 <i class="fas fa-check"></i>
+            </a>
+            <a href="#" onclick="DroneMap.toggleLock();" class="tooltip-container">
+                <i id="map-lock-toggle-icon" class="fas fa-lock"></i>
+                <div class="tooltiptext ">Activer/désactiver le controle de la carte</div>
             </a>
         </div>
         <div class="right-fixed-overview">
