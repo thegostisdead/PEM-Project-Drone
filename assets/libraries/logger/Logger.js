@@ -328,7 +328,7 @@ var Logger = (function()
                 var msgNode = document.createTextNode(line);
                 msgDiv.appendChild(msgNode); */
                 let messageTextDiv = document.createElement("p");
-                messageTextDiv.setAttribute("style", "display: inline;");
+                messageTextDiv.setAttribute("style", "display: inline;font-family: SFMono-Regular,Menlo,Monaco,Consolas,\"Liberation Mono\",\"Courier New\",monospace;");
                 messageTextDiv.innerHTML = lines[i];
                 msgDiv.appendChild(messageTextDiv);
                 

@@ -7,6 +7,7 @@ class Statistics {
         }
 
         Statistics.loadedPhysicalQualities = null;
+        Statistics.maxValueCount = -1;
         Statistics.currentFlightCharts = null;
 
         Statistics.loadPhysicalQualities();
@@ -35,6 +36,7 @@ class Statistics {
             }
 
             Statistics.loadedPhysicalQualities = loaded;
+            Statistics.maxValueCount = json.max_request_size; 
 
             Statistics.subscribeToSocket();
             Statistics.fillStatistics();
@@ -202,6 +204,10 @@ class Statistics {
     }
 
     static updateCurrentFlightGraphs(data) {
+        if (Statistics.currentFlightCharts == null) {
+            return;
+        }
+
         let newValues = data.new_values;
         let maxValueSize = data.max_size;
 
@@ -211,7 +217,7 @@ class Statistics {
 
             let values = newValues[quality];
 
-            if (values == null) {
+            if (chart == null || values == null) {
                 continue;
             }
 

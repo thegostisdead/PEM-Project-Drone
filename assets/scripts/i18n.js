@@ -23,6 +23,7 @@ class i18n {
     static registerHardcodedLanguages() {
         let english = i18n.registerLanguage("en", "English");
         english.set("date.at", "at");
+        english.set("socket.error.disconnected", "Socket disconnected.");
         english.set("quality.temperature", "Temperature");
         english.set("quality.pressure", "Pressure");
         english.set("quality.humidity", "Humidity");
@@ -41,6 +42,7 @@ class i18n {
 
         let french = i18n.registerLanguage("fr", "Français");
         french.set("date.at", "à");
+        french.set("socket.error.disconnected", "Flux de données déconnecté.");
         french.set("quality.temperature", "Température");
         french.set("quality.pressure", "Pression");
         french.set("quality.humidity", "Humidité");
@@ -97,7 +99,19 @@ class i18n {
         Cookies.set(i18n.COOKIES.LANGUAGE.name, code);
         i18n.language = i18n.translation[code];
 
-        let elements = document.getElementsByClassName("translatable");
+        i18n.applyOn(document);
+
+        if (sourceElement != null) {
+            for (let element of document.getElementsByClassName("settings-item-language")) {
+                element.classList.remove("active");
+            }
+
+            sourceElement.classList.add("active");
+        }
+    }
+
+    static applyOn(container) {
+        let elements = container.getElementsByClassName("translatable");
         for (let element of elements) {
             let dataset = element.dataset;
             let key = dataset["i18n"];
@@ -107,14 +121,6 @@ class i18n {
             } else {
                 element.innerHTML = i18n.get(key);
             }
-        }
-
-        if (sourceElement != null) {
-            for (let element of document.getElementsByClassName("settings-item-language")) {
-                element.classList.remove("active");
-            }
-
-            sourceElement.classList.add("active");
         }
     }
 
