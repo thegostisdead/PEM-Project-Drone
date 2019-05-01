@@ -27,6 +27,7 @@ public class QualityRegistry {
 	/* Constants */
 	public static final String JSON_KEY_PHYSICAL_QUALITY_NAME = "name";
 	public static final String JSON_KEY_PHYSICAL_QUALITY_UNIT = "unit";
+	public static final String JSON_KEY_PHYSICAL_QUALITY_USE_GRAPH = "use_graph";
 	public static final String JSON_KEY_PHYSICAL_QUALITY_VALUES = "values";
 	
 	/* Static */
@@ -80,9 +81,10 @@ public class QualityRegistry {
 					
 					String name = (String) map.get(JSON_KEY_PHYSICAL_QUALITY_NAME);
 					String unit = (String) map.get(JSON_KEY_PHYSICAL_QUALITY_UNIT);
+					boolean useGraph = (boolean) map.getOrDefault(JSON_KEY_PHYSICAL_QUALITY_USE_GRAPH, true);
 					
-					if (StringUtils.validate(name, unit)) {
-						qualities.add(new PhysicalQuality(unit, name));
+					if (StringUtils.validate(name)) {
+						qualities.add(new PhysicalQuality(unit, name, useGraph));
 					}
 				}
 			}
@@ -96,6 +98,7 @@ public class QualityRegistry {
 		Map<String, Object> response = new HashMap<>();
 		
 		response.put("loaded", qualities);
+		response.put("max_request_size", Config.API_PHYSICAL_QUALITIES_REQUEST_MAX_VALUE_SIZE);
 		
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}

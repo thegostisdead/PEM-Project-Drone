@@ -59,6 +59,7 @@ public class QualityRestController {
 			
 			qualityMap.put(QualityRegistry.JSON_KEY_PHYSICAL_QUALITY_NAME, physicalQuality.getName());
 			qualityMap.put(QualityRegistry.JSON_KEY_PHYSICAL_QUALITY_UNIT, physicalQuality.getUnit());
+			qualityMap.put(QualityRegistry.JSON_KEY_PHYSICAL_QUALITY_USE_GRAPH, physicalQuality.isUseGraph());
 			
 			qualitiesPart.put(physicalQuality.getName(), qualityMap);
 		}

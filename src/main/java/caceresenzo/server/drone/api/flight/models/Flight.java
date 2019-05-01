@@ -19,6 +19,7 @@ public class Flight {
 	
 	/* Json Keys */
 	public static final String JSON_KEY_NAME = "name";
+	public static final String JSON_KEY_LOCAL_FILE = "local_file";
 	public static final String JSON_KEY_START = "start";
 	public static final String JSON_KEY_END = "end";
 	public static final String JSON_KEY_RUSHED = "rushed";
@@ -197,7 +198,7 @@ public class Flight {
 		
 		JsonObject jsonObject = toJsonObject();
 		
-		jsonObject.put("local_file", getLocalFileName());
+		jsonObject.put(JSON_KEY_LOCAL_FILE, getLocalFileName());
 		
 		List<String> pictureReferences = new ArrayList<>();
 		pictureManager.getPicturesByFlight(this).forEach(picture -> pictureReferences.add(picture.toReference().getReference()));
@@ -208,9 +209,8 @@ public class Flight {
 	}
 	
 	public JsonObject toJsonObject() {
-		JsonObject jsonObject = new JsonObject();
+		JsonObject jsonObject = toSimpleJsonObject();
 		
-		jsonObject.put(JSON_KEY_NAME, getName());
 		jsonObject.put(JSON_KEY_RUSHED, isRushed());
 		jsonObject.put(JSON_KEY_START, getStart());
 		jsonObject.put(JSON_KEY_END, getEnd());
@@ -219,6 +219,15 @@ public class Flight {
 		points.forEach(flightPoint -> positions.add(flightPoint.toJsonObject()));
 		
 		jsonObject.put(JSON_KEY_POSITIONS, positions);
+		
+		return jsonObject;
+	}
+	
+	public JsonObject toSimpleJsonObject() {
+		JsonObject jsonObject = new JsonObject();
+
+		jsonObject.put(JSON_KEY_NAME, getName());
+		jsonObject.put(JSON_KEY_LOCAL_FILE, getLocalFileName());
 		
 		return jsonObject;
 	}

@@ -16,11 +16,10 @@ gps_latitude = 1.23456
 gps_longitude = 6.54321
 
 header = ""
-#header += "id " + str(picture_id) + "," # disabled to use an random name
+# header += "id " + str(picture_id) + "," # disabled to use an random name
 header += "length " + str(picture_size) + ","
 header += "gps " + str(gps_latitude) + " " + str(gps_longitude)
 header += "\n"
- 
 
 socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 socket.connect((hote, port))
@@ -28,14 +27,13 @@ print ("Connection on {}".format(port))
 
 socket.send(bytearray(header, 'utf-8'))
 size = 0
-#writter = open("hello.jpg", "wb");
+
 with open(picture_path, 'rb') as f:
-   for line in f:
-      size += len(bytearray(line))
-      print(line)
-      #writter.write(bytearray(line))
-      #time.sleep(0.02)
-      socket.send(bytearray(line))
+    for line in f:
+        part = bytearray(line)
+        size += len(part)
+        print(int((size / (picture_size * 1.0)) * 100))
+        socket.send(part)
 print(size)
 
 print ("Close")

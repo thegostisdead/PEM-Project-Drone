@@ -109,7 +109,7 @@ public class QualityManager implements Initializable {
 	 */
 	public void createDefaultTable(SqliteStorage sqliteStorage) {
 		for (PhysicalQuality physicalQuality : qualityRegistry.getLoaded()) {
-			sqliteStorage.execute(String.format("CREATE TABLE IF NOT EXISTS `%s`( `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `content` INTEGER NOT NULL);", physicalQuality.getName()));
+			sqliteStorage.execute(String.format("CREATE TABLE IF NOT EXISTS `%s`( `id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, `date` INTEGER NOT NULL, `content` STRING NOT NULL);", physicalQuality.getName()));
 		}
 	}
 	
@@ -183,8 +183,7 @@ public class QualityManager implements Initializable {
 	public void sendToSocket(Map<String, List<ValueHolder>> body) {
 		JsonObject jsonObject = new JsonObject();
 		
-		jsonObject.put("max_size", Config.API_PHYSICAL_QUALITIES_REQUEST_MAX_VALUE_SIZE);
-		jsonObject.put("flight", flightController.getCurrentFlight().toMoreDetailedJsonObject());
+		jsonObject.put("flight", flightController.getCurrentFlight().toSimpleJsonObject());
 		
 		JsonObject newValuesPart = new JsonObject();
 		jsonObject.put("new_values", newValuesPart);

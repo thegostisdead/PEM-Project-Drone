@@ -4,11 +4,13 @@ public class PhysicalQuality {
 	
 	/* Variables */
 	private final String unit, name;
+	private final boolean useGraph;
 	
 	/** Constructor */
-	public PhysicalQuality(String unit, String name) {
+	public PhysicalQuality(String unit, String name, boolean useGraph) {
 		this.unit = unit;
 		this.name = name;
+		this.useGraph = useGraph;
 	}
 	
 	/** @return The qualilty's unit. */
@@ -19,6 +21,11 @@ public class PhysicalQuality {
 	/** @return The qualilty's name. */
 	public String getName() {
 		return name;
+	}
+	
+	/** @return Weather or not the physical quality can be represented using a graph. */
+	public boolean isUseGraph() {
+		return useGraph;
 	}
 	
 }
