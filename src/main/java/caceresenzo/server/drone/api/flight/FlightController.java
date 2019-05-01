@@ -106,7 +106,7 @@ public class FlightController implements Initializable, Destroyable {
 	public void sendNewPointPosition(FlightPoint flightPoint) {
 		JsonObject jsonObject = new JsonObject();
 		
-		jsonObject.put("flight", currentFlight.getName());
+		jsonObject.put("flight", currentFlight.toSimpleJsonObject());
 		jsonObject.put("position", flightPoint.toJsonObject());
 		
 		exchangeManager.send(ExchangeManager.IDENTIFIER_FLIGHT_NEW_POINT, jsonObject);

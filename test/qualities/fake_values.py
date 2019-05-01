@@ -24,7 +24,12 @@ QUALITIES = {
         }
     }
 }
-DELAY = 5
+OLD_VALUES = {}
+DELAY = 0.1
+
+for quality in QUALITIES:
+    range = QUALITIES[quality]["range"]
+    OLD_VALUES[quality] = (range["min"] + range["max"]) / 2
 
 print(type(QUALITIES));
 print(QUALITIES)
@@ -36,7 +41,11 @@ while True:
         settings = QUALITIES[quality];
         
         range = settings["range"]
-        value = randint(range["min"], range["max"]);
+        value = randint(range["min"], range["max"])
+        
+        old_value = OLD_VALUES[quality]
+        value = (old_value * 2 + value) / 3
+        OLD_VALUES[quality] = value
         
         payload[quality] = [{"date": int(time.time() * 1000) , "content": value}]
     

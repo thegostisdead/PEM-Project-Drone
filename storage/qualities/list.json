@@ -10,5 +10,9 @@
 	{
 		"name": "pressure",
 		"unit": "hPa"
+	},
+	{
+		"name": "position",
+		"use_graph": false
 	}
 ]

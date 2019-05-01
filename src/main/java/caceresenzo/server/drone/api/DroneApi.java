@@ -1,6 +1,7 @@
 package caceresenzo.server.drone.api;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -165,7 +166,14 @@ public class DroneApi {
 								break;
 							}
 							
-							flight.addPoint(new FlightPoint(String.valueOf(random.nextFloat()), String.valueOf(random.nextFloat())));
+							double minLat = -90.00;
+							double maxLat = 90.00;
+							double latitude = minLat + (double) (Math.random() * ((maxLat - minLat) + 1));
+							double minLon = 0.00;
+							double maxLon = 180.00;
+							double longitude = minLon + (double) (Math.random() * ((maxLon - minLon) + 1));
+							
+							flight.addPoint(new FlightPoint(String.valueOf(latitude), String.valueOf(longitude)));
 							
 							ThreadUtils.sleep(2000);
 						}
