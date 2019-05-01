@@ -225,20 +225,23 @@ var Logger = (function()
                                              "border-top:1px solid #aaa; ");
 
                 // style for log message
-                var span = document.createElement("span");  // for coloring text
+                //var span = document.createElement("span");  // for coloring text
+                var span = document.createElement("p");  // for coloring text
                 span.style.color = "#afa";
                 span.style.fontWeight = "bold";
+                span.style.textAlign = "center";
+                span.style.margin = "0";
 
                 // the first message in log
                 var msg = "===== Log Started at " +
                           getDate() + ", " + getTime() + ", " +
-                          "(Logger version " + version + ") " +
+                          "(Logger version " + version + ", modified by Enzo CACERES) " +
                           "=====";
 
                 span.appendChild(document.createTextNode(msg));
                 logDiv.appendChild(span);
-                logDiv.appendChild(document.createElement("br"));   // blank line
-                logDiv.appendChild(document.createElement("br"));   // blank line
+                //logDiv.appendChild(document.createElement("br"));   // blank line
+                //logDiv.appendChild(document.createElement("br"));   // blank line
 
                 // add divs to document
                 containerDiv.appendChild(tabDiv);
@@ -313,14 +316,58 @@ var Logger = (function()
                 // create message span
                 var msgDiv = document.createElement("div");
                 msgDiv.setAttribute("style", "word-wrap:break-word;" +  // wrap msg
-                                             "margin-left:6.0em;");     // margin-left = 9 * ?
+                                             "margin-left:4.5em;");     // margin-left = 9 * ?
+                msgDiv.setAttribute("onmouseover", "this.style.background='#414141';");
+                msgDiv.setAttribute("onmouseout", "this.style.background=''");
+                
                 if(!msgDefined)
                     msgDiv.style.color = "#afa"; // override color if msg is not defined
 
                 // put message into a text node
-                var line = lines[i].replace(/ /g, "\u00a0");
+                /* var line = lines[i].replace(/ /g, "\u00a0");
                 var msgNode = document.createTextNode(line);
-                msgDiv.appendChild(msgNode);
+                msgDiv.appendChild(msgNode); */
+                let messageTextDiv = document.createElement("p");
+                messageTextDiv.setAttribute("style", "display: inline;");
+                messageTextDiv.innerHTML = lines[i];
+                msgDiv.appendChild(messageTextDiv);
+                
+                
+                
+                
+                let obj = {};
+				Error.captureStackTrace(obj, this);
+				let stacktrace =  obj.stack;
+				let sourceLine = stacktrace.split("\n")[3];
+                // console.old_log(sourceLine);
+                
+                let match = /at .*?(.+?):([\d]+).*?$/gm.exec(sourceLine);
+                //console.old_info(stacktrace);
+                //console.old_info(sourceLine);
+                //console.old_info(match);
+                
+                //debugger;
+                
+                if (match != null) {
+                	let file = match[1];
+                	let line = match[2];
+                	
+                	let filename = file.substring(file.lastIndexOf('/') + 1).split(/([\?\#])/g)[0];
+                	
+                	let fileMatch = /^.*?\((.*?)$/g.exec(file);
+                	if (fileMatch != null) {
+                		file = fileMatch[1];
+                	}
+
+	                var fileDiv = document.createElement("a");
+	                fileDiv.setAttribute("style", "right: 0;display: inline-block;position: absolute;margin-right: 1em;color: #AAAAAA;");
+	                fileDiv.setAttribute("target", "_blank");
+	                fileDiv.setAttribute("rel", "noopener noreferrer");
+	                fileDiv.href = file;
+	                fileDiv.innerText = filename + ":" + line;
+	                msgDiv.appendChild(fileDiv);
+                }
+                
 
                 // new line div with clearing css float property
                 var newLineDiv = document.createElement("div");

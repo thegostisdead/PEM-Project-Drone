@@ -23,12 +23,14 @@ class Statistics {
             for (let quality of json.loaded) {
                 let name = quality.name;
                 let unit = quality.unit;
+                let useGraph = quality.useGraph;
 
-                console.log("Statistics: Added physical quality \"" + name + "\" (" + unit + ").");
+                console.log("Statistics: Added physical quality \"" + name + "\" (in " + unit + ", " + (useGraph ? "" : "not ") + "using graph).");
 
                 loaded[name] = {
                     name: name,
-                    unit: unit
+                    unit: unit,
+                    useGraph: useGraph
                 };
             }
 

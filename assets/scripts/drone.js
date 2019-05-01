@@ -11,14 +11,14 @@ class DroneSocket {
         let socket = DroneSocket.socket = new WebSocket("ws://" + WEB_SOCKET_HOST + ":" + WEB_SOCKET_PORT);
 
         socket.onopen = function() {
-            console.log("WebSocket: Connected");
+            console.info("WebSocket: Connected");
 
             DroneSocket.fire("onopen", null);
         };
 
         socket.onmessage = function(event) {
             let data = event.data;
-            console.log("WebSocket: Received message:", data);
+            console.info("WebSocket: Received message:", data);
 
             let json = JSON.parse(data);
 
@@ -45,7 +45,7 @@ class DroneSocket {
         };
 
         socket.onclose = function(event) {
-            console.log("WebSocket: Closed. Reconnect will be attempted in 1 second.", event.reason);
+            console.warn("WebSocket: Closed. Reconnect will be attempted in 1 second.", event.reason);
 
             setTimeout(function() {
                 DroneSocket.connect();
