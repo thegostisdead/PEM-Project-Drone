@@ -129,7 +129,9 @@ class Statistics {
                     let name = quality.name;
                     let valueHolders = qualities[name];
 
-                    callback(quality, name, valueHolders);
+                    if (quality.useGraph) {
+                        callback(quality, name, valueHolders);
+                    }
                 }
             };
 
