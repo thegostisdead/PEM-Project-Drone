@@ -48,6 +48,7 @@ class DroneDebug {
                 "color": "#d800ff"
             }
         };
+        
         for (const sub in loggers) {
             let settings = loggers[sub];
             console["old_" + sub] = console[sub];
@@ -74,6 +75,10 @@ class DroneDebug {
                 }
             }
         }
+
+        window.onerror = function(msg, url, line, col, error) {
+            console.error(error.stack);
+        };
         
         console.info("           o x o x o x o . . .\r\n         o      _____            _______________ ___=====__T___\r\n       .][__n_n_|DD[  ====_____  |    |.\\\/.|   | |   |_|     |_\r\n      >(________|__|_[_________]_|____|_\/\\_|___|_|___________|_|\r\n      _\/oo OOOOO oo`  ooo   ooo   o^o       o^o   o^o     o^o\r\n-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-");
     }

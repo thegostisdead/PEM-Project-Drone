@@ -46,8 +46,9 @@ class Gallery {
             }
             flights.extend(json.all);
             //console.log(flights);
-			
-			DroneMap.fillCachedHistory(flights);
+            
+            //debugger;
+			DroneMap.fillCachedHistory(flights, firstIsCurrent ? flights[0].local_file : null);
 
             let html = "";
             for (let index = 0; index < flights.length; index++) {
@@ -141,7 +142,7 @@ class Gallery {
                 for (let index = 0; index < pictures.length; index++) {
                     let picture = pictures[index];
 
-                    Gallery.addPicture(picture);
+                    Gallery.addPicture(picture, flightLocalFile);
                 }
             } else {
                 Gallery.DIVS.PICTURES.innerHTML = i18n.get("gallery.text.no-picture");
@@ -149,7 +150,7 @@ class Gallery {
         });
     }
 
-    static addPicture(picture, flight = null) {
+    static addPicture(picture, flightLocalFile = null) {
         let html = Gallery.DIVS.PICTURES.innerHTML;
 
         let nodes = Gallery.DIVS.PICTURES.childNodes;
@@ -161,8 +162,8 @@ class Gallery {
         elementHtml += "<div class=\"picture-container\">\n";
         elementHtml += "	<img class=\"picture\" src=\"" + API_URL + picture.remote + "\">\n";
         elementHtml += "	<div class=\"middle\">\n";
-        elementHtml += "		<a data-latitude=\"" + picture.position.latitude + "\" data-longitude=\"" + picture.position.longitude + "\" " + (flight != null ? "data-flight=\"" + flight + "\"" : "") + " onclick=\"Gallery.showOnMap(this);\" href=\"#\">\n";
-        elementHtml += "			<div class=\"text\">GPS</div>\n";
+        elementHtml += "		<a data-latitude=\"" + picture.position.latitude + "\" data-longitude=\"" + picture.position.longitude + "\" " + (flightLocalFile != null ? "data-flight=\"" + flightLocalFile + "\"" : "") + " onclick=\"Gallery.showOnMap(this);\" href=\"#\">\n";
+        elementHtml += "			<button type=\"button\" class=\"btn btn-success translatable\" data-i18n=\"gallery.picture.show-position\">Success</button>\n";
         elementHtml += "		</a>\n";
         elementHtml += "	</div>\n";
         elementHtml += "</div>\n";
@@ -170,15 +171,23 @@ class Gallery {
         html = elementHtml + html;
 
         Gallery.DIVS.PICTURES.innerHTML = html;
+        i18n.applyOn(Gallery.DIVS.PICTURES);
     }
 
     static showOnMap(element) {
         let latitude = element.dataset.latitude;
         let longitude = element.dataset.longitude;
 
-        // TODO
-        map.setCenter(new google.maps.LatLng(latitude, longitude));
-        pictureMarker.setPosition(new google.maps.LatLng(latitude, longitude));
+        let flightLocalFile = element.dataset.flight;
+        
+        let lngLat = DroneMap.createPositionObject(latitude, longitude);
+        DroneMap.askSetMapCenter(lngLat);
+        //pictureMarker.setPosition(lngLat); // TODO
+
+        if (flightLocalFile != null) {
+            DroneMap.displayHistory(flightLocalFile);
+        }
+
 
         Gallery.display(false);
     }

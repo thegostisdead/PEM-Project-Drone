@@ -3,19 +3,15 @@
 <head>
     <title>Hello</title>
     <meta charset="UTF-8">
-
     <!-- Libraries -->
     <link rel="stylesheet" href="assets/libraries/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="assets/libraries/fontawesome/fontawesome-all.min.css">
     <!-- <link rel="stylesheet" href="assets/libraries/chart.js/Chart.min.css">-->
-
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyBTBT9HqdZF0xrAqY3lYmJISVYK65EN0cY"></script>
-
     <script type="text/javascript" src="assets/libraries/js-cookie/js.cookie.min.js"></script>
     <script type="text/javascript" src="assets/libraries/chart.js/Chart.min.js"></script>
     <script type="text/javascript" src="assets/libraries/logger/Logger.js"></script>
-
     <!-- Project -->
     <link rel="stylesheet" href="assets/styles/utils.css">
     <link rel="stylesheet" href="assets/styles/style.css">
@@ -23,18 +19,21 @@
     <link rel="stylesheet" href="assets/styles/gallery.css">
     <link rel="stylesheet" href="assets/styles/loader.css">
     <link rel="stylesheet" href="assets/styles/tooltips.css">
-
+    <link rel="stylesheet" href="assets/styles/slideshow.css">
     <script type="text/javascript" src="assets/scripts/constants.js"></script>
     <script type="text/javascript" src="assets/scripts/utils.js"></script>
     <script type="text/javascript" src="assets/scripts/i18n.js"></script>
     <script type="text/javascript" src="assets/scripts/drone.js"></script>
+    <!-- Image Preview -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mousetrap/1.4.6/mousetrap.min.js"></script>
+    <link rel="stylesheet" href="https://codepen.io/meltedlilacs/pen/bNabBx">
 
     <!-- Flight indicator part (right overview) -->
-    <link rel="stylesheet" href="assets/styles/flightindicators.css">
+    <link rel="stylesheet" href="assets/_examples_data/style.css">
+    <link rel="stylesheet" href="assets/libraries/jquery/flightindicators/flightindicators.css">
     <script src="assets/_examples_data/prism/prism.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
-	<script src="assets/libraries/jquery/jquery.flightindicators.min.js"></script>
-
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script src="assets/libraries/jquery/flightindicators/jquery.flightindicators.min.js"></script>
     <!-- Parts -->
     <script type="text/javascript" src="assets/scripts/maps.js"></script>
     <script type="text/javascript" src="assets/scripts/gallery.js"></script>
@@ -64,31 +63,36 @@
                 <i id="map-lock-toggle-icon" class="fas fa-lock"></i>
                 <div data-i18n="section.tooltip.map-lock-toggle" class="tooltiptext translatable">?</div>
             </a>
+            <a href="#" class="tooltip-container">
+                <i id="map-lock-toggle-icon" class="fas fa-undo"></i>
+                <div data-i18n="section.tooltip.back-to-flight" class="tooltiptext translatable">?</div>
+            </a>
         </div>
-
-
-
-
-        <!-- riht fixed overview  -->
+        <!-- riht fixed overview -->
         <div class="right-fixed-overview">
+            <!-- image viewer parts -->
+
+            <!-- flight indicators parts -->
+            <div class="image-slideshow">
+
+            </div>
+
             <div class="examples">
-				<div>
-					<span id="attitude"></span>
-				</div>
-				<div>
-					<span id="heading"></span>
-				</div>
-			</div>
+                <div>
+                    <span id="attitude"></span>
+                </div>
+                <div>
+                    <span id="heading"></span>
+                </div>
+            </div>
         </div>
     </div>
-
     <div id="map-canvas"></div>
-
     <div class="modal" id="modal-statistics">
         <div class="modal-sandbox"></div>
         <div class="modal-box">
             <div class="modal-header">
-                <!--  <img src="assets/images/close.png"> -->
+                <!-- <img src="assets/images/close.png"> -->
             </div>
             <div class="modal-body">
                 <div class="row no-gutters">
@@ -102,12 +106,11 @@
             </div>
         </div>
     </div>
-
     <div class="modal" id="modal-gallery">
         <div class="modal-sandbox"></div>
         <div class="modal-box">
             <div class="modal-header">
-                <!--  <img src="assets/images/close.png"> -->
+                <!-- <img src="assets/images/close.png"> -->
             </div>
             <div class="modal-body">
                 <div class="row no-gutters">
@@ -121,7 +124,6 @@
             </div>
         </div>
     </div>
-
     <div class="modal" id="modal-debug">
         <div class="modal-sandbox"></div>
         <div class="modal-box">
@@ -143,7 +145,6 @@
             </div>
         </div>
     </div>
-
     <div class="modal" id="modal-settings">
         <div class="modal-sandbox"></div>
         <div class="modal-box">
@@ -158,7 +159,6 @@
             </div>
         </div>
     </div>
-
     <div class="modal" id="modal-disconnected">
         <div class="modal-box">
             <div class="modal-body" style="text-align: center;">
@@ -168,9 +168,122 @@
             </div>
         </div>
     </div>
-
     <script type="text/javascript" src="assets/scripts/initializer.js"></script>
     <script type="text/javascript" src="assets/scripts/debug.js"></script>
+    <script type="text/javascript">
+        // First static example
+        var first_attitude = $.flightIndicator('#first_attitude', 'attitude', {
+            size: 350,
+            roll: 8,
+            pitch: 3,
+            showBox: true
+        });
+        // Dynamic examples
+        var attitude = $.flightIndicator('#attitude', 'attitude', {
+            roll: 50,
+            pitch: -20,
+            size: 200,
+            showBox: true
+        });
+        var heading = $.flightIndicator('#heading', 'heading', {
+            heading: 150,
+            showBox: true
+        });
+        var variometer = $.flightIndicator('#variometer', 'variometer', {
+            vario: -5,
+            showBox: true
+        });
+        var airspeed = $.flightIndicator('#airspeed', 'airspeed', {
+            showBox: false
+        });
+        var altimeter = $.flightIndicator('#altimeter', 'altimeter');
+        var turn_coordinator = $.flightIndicator('#turn_coordinator', 'turn_coordinator', {
+            turn: 0
+        });
+        // Update at 20Hz
+        var increment = 0;
+        setInterval(function() {
+            // Airspeed update
+            airspeed.setAirSpeed(80 + 80 * Math.sin(increment / 10));
+            // Attitude update
+            attitude.setRoll(30 * Math.sin(increment / 10));
+            attitude.setPitch(50 * Math.sin(increment / 20));
+            // Altimeter update
+            altimeter.setAltitude(10 * increment);
+            altimeter.setPressure(1000 + 3 * Math.sin(increment / 50));
+            increment++;
+            // TC update - note that the TC appears opposite the angle of the attitude indicator, as it mirrors the actual wing up/down position
+            turn_coordinator.setTurn((30 * Math.sin(increment / 10)) * -1);
+            // Heading update
+            heading.setHeading(increment);
+            // Vario update
+            variometer.setVario(2 * Math.sin(increment / 10));
+        }, 50);
+    </script>
+    <script>
+        try {
+            $(document).ready(function() {
+                var current = 0;
+
+                function previousIndex() {
+                    var previous = current - 1;
+                    if (previous == -1) {
+                        previous = $("div").size() - 1;
+                    }
+                    return previous;
+                }
+
+                function nextIndex() {
+                    var next = current + 1;
+                    if (next == $("div").size()) {
+                        next = 0;
+                    }
+                    return next;
+                }
+
+                function removeClasses() {
+                    $("div").each(function(index) {
+                        if (index != current) {
+                            $(this).removeClass("active fadeInRight fadeInLeft fadeOutRight fadeOutLeft");
+                        }
+                    })
+                }
+
+                function nextElement() {
+                    removeClasses();
+                    $($("div")[current]).addClass("fadeOutLeft");
+                    current = nextIndex();
+                    setTimeout(function() {
+                        $($("div")[current]).addClass("active fadeInRight");
+                    }, 50);
+                    setTimeout(function() {
+                        $($("div")[previousIndex()]).removeClass("active fadeOutLeft");
+                    }, 750);
+                }
+
+                function previousElement() {
+                    removeClasses();
+                    $($("div")[current]).addClass("fadeOutRight");
+                    current = previousIndex();
+                    setTimeout(function() {
+                        $($("div")[current]).addClass("active fadeInLeft");
+                    }, 50);
+                    setTimeout(function() {
+                        $($("div")[nextIndex()]).removeClass("active fadeOutRight");
+                    }, 750);
+                }
+
+                Mousetrap.bind('left', previousElement);
+                Mousetrap.bind('right', nextElement);
+
+                $(".previous").click(previousElement);
+                $(".next").click(nextElement);
+            });
+        } catch (error) {
+            console.old_error(error);
+        }
+    </script>
+
 </body>
 
 </html>

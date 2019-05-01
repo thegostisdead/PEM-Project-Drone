@@ -36,7 +36,7 @@ class Statistics {
             }
 
             Statistics.loadedPhysicalQualities = loaded;
-            Statistics.maxValueCount = json.max_request_size; 
+            Statistics.maxValueCount = json.max_request_size;
 
             Statistics.subscribeToSocket();
             Statistics.fillStatistics();
@@ -180,7 +180,7 @@ class Statistics {
                             callbacks: {
                                 label: function(tooltipItem, data) {
                                     let quality = data.datasets[0].label;
-                                    
+
                                     return i18n.get("quality." + quality) + ": " + tooltipItem.yLabel + " " + Statistics.loadedPhysicalQualities[quality].unit;
                                 }
                             }
@@ -209,7 +209,7 @@ class Statistics {
         }
 
         let newValues = data.new_values;
-        let maxValueSize = data.max_size;
+        let maxValueSize = Statistics.maxValueCount;
 
         let charts = Statistics.currentFlightCharts;
         for (let quality in Statistics.loadedPhysicalQualities) {
@@ -228,9 +228,11 @@ class Statistics {
                 labels.unshift(new Date(valueHolder.date).toSimpleHourString());
                 chartData.unshift(valueHolder.content);
 
-                while (labels.length > maxValueSize) {
-                    labels.pop();
-                    chartData.pop();
+                if (maxValueSize != -1) {
+                    while (labels.length > maxValueSize) {
+                        labels.pop();
+                        chartData.pop();
+                    }
                 }
             }
 

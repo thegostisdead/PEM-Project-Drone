@@ -36,9 +36,11 @@ class i18n {
         english.set("section.tooltip.gallery", "Picture Gallery");
         english.set("section.tooltip.debug", "Debugging");
         english.set("section.tooltip.settings", "Settings");
+        english.set("section.tooltip.back-to-flight", "Back to current flight");
         english.set("section.modal.settings.header", "Settings (not final)");
         english.set("section.modal.settings.item.language", "Language");
         english.set("section.tooltip.map-lock-toggle", "Toggle Map Controls Locking");
+        english.set("gallery.picture.show-position", "Show position");
 
         let french = i18n.registerLanguage("fr", "Français");
         french.set("date.at", "à");
@@ -55,16 +57,18 @@ class i18n {
         french.set("section.tooltip.gallery", "Gallerie d'image");
         french.set("section.tooltip.debug", "Débogage");
         french.set("section.tooltip.settings", "Paramètres");
+        french.set("section.tooltip.back-to-flight", "Retour au vol actuel");
         french.set("section.modal.settings.header", "Paramètres (non final)");
         french.set("section.modal.settings.item.language", "Langage");
         french.set("section.tooltip.map-lock-toggle", "Activer/désactiver le verrouillage des contrôle de la carte");
+        french.set("gallery.picture.show-position", "Afficher la position");
     }
 
     static prepareSettingsSection() {
         let html = "";
 
         html += "<h4 class=\"translatable\" data-i18n=\"section.modal.settings.item.language\">?<h4>"
-        
+
         for (let language in i18n.translation) {
             language = i18n.translation[language];
 
