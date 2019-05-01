@@ -46,6 +46,8 @@ class Gallery {
             }
             flights.extend(json.all);
             //console.log(flights);
+			
+			DroneMap.fillCachedHistory(flights);
 
             let html = "";
             for (let index = 0; index < flights.length; index++) {
@@ -147,7 +149,7 @@ class Gallery {
         });
     }
 
-    static addPicture(picture) {
+    static addPicture(picture, flight = null) {
         let html = Gallery.DIVS.PICTURES.innerHTML;
 
         let nodes = Gallery.DIVS.PICTURES.childNodes;
@@ -159,7 +161,7 @@ class Gallery {
         elementHtml += "<div class=\"picture-container\">\n";
         elementHtml += "	<img class=\"picture\" src=\"" + API_URL + picture.remote + "\">\n";
         elementHtml += "	<div class=\"middle\">\n";
-        elementHtml += "		<a data-latitude=\"" + picture.position.latitude + "\" data-longitude=\"" + picture.position.longitude + "\" onclick=\"Gallery.showOnMap(this);\" href=\"#\">\n";
+        elementHtml += "		<a data-latitude=\"" + picture.position.latitude + "\" data-longitude=\"" + picture.position.longitude + "\" " + (flight != null ? "data-flight=\"" + flight + "\"" : "") + " onclick=\"Gallery.showOnMap(this);\" href=\"#\">\n";
         elementHtml += "			<div class=\"text\">GPS</div>\n";
         elementHtml += "		</a>\n";
         elementHtml += "	</div>\n";

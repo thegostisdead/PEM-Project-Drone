@@ -22,6 +22,25 @@ class DroneDebug {
             element.innerHTML = json.result;
         });
     }
+	
+	static useLogger() {
+		Logger.init();
+		
+		for (let sub of ["log", "warn", "error"]) {
+			console["old_" + sub] = console[sub];
+			
+			console[sub] = function(string) {
+				Logger.print(string);
+				
+				var i = -1, l = arguments.length, args = [], fn = "console.old_" + sub + "(args)";
+				while(++i<l){
+					args.push('args['+i+']');
+				};
+				fn = new Function('args',fn.replace(/args/,args.join(',')));
+				fn(arguments);
+			}
+		}
+	}
     
     static tryToRemoveGoogleMapDialog() {
     	let element = document.getElementById("map-canvas");

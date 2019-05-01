@@ -1,4 +1,6 @@
 window.addEventListener("load", function(event) {
+	DroneDebug.useLogger();
+	
     i18n.initialize();
 
     DroneSocket.initialize();

@@ -49,7 +49,9 @@ class DroneMap {
             "LOCK": "fas fa-lock",
             "UNLOCK": "fas fa-unlock",
         }
-
+		
+		DroneMap.cachedFlightPositionHistory = {};
+		
         DroneMap.initializeFlighPlan();
         DroneMap.registerListeners();
         DroneMap.subscribeToSocket();
@@ -85,6 +87,13 @@ class DroneMap {
 
     static subscribeToSocket() {
         DroneSocket.subscribe(["flight.point.new"], function(identifier, json) {
+			let targetHistoryArray = DroneMap.cachedFlightPositionHistory[json.flight];
+			if (targetHistoryArray == null) {
+				targetHistoryArray = [];
+			}
+			targetHistoryArray.push(json.position);
+			DroneMap.cachedFlightPositionHistory[json.flight] = targetHistoryArray;
+			
             let latLng = new google.maps.LatLng(json.position.latitude, json.position.longitude);
 
             DroneMap.map.setCenter(latLng);
@@ -109,6 +118,16 @@ class DroneMap {
 
         DroneMap.lockMapControls(cookieLockedState);
     }
+	
+	static fillCachedHistory(flights) { // TODO Use local file name
+		for (let flight of flights) {
+			let name = flight.name;
+			let positions = flight.positions;
+			
+			DroneMap.cachedFlightPositionHistory[name] = positions;
+			console.log("Map: Cached " + positions.length + " position(s) for flight \"" + name + "\"");
+		}
+	}
 
     static appendFlightPlanCoordinates(latLng) {
         DroneMap.flightPath.getPath().push(latLng);
