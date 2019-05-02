@@ -13,6 +13,9 @@ os.system("i2cdetect -y " + str(I2C_CHANNEL))
 # Connecting to the channel
 bus = smbus.SMBus(I2C_CHANNEL)
 
+# Setup
+GPIO.setmode(GPIO.BCM)
+
 
 def int32(x):
     if x > 0xFFFFFFFF:
@@ -30,8 +33,11 @@ while True:
     data = None
 
     try:
+        GPIO.setup(GPIO_TRANSACTION_LOCK_PIN, GPIO.IN)
         while GPIO.input(GPIO_TRANSACTION_LOCK_PIN) == 1:
             pass
+        
+        GPIO.setup(GPIO_TRANSACTION_LOCK_PIN, GPIO.OUT)
         GPIO.output(GPIO_TRANSACTION_LOCK_PIN, GPIO.HIGH)
     except:
         pass
