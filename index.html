@@ -1,10 +1,14 @@
-<html>
+<!doctype html>
+<html lang="en">
 
 <head>
     <title>Hello</title>
     <meta charset="UTF-8">
     <!-- Libraries -->
     <link rel="stylesheet" href="assets/libraries/bootstrap/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="assets/libraries/fontawesome/fontawesome-all.min.css">
     <!-- <link rel="stylesheet" href="assets/libraries/chart.js/Chart.min.css">-->
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -14,19 +18,19 @@
     <script type="text/javascript" src="assets/libraries/logger/Logger.js"></script>
     <!-- Project -->
     <link rel="stylesheet" href="assets/styles/utils.css">
+    <link rel="stylesheet" href="assets/styles/settings.css">
     <link rel="stylesheet" href="assets/styles/style.css">
     <link rel="stylesheet" href="assets/styles/modal.css">
     <link rel="stylesheet" href="assets/styles/gallery.css">
     <link rel="stylesheet" href="assets/styles/loader.css">
     <link rel="stylesheet" href="assets/styles/tooltips.css">
-    <link rel="stylesheet" href="assets/styles/slideshow.css">
+
     <script type="text/javascript" src="assets/scripts/constants.js"></script>
     <script type="text/javascript" src="assets/scripts/utils.js"></script>
     <script type="text/javascript" src="assets/scripts/i18n.js"></script>
     <script type="text/javascript" src="assets/scripts/drone.js"></script>
     <!-- Image Preview -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mousetrap/1.4.6/mousetrap.min.js"></script>
-    <link rel="stylesheet" href="https://codepen.io/meltedlilacs/pen/bNabBx">
+    <link rel="stylesheet" href="assets/styles/slideshow.css">
 
     <!-- Flight indicator part (right overview) -->
     <link rel="stylesheet" href="assets/_examples_data/style.css">
@@ -71,11 +75,6 @@
         <!-- riht fixed overview -->
         <div class="right-fixed-overview">
             <!-- image viewer parts -->
-
-            <!-- flight indicators parts -->
-            <div class="image-slideshow">
-
-            </div>
 
             <div class="examples">
                 <div>
@@ -145,20 +144,107 @@
             </div>
         </div>
     </div>
+
     <div class="modal" id="modal-settings">
         <div class="modal-sandbox"></div>
         <div class="modal-box">
+            <div class="modal-header">
+            </div>
             <div class="modal-body">
-                <div>
-                    <h3 class="translatable" data-i18n="section.modal.settings.header">Settings v0</h3>
-                    <div id="settings-section-i18n">
-                        <!-- Replaced with JS code -->
+                <div class="row no-gutters">
+                    <div class="col-6 col-md-4">
+                        <div id="list-group" class="list-group" role="tablist" style="height: 80vh; overflow-y: scroll;">
+                            <a class="list-group-item list-group-item-action active" id="list-google-map-list" data-toggle="list" href="#list-google-map" role="tab" aria-controls="google-map">Google Maps</a>
+                            <a class="list-group-item list-group-item-action " id="list-network-list" data-toggle="list" href="#list-network" role="tab" aria-controls="network">Network</a>
+                            <a class="list-group-item list-group-item-action " id="list-languages-list" data-toggle="list" href="#list-languages" role="tab" aria-controls="languages">Languages</a>
+                        </div>
+
+
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-8" style="height: 80vh; overflow-y: scroll;">
+
+
+                        <div class="tab-content" id="nav-tabContent">
+                            <div class="tab-pane fade show active" id="list-google-map" role="tabpanel" aria-labelledby="list-google-map-list">
+                                <div class="decription">
+                                    <h3>Here you can edit some settings about the google map</h3>
+                                </div>
+                                <div class="content">
+                                    <div class="settings-item big" id="google-api-key-container">
+                                        <div class="form-group">
+                                            <label class="label-beautiful" for="apiKeyInput">Google API Key</label>
+                                            <input class="form-control api-google" id="apiKeyInput" placeholder="0226sq2d6sq2d6s20qd6sq2d6qs2d602qs6d2">
+                                        </div>
+                                    </div>
+                                    <div class="settings-item big">
+                                        <div class="form-group">
+                                            <label class="label-beautiful" for="">Google Maps View Style</label>
+                                            <div class="images-selector">
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="img-zone col">
+                                                            <p>Roadmap</p>
+                                                            <img src="assets/images/map-type/roadmap.png" class="map-type images-selector" data-style="ROADMAP">
+                                                        </div>
+                                                        <div class="img-zone col">
+                                                            <p>Satellite</p>
+                                                            <img src="assets/images/map-type/satellite.png" class="map-type images-selector" data-style="SATELLITE">
+                                                        </div>
+                                                        <div class="img-zone col">
+                                                            <p>Hybrid</p>
+                                                            <img src="assets/images/map-type/hybrid.png" class="map-type images-selector" data-style="HYBRID">
+                                                        </div>
+                                                        <div class="img-zone col">
+                                                            <p>Terrain</p>
+                                                            <img src="assets/images/map-type/terrain.png" class="map-type images-selector" data-style="TERRAIN">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="button-action">
+                                        <button type="button" class="btn btn-success" onclick="pushChanges();">Apply changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="list-network" role="tabpanel" aria-labelledby="list-network-list">
+                                <div class="decription">
+                                    <h3 class="translatable" data-i18n="settings.network.description">Here you can edit some settings about the network options</h3>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="list-languages" role="tabpanel" aria-labelledby="list-languages-list">
+                                <div class="decription">
+                                    <h3 class="translatable" data-i18n="settings.languages.description">Here you can change the website language</h3>
+                                    <br>
+                                    <select id="inputState" class="form-control">
+
+                                        <option selected>Choose your language</option>
+                                        <option>(FR) French </option>
+                                        <option>(EN) English </option>
+                                    </select>
+                                    <div id="settings-section-i18n"></div>
+                                    <br>
+                                    <button type="submit" class="btn btn-success">Apply changes</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <br>
             </div>
         </div>
     </div>
+
+
+
+
+
+
+
+
     <div class="modal" id="modal-disconnected">
         <div class="modal-box">
             <div class="modal-body" style="text-align: center;">
@@ -220,70 +306,24 @@
             variometer.setVario(2 * Math.sin(increment / 10));
         }, 50);
     </script>
-    <script>
-        try {
-            $(document).ready(function() {
-                var current = 0;
-
-                function previousIndex() {
-                    var previous = current - 1;
-                    if (previous == -1) {
-                        previous = $("div").size() - 1;
-                    }
-                    return previous;
-                }
-
-                function nextIndex() {
-                    var next = current + 1;
-                    if (next == $("div").size()) {
-                        next = 0;
-                    }
-                    return next;
-                }
-
-                function removeClasses() {
-                    $("div").each(function(index) {
-                        if (index != current) {
-                            $(this).removeClass("active fadeInRight fadeInLeft fadeOutRight fadeOutLeft");
-                        }
-                    })
-                }
-
-                function nextElement() {
-                    removeClasses();
-                    $($("div")[current]).addClass("fadeOutLeft");
-                    current = nextIndex();
-                    setTimeout(function() {
-                        $($("div")[current]).addClass("active fadeInRight");
-                    }, 50);
-                    setTimeout(function() {
-                        $($("div")[previousIndex()]).removeClass("active fadeOutLeft");
-                    }, 750);
-                }
-
-                function previousElement() {
-                    removeClasses();
-                    $($("div")[current]).addClass("fadeOutRight");
-                    current = previousIndex();
-                    setTimeout(function() {
-                        $($("div")[current]).addClass("active fadeInLeft");
-                    }, 50);
-                    setTimeout(function() {
-                        $($("div")[nextIndex()]).removeClass("active fadeOutRight");
-                    }, 750);
-                }
-
-                Mousetrap.bind('left', previousElement);
-                Mousetrap.bind('right', nextElement);
-
-                $(".previous").click(previousElement);
-                $(".next").click(nextElement);
+     <script>
+        var elementHtml = document.getElementsByClassName('map-type');
+        for (let img of elementHtml) {
+            console.log(img)
+            img.addEventListener('click', function() {
+                deselect()
+                this.classList.add("selected")
             });
-        } catch (error) {
-            console.old_error(error);
+        }
+
+        function deselect() {
+            for (let img of elementHtml) {
+                img.classList.remove("selected");
+            }
         }
     </script>
 
 </body>
+<script type="text/javascript" src="assets/scripts/settings.js"></script>
 
 </html>

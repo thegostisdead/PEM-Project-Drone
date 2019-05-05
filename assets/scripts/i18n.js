@@ -41,6 +41,13 @@ class i18n {
         english.set("section.modal.settings.item.language", "Language");
         english.set("section.tooltip.map-lock-toggle", "Toggle Map Controls Locking");
         english.set("gallery.picture.show-position", "Show position");
+        english.set("settings.googlemap.description", "Here you can edit some settings about the google map");
+        english.set("settings.googlemap.text.key", "Google API Key");
+        english.set("settings.googlemap.text.style","Google Maps View Style");
+        english.set("settings.network","Network");
+        english.set("settings.network.description","Here you can edit some settings about the network options");
+        english.set("settings.languages.text","Languages");
+        english.set("settings.languages.description","Here you can change the website language");
 
         let french = i18n.registerLanguage("fr", "Français");
         french.set("date.at", "à");
@@ -62,6 +69,15 @@ class i18n {
         french.set("section.modal.settings.item.language", "Langage");
         french.set("section.tooltip.map-lock-toggle", "Activer/désactiver le verrouillage des contrôle de la carte");
         french.set("gallery.picture.show-position", "Afficher la position");
+        french.set("settings.googlemap.description", "Ici vous pouvez modifier les paramètes de la carte google map.");
+        french.set("settings.googlemap.text.key", "Clée Google API");
+        french.set("settings.googlemap.text.style","Style de la carte Google Map");
+        french.set("settings.network","Réseau");
+        french.set("settings.network.description","Ici vous pouvez modifier les paramètres de réseau du site.");
+        french.set("settings.languages.text","Langues");
+        french.set("settings.languages.description","Ici vous pouvez modifier la langue du site.");
+
+
     }
 
     static prepareSettingsSection() {

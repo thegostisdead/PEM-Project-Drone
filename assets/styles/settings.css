@@ -1,15 +1,18 @@
-html {
+ html {
     margin: 0px;
 }
 
 body {
     overflow: hidden;
-    /* hiding scroll bar */
-    background-color: #181818;
 }
 
 .content {
-    margin: 70px;
+
+    margin-left: 5px;
+    margin-top: 10px;
+    margin-right: 0px;
+    margin-bottom: 0px;
+
 }
 
 .label-beautiful {
@@ -28,7 +31,7 @@ body {
     padding-right: 10px;
     padding-bottom: 10px;
     border-radius: 5px;
-    background-color: #202020;
+    background-color: #546E7A; /* replace here with other color*/
     margin-bottom: 20px;
     padding-bottom: 20px;
 }
@@ -38,17 +41,16 @@ body {
 }
 
 .big {
-    width: 80%;
+    width: 100%;
 }
 
 .images-selector {
     border-radius: 6px;
 }
 
-.img-zone {}
-
 .img-zone p {
     color: #ffffff;
+    text-align: center;
 }
 
 .button-action {
@@ -68,4 +70,15 @@ body {
     width: 150px;
     height: 150px;
     text-align: center;
+}
+
+.modal-backdrop {
+    visibility: hidden;
+}
+.api-google{
+    color: black;
+    width: 100%;
+}
+.map-type{
+    margin-left: 35px;
 }
