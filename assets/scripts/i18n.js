@@ -40,6 +40,16 @@ class i18n {
         english.set("section.modal.settings.header", "Settings (not final)");
         english.set("section.tooltip.map-lock-toggle", "Toggle Map Controls Locking");
         english.set("gallery.picture.show-position", "Show position");
+        english.set("settings.general.title", "General");
+        english.set("settings.general.language.title", "Language");
+        english.set("settings.maps.title", "Maps");
+        english.set("settings.maps.api-key", "Google API Key");
+        english.set("settings.maps.view-type", "View Type");
+        english.set("settings.maps.view-type.roadmap", "Roadmap");
+        english.set("settings.maps.view-type.satellite", "Satellite");
+        english.set("settings.maps.view-type.hybrid", "Hybrid");
+        english.set("settings.maps.view-type.terrain", "Terrain");
+        english.set("settings.x.button.apply", "Apply");
 
         let french = i18n.registerLanguage("fr", "Français");
         french.set("date.at", "à");
@@ -60,21 +70,6 @@ class i18n {
         french.set("section.modal.settings.header", "Paramètres (non final)");
         french.set("section.tooltip.map-lock-toggle", "Activer/désactiver le verrouillage des contrôle de la carte");
         french.set("gallery.picture.show-position", "Afficher la position");
-
-
-
-        
-        english.set("settings.general.title", "General");
-        english.set("settings.general.language.title", "Language");
-        english.set("settings.maps.title", "Maps");
-        english.set("settings.maps.api-key", "Google API Key");
-        english.set("settings.maps.view-type", "View Type");
-        english.set("settings.maps.view-type.roadmap", "Roadmap");
-        english.set("settings.maps.view-type.satellite", "Satellite");
-        english.set("settings.maps.view-type.hybrid", "Hybrid");
-        english.set("settings.maps.view-type.terrain", "Terrain");
-        english.set("settings.x.button.apply", "Apply");
-
         french.set("settings.general.title", "Générale");
         french.set("settings.general.language.title", "Langage");
         french.set("settings.maps.title", "Carte");
@@ -85,25 +80,6 @@ class i18n {
         french.set("settings.maps.view-type.hybrid", "Hybride");
         french.set("settings.maps.view-type.terrain", "Terrain");
         french.set("settings.x.button.apply", "Appliquer");
-
-
-        french.set("settings.maps.description", "Ici vous pouvez modifier les paramètes de la carte google map.");
-        french.set("settings.maps.text.key", "Clée Google API");
-        french.set("settings.maps.text.style", "Style de la carte Google Map");
-        french.set("settings.network", "Réseau");
-        french.set("settings.network.description", "Ici vous pouvez modifier les paramètres de réseau du site.");
-        french.set("settings.general.languages", "Langues");
-        french.set("settings.languages.description", "Ici vous pouvez modifier la langue du site.");
-
-        english.set("settings.maps.description", "Here you can edit some settings about the google map");
-        english.set("settings.maps.text.key", "Google API Key");
-        english.set("settings.maps.text.style", "Google Maps View Style");
-        english.set("settings.network", "Network");
-        english.set("settings.network.description", "Here you can edit some settings about the network options");
-        english.set("settings.languages", "Languages");
-        english.set("settings.languages.description", "Here you can change the website language");
-
-
     }
 
     static prepareSettingsSection() {
