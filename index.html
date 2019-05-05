@@ -10,12 +10,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="assets/libraries/fontawesome/fontawesome-all.min.css">
-    <!-- <link rel="stylesheet" href="assets/libraries/chart.js/Chart.min.css">-->
+    
+    <!-- Image Preview -->
+    <link rel="stylesheet" href="assets/styles/slideshow.css">
+
+    <!-- Libraries -->
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&key=AIzaSyBTBT9HqdZF0xrAqY3lYmJISVYK65EN0cY"></script>
     <script type="text/javascript" src="assets/libraries/js-cookie/js.cookie.min.js"></script>
     <script type="text/javascript" src="assets/libraries/chart.js/Chart.min.js"></script>
     <script type="text/javascript" src="assets/libraries/logger/Logger.js"></script>
+
     <!-- Project -->
     <link rel="stylesheet" href="assets/styles/utils.css">
     <link rel="stylesheet" href="assets/styles/settings.css">
@@ -29,8 +34,7 @@
     <script type="text/javascript" src="assets/scripts/utils.js"></script>
     <script type="text/javascript" src="assets/scripts/i18n.js"></script>
     <script type="text/javascript" src="assets/scripts/drone.js"></script>
-    <!-- Image Preview -->
-    <link rel="stylesheet" href="assets/styles/slideshow.css">
+    <script type="text/javascript" src="assets/scripts/settings.js"></script>
 
     <!-- Flight indicator part (right overview) -->
     <link rel="stylesheet" href="assets/_examples_data/style.css">
@@ -86,7 +90,9 @@
             </div>
         </div>
     </div>
+    
     <div id="map-canvas"></div>
+
     <div class="modal" id="modal-statistics">
         <div class="modal-sandbox"></div>
         <div class="modal-box">
@@ -105,6 +111,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal" id="modal-gallery">
         <div class="modal-sandbox"></div>
         <div class="modal-box">
@@ -123,6 +130,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal" id="modal-debug">
         <div class="modal-sandbox"></div>
         <div class="modal-box">
@@ -154,82 +162,25 @@
                 <div class="row no-gutters">
                     <div class="col-6 col-md-4">
                         <div id="list-group" class="list-group" role="tablist" style="height: 80vh; overflow-y: scroll;">
-                            <a class="list-group-item list-group-item-action active" id="list-google-map-list" data-toggle="list" href="#list-google-map" role="tab" aria-controls="google-map">Google Maps</a>
-                            <a class="list-group-item list-group-item-action " id="list-network-list" data-toggle="list" href="#list-network" role="tab" aria-controls="network">Network</a>
-                            <a class="list-group-item list-group-item-action " id="list-languages-list" data-toggle="list" href="#list-languages" role="tab" aria-controls="languages">Languages</a>
+                            <a class="list-group-item list-group-item-action active" id="list-general-list" data-toggle="list" href="#list-general" role="tab" aria-controls="general">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="mb-1 translatable" data-i18n="settings.general.title">?</h5>
+                                </div>
+                            </a>
+                            <a class="list-group-item list-group-item-action" id="list-maps-list" data-toggle="list" href="#list-maps" role="tab" aria-controls="maps">
+                                <div class="d-flex justify-content-between">
+                                    <h5 class="mb-1 translatable" data-i18n="settings.maps.title">?</h5>
+                                </div>
+                            </a>
                         </div>
-
-
                     </div>
                     <div class="col-12 col-sm-6 col-md-8" style="height: 80vh; overflow-y: scroll;">
-
-
                         <div class="tab-content" id="nav-tabContent">
-                            <div class="tab-pane fade show active" id="list-google-map" role="tabpanel" aria-labelledby="list-google-map-list">
-                                <div class="decription">
-                                    <h3>Here you can edit some settings about the google map</h3>
-                                </div>
-                                <div class="content">
-                                    <div class="settings-item big" id="google-api-key-container">
-                                        <div class="form-group">
-                                            <label class="label-beautiful" for="apiKeyInput">Google API Key</label>
-                                            <input class="form-control api-google" id="apiKeyInput" placeholder="0226sq2d6sq2d6s20qd6sq2d6qs2d602qs6d2">
-                                        </div>
-                                    </div>
-                                    <div class="settings-item big">
-                                        <div class="form-group">
-                                            <label class="label-beautiful" for="">Google Maps View Style</label>
-                                            <div class="images-selector">
-                                                <div class="container">
-                                                    <div class="row">
-                                                        <div class="img-zone col">
-                                                            <p>Roadmap</p>
-                                                            <img src="assets/images/map-type/roadmap.png" class="map-type images-selector" data-style="ROADMAP">
-                                                        </div>
-                                                        <div class="img-zone col">
-                                                            <p>Satellite</p>
-                                                            <img src="assets/images/map-type/satellite.png" class="map-type images-selector" data-style="SATELLITE">
-                                                        </div>
-                                                        <div class="img-zone col">
-                                                            <p>Hybrid</p>
-                                                            <img src="assets/images/map-type/hybrid.png" class="map-type images-selector" data-style="HYBRID">
-                                                        </div>
-                                                        <div class="img-zone col">
-                                                            <p>Terrain</p>
-                                                            <img src="assets/images/map-type/terrain.png" class="map-type images-selector" data-style="TERRAIN">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="button-action">
-                                        <button type="button" class="btn btn-success" onclick="pushChanges();">Apply changes</button>
-                                    </div>
-                                </div>
+                            <div class="tab-pane fade show active" id="list-general" role="tabpanel" aria-labelledby="list-general-list">
+                                <div id="settings-section-i18n"></div>
                             </div>
-                            <div class="tab-pane fade" id="list-network" role="tabpanel" aria-labelledby="list-network-list">
-                                <div class="decription">
-                                    <h3 class="translatable" data-i18n="settings.network.description">Here you can edit some settings about the network options</h3>
-                                </div>
-                            </div>
-                            <div class="tab-pane fade" id="list-languages" role="tabpanel" aria-labelledby="list-languages-list">
-                                <div class="decription">
-                                    <h3 class="translatable" data-i18n="settings.languages.description">Here you can change the website language</h3>
-                                    <br>
-                                    <select id="inputState" class="form-control">
-
-                                        <option selected>Choose your language</option>
-                                        <option>(FR) French </option>
-                                        <option>(EN) English </option>
-                                    </select>
-                                    <div id="settings-section-i18n"></div>
-                                    <br>
-                                    <button type="submit" class="btn btn-success">Apply changes</button>
-                                </div>
+                            <div class="tab-pane fade show" id="list-maps" role="tabpanel" aria-labelledby="list-maps-list">
+                                <div id="settings-section-maps"></div>
                             </div>
                         </div>
                     </div>
@@ -237,13 +188,6 @@
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
 
     <div class="modal" id="modal-disconnected">
         <div class="modal-box">
@@ -254,6 +198,7 @@
             </div>
         </div>
     </div>
+    
     <script type="text/javascript" src="assets/scripts/initializer.js"></script>
     <script type="text/javascript" src="assets/scripts/debug.js"></script>
     <script type="text/javascript">
@@ -306,24 +251,6 @@
             variometer.setVario(2 * Math.sin(increment / 10));
         }, 50);
     </script>
-     <script>
-        var elementHtml = document.getElementsByClassName('map-type');
-        for (let img of elementHtml) {
-            console.log(img)
-            img.addEventListener('click', function() {
-                deselect()
-                this.classList.add("selected")
-            });
-        }
-
-        function deselect() {
-            for (let img of elementHtml) {
-                img.classList.remove("selected");
-            }
-        }
-    </script>
-
 </body>
-<script type="text/javascript" src="assets/scripts/settings.js"></script>
 
 </html>

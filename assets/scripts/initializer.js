@@ -1,12 +1,14 @@
 window.addEventListener("load", function(event) {
-	DroneDebug.useLogger();
-	
+    DroneDebug.useLogger();
+
     i18n.initialize();
 
     DroneSocket.initialize();
     DroneSocket.connect();
 
     DroneApi.initialize();
+
+    SettingsManager.initialize();
 
     Statistics.initialize();
 

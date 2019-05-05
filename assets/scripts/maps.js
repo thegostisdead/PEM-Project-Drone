@@ -36,7 +36,8 @@ class DroneMap {
         };
 
         DroneMap.DIVS = {
-            "LOCK_TOGGLE_ICON": document.getElementById("map-lock-toggle-icon")
+            "LOCK_TOGGLE_ICON": document.getElementById("map-lock-toggle-icon"),
+            "SETTINGS_SECTION": document.getElementById("settings-section-maps")
         }
 
         DroneMap.COOKIES = {
@@ -51,12 +52,144 @@ class DroneMap {
             "UNLOCK": "fas fa-unlock",
         }
 
+        DroneMap.SETTINGS_KEY = {
+            "GOOGLE_MAPS_API": "googlemaps.api.key",
+            "MAP_VIEW_TYPE": "map.view-type"
+        }
+
         DroneMap.cachedFlightPositionHistory = {};
 
+        DroneMap.prepareSettingsSection();
         DroneMap.initializeFlighPlan();
         DroneMap.registerListeners();
         DroneMap.subscribeToSocket();
         DroneMap.restoreLockState();
+    }
+
+    static prepareSettingsSection() {
+        let html = "";
+
+        html += "<div class=\"row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative\" style=\"margin: 8px;\">\n";
+        html += "    <div class=\"col p-4 d-flex flex-column position-static\" id=\"google-api-key-container\">\n";
+        html += "        <strong class=\"d-inline-block mb-2 text-primary translatable\" data-i18n=\"settings.maps.api-key\">?</strong>\n";
+        html += "        <div class=\"input-group mb-3\">\n";
+        html += "            <input id=\"apiKeyInput\" type=\"text\" class=\"form-control\" placeholder=\"abcdefghijklmnopqrstuvwxyz\" aria-describedby=\"setting-maps-api-key\">\n";
+        html += "            <div class=\"input-group-append\">\n";
+        html += "                <button type=\"button\" class=\"btn btn-success translatable\" data-i18n=\"settings.x.button.apply\" id=\"setting-maps-api-key\" onclick=\"SettingsManager.pushChanges();\">?</button>\n";
+        html += "            </div>\n";
+        html += "        </div>\n";
+        html += "    </div>\n";
+        html += "</div>\n";
+        html += "<div class=\"row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative\" style=\"margin: 8px;\">\n";
+        html += "    <div class=\"col p-4 d-flex flex-column position-static\" id=\"map-type-container\">\n";
+        html += "        <strong class=\"d-inline-block mb-2 text-primary translatable\" data-i18n=\"settings.maps.view-type\">?</strong>\n";
+        html += "        <div class=\"images-selector\">\n";
+        html += "            <div class=\"container\">\n";
+        html += "                <div class=\"row\">\n";
+
+        for (let type of MAPS_VIEW_TYPE_ARRAY) {
+            let imageUrl = MAPS_VIEW_TYPE_IMAGE_URL.replace("%type%", type);
+
+            html += "<div class=\"img-zone col\">\n";
+            html += "    <p class=\"translatable\" data-i18n=\"settings.maps.view-type." + type + "\">?</p>\n";
+            html += "    <img src=\"" + imageUrl + "\" class=\"map-type images-selector\" data-type=\"" + type.toLowerCase() + "\">\n";
+            html += "</div>\n";
+        }
+
+        html += "                </div>\n";
+        html += "            </div>\n";
+        html += "        </div>\n";
+        html += "        <button type=\"button\" class=\"btn btn-success translatable\" data-i18n=\"settings.x.button.apply\" style=\"margin: 8px;\" onclick=\"SettingsManager.pushChanges();\">?</button>\n";
+        html += "    </div>\n";
+        html += "</div>\n";
+
+        //debugger;
+        DroneMap.DIVS.SETTINGS_SECTION.innerHTML = html;
+
+        let forEachMapViewImage = function(callback) {
+            let elementHtml = document.getElementsByClassName('map-type');
+            for (let image of elementHtml) {
+                callback(image, elementHtml);
+            }
+        }
+
+        forEachMapViewImage(function(item, elements) {
+            item.selected = function() {
+                return this.classList.contains("selected");
+            }
+
+            item.select = function() {
+                this.classList.add("selected");
+            }
+
+            item.deselect = function() {
+                item.classList.remove("selected");
+            }
+
+            item.addEventListener('click', function() {
+                for (let item of elements) { /* Unselect */
+                    item.deselect();
+                }
+
+                this.select();
+            });
+        })
+
+        i18n.applyOn(DroneMap.DIVS.SETTINGS_SECTION);
+
+        SettingsManager.add(new SettingsItem("google-api-key-container", DroneMap.SETTINGS_KEY.GOOGLE_MAPS_API, "abcdefghijklmnopqrstuvwxyz", function(div) {
+            return div.getElementsByTagName("input")[0].value;
+        }, function(div, value, isDefault, isChanged) {
+            if (!isChanged) {
+                div.getElementsByTagName("input")[0].value = value;
+            }
+        }, function(value) {
+            // TODO
+        }));
+
+        SettingsManager.add(new SettingsItem("map-type-container", DroneMap.SETTINGS_KEY.MAP_VIEW_TYPE, MAPS_VIEW_TYPE_ARRAY[0], function(div) {
+            let selected = MAPS_VIEW_TYPE_ARRAY[0];
+
+            forEachMapViewImage(function(item, elements) {
+                if (item.selected()) {
+                    selected = item.dataset.type;
+                }
+            });
+
+            return selected.toLowerCase();
+        }, function(div, value, isDefault, isChanged) {
+            if (!isChanged) {
+                forEachMapViewImage(function(item, elements) {
+                    if (item.dataset.type == value.toLowerCase()) {
+                        for (let subitem of elements) { /* Unselect */
+                            subitem.deselect();
+                        }
+
+                        item.select();
+                    }
+                });
+            }
+        }, function(value) {
+            let valid = false;
+
+            /* Verification process */
+            for (let mapTypeIdField in google.maps.MapTypeId) {
+                let mapTypeId = google.maps.MapTypeId[mapTypeIdField];
+                
+                if (value == mapTypeId) {
+                    valid = true;
+                    break;
+                }
+            }
+
+            if (valid) {
+                DroneMap.map.setOptions({
+                    mapTypeId: value
+                });
+            } else {
+                console.warn("Map: \"" + value + "\" seems to not be a valid map type.");
+            }
+        }));
     }
 
     static initializeFlighPlan() {
@@ -175,7 +308,7 @@ class DroneMap {
 
     static clearFlightPlanCoordinates() {
         DroneMap.flightPath.getPath().clear();
-        
+
         console.log("Map: Cleared flight plan.");
     }
 

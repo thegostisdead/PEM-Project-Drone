@@ -1,84 +1,86 @@
  html {
-    margin: 0px;
-}
-
-body {
-    overflow: hidden;
-}
-
-.content {
-
-    margin-left: 5px;
-    margin-top: 10px;
-    margin-right: 0px;
-    margin-bottom: 0px;
-
-}
-
-.label-beautiful {
-    border-radius: 5px;
-}
-
-.label-beautiful p {
-    padding-left: 10px;
-    padding-top: 10px;
-    color: #ffffff;
-}
-
-.settings-item {
-    padding-left: 10px;
-    padding-top: 10px;
-    padding-right: 10px;
-    padding-bottom: 10px;
-    border-radius: 5px;
-    background-color: #546E7A; /* replace here with other color*/
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-}
-
-.small {
-    width: 30%;
-}
-
-.big {
-    width: 100%;
-}
-
-.images-selector {
-    border-radius: 6px;
-}
-
-.img-zone p {
-    color: #ffffff;
-    text-align: center;
-}
-
-.button-action {
-    padding: 20px 20px 20px 20px
-}
-
-.selected {
-    border: solid 2px red;
-}
-
-.green-btn-network {
-    background-color: #28a745;
-    color: white;
-    border-color: #28a745;
-}
-.img-zone img{
-    width: 150px;
-    height: 150px;
-    text-align: center;
-}
-
-.modal-backdrop {
-    visibility: hidden;
-}
-.api-google{
-    color: black;
-    width: 100%;
-}
-.map-type{
-    margin-left: 35px;
-}
+     margin: 0px;
+ }
+ 
+ body {
+     overflow: hidden;
+ }
+ 
+ .content {
+     margin-left: 5px;
+     margin-top: 10px;
+     margin-right: 0px;
+     margin-bottom: 0px;
+ }
+ 
+ .label-beautiful {
+     border-radius: 5px;
+ }
+ 
+ .label-beautiful p {
+     padding-left: 10px;
+     padding-top: 10px;
+     color: #ffffff;
+ }
+ 
+ .settings-item {
+     padding-left: 10px;
+     padding-top: 10px;
+     padding-right: 10px;
+     padding-bottom: 10px;
+     border-radius: 5px;
+     background-color: #546E7A;
+     /* replace here with other color*/
+     margin-bottom: 20px;
+     padding-bottom: 20px;
+ }
+ 
+ .small {
+     width: 30%;
+ }
+ 
+ .big {
+     width: 100%;
+ }
+ 
+ .images-selector {
+     border-radius: 6px;
+ }
+ 
+ .button-action {
+     padding: 20px 20px 20px 20px
+ }
+ 
+ .green-btn-network {
+     background-color: #28a745;
+     color: white;
+     border-color: #28a745;
+ }
+ 
+ .img-zone img {
+     width: 150px;
+     height: 150px;
+     text-align: center;
+ }
+ 
+ .modal-backdrop {
+     visibility: hidden;
+ }
+ 
+ .api-google {
+     color: black;
+     width: 100%;
+ }
+ 
+ .img-zone {
+     text-align: center;
+ }
+ 
+ .img-zone p {
+     color: black;
+     margin: 0;
+ }
+ 
+ .selected {
+     border: solid 8px #007bff;
+ }

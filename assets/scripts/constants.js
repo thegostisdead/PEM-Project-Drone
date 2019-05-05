@@ -22,3 +22,6 @@ const LANGUAGE_DEFAULT = "en";
 
 const HTML_PART_LOADER = "<div class=\"lds-ellipsis\"><div></div><div></div><div></div><div></div></div>";
 const MAP_START_POSITION = [47.1920857, 2.3766726];
+
+const MAPS_VIEW_TYPE_ARRAY = ["roadmap", "satellite", "hybrid", "terrain"];
+const MAPS_VIEW_TYPE_IMAGE_URL = "assets/images/map-type/%type%.png";
