@@ -8,6 +8,7 @@ class Gallery {
 
         Gallery.currentFlightLocalFile = null;
         Gallery.displayedFlightLocalFile = null;
+        Gallery.cachedPictures = null;
 
         Gallery.subscribeToSocket();
     }
@@ -47,8 +48,7 @@ class Gallery {
             flights.extend(json.all);
             //console.log(flights);
             
-            //debugger;
-			DroneMap.fillCachedHistory(flights, firstIsCurrent ? flights[0].local_file : null);
+			DroneHistoryMap.fillCachedPositionHistory(flights, firstIsCurrent ? flights[0].local_file : null);
 
             let html = "";
             for (let index = 0; index < flights.length; index++) {
@@ -83,7 +83,7 @@ class Gallery {
                 html += "</a>\n";
             }
 
-            html += "<a data-flight=\"unknown\" onclick=\"Gallery.selectFlight(this);\" href=\"#\" class=\"gallery-flight-item list-group-item list-group-item-action\">";
+            html += "<a data-flight=\"" + FLIGHT_DEFAULT_UNKNOWN_NAME + "\" onclick=\"Gallery.selectFlight(this);\" href=\"#\" class=\"gallery-flight-item list-group-item list-group-item-action\">";
             html += "	<div class=\"d-flex w-100 justify-content-between\">\n";
             html += "		<h5 class=\"mb-1 translatable\" data-i18n=\"flight.list.item.others\">" + i18n.get("flight.list.item.others") + "</h5>\n";
             html += "	</div>\n";
@@ -122,6 +122,8 @@ class Gallery {
                 log("Failed to fetch pictures list.");
                 return true;
             }
+
+            Gallery.cachedPictures = json;
 
             Gallery.unselectAllFlights(); /* Just to be sure */
 
@@ -182,10 +184,12 @@ class Gallery {
         
         let lngLat = DroneMap.createPositionObject(latitude, longitude);
         DroneMap.askSetMapCenter(lngLat);
-        //pictureMarker.setPosition(lngLat); // TODO
+        DroneHistoryMap.MARKERS.PICTURE.setPosition(lngLat); // TODO
 
-        if (flightLocalFile != null) {
-            DroneMap.displayHistory(flightLocalFile);
+        if (flightLocalFile != FLIGHT_DEFAULT_UNKNOWN_NAME) {
+            DroneHistoryMap.displayHistory(flightLocalFile);
+        } else { /* A "lost" picture */
+            DroneMap.clearFlightPlanCoordinates();
         }
 
 

@@ -22,17 +22,7 @@ class DroneMap {
                     origin: new google.maps.Point(0, 0),
                     anchor: new google.maps.Point(25, 50)
                 }
-            }),
-            "PICTURE": new google.maps.Marker({
-                //position: latlng,
-                map: DroneMap.map,
-                icon: {
-                    url: "https://www.pilotpen.fr/pub/media/catalog/product/cache/image/755x566/beff4985b56e3afdbeabfc89641a4582/4/9/4902505511097-4902505511097_zoom_01.jpg",
-                    scaledSize: new google.maps.Size(50, 50),
-                    origin: new google.maps.Point(0, 0),
-                    anchor: new google.maps.Point(25, 50)
-                }
-            }),
+            })
         };
 
         DroneMap.DIVS = {
@@ -57,13 +47,13 @@ class DroneMap {
             "MAP_VIEW_TYPE": "map.view-type"
         }
 
-        DroneMap.cachedFlightPositionHistory = {};
-
         DroneMap.prepareSettingsSection();
         DroneMap.initializeFlighPlan();
         DroneMap.registerListeners();
         DroneMap.subscribeToSocket();
         DroneMap.restoreLockState();
+
+        DroneHistoryMap.initialize();
     }
 
     static prepareSettingsSection() {
@@ -175,7 +165,7 @@ class DroneMap {
             /* Verification process */
             for (let mapTypeIdField in google.maps.MapTypeId) {
                 let mapTypeId = google.maps.MapTypeId[mapTypeIdField];
-                
+
                 if (value == mapTypeId) {
                     valid = true;
                     break;
@@ -221,13 +211,6 @@ class DroneMap {
 
     static subscribeToSocket() {
         DroneSocket.subscribe(["flight.point.new"], function(identifier, json) {
-            let targetHistoryArray = DroneMap.cachedFlightPositionHistory[json.flight];
-            if (targetHistoryArray == null) {
-                targetHistoryArray = [];
-            }
-            targetHistoryArray.push(json.position);
-            DroneMap.cachedFlightPositionHistory[json.flight] = targetHistoryArray;
-
             let latLng = DroneMap.createPositionObject(json.position.latitude, json.position.longitude);
 
             DroneMap.moveDroneMarker(latLng);
@@ -237,7 +220,9 @@ class DroneMap {
         });
 
         DroneSocket.subscribe(["flight.starting"], function(identifier, json) {
-            DroneMap.clearFlightPlanCoordinates();
+            if (DroneHistoryMap.running) {
+                DroneMap.clearFlightPlanCoordinates();
+            }
         });
     }
 
@@ -253,36 +238,6 @@ class DroneMap {
         console.log("Map: Restored lock state to: " + cookieLockedState);
 
         DroneMap.lockMapControls(cookieLockedState);
-    }
-
-    static fillCachedHistory(flights, current) {
-        for (let flight of flights) {
-            let name = flight.name;
-            let local_file = flight.local_file;
-            let positions = flight.positions;
-
-            DroneMap.cachedFlightPositionHistory[local_file] = positions;
-            console.log("Map: Cached " + positions.length + " position(s) for flight \"" + name + "\" (local file: " + local_file + ")");
-
-            console.old_log(current);
-            if (current == local_file) {
-                DroneMap.displayHistory(local_file);
-            }
-        }
-    }
-
-    static displayHistory(flightLocalFile, clearBefore = true) {
-        let positions = DroneMap.cachedFlightPositionHistory[flightLocalFile];
-
-        if (positions != null) {
-            if (clearBefore) {
-                DroneMap.clearFlightPlanCoordinates();
-            }
-
-            for (let position of positions) {
-                DroneMap.appendFlightPlanCoordinates(DroneMap.createPositionObject(position.latitude, position.longitude));
-            }
-        }
     }
 
     static createPositionObject(latitude, longitude) {
@@ -343,6 +298,121 @@ class DroneMap {
             /* The enabled/disabled state of the Zoom control. */
             zoomControl: !lockState
         });
+    }
+
+}
+
+class DroneHistoryMap {
+
+    static initialize() {
+        DroneHistoryMap.running = false;
+        DroneHistoryMap.cachedFlightPositionHistory = {};
+        DroneHistoryMap.cachedPictureMarkers = [];
+        DroneHistoryMap.currentFlight = null;
+
+        DroneHistoryMap.DIVS = {
+            "BACK_TO_CURRENT_ICON_LINK": document.getElementById("map-lock-toggle-icon-link")
+        }
+
+        DroneHistoryMap.MARKERS = {
+            "PICTURE": new google.maps.Marker({
+                //position: latlng,
+                map: DroneMap.map,
+                icon: {
+                    url: "https://www.pilotpen.fr/pub/media/catalog/product/cache/image/755x566/beff4985b56e3afdbeabfc89641a4582/4/9/4902505511097-4902505511097_zoom_01.jpg",
+                    scaledSize: new google.maps.Size(50, 50),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(25, 50)
+                }
+            }),
+        };
+
+        DroneHistoryMap.subscribeToSocket();
+    }
+
+    static subscribeToSocket() {
+        DroneSocket.subscribe(["flight.point.new"], function(identifier, json) {
+            let targetHistoryArray = DroneHistoryMap.cachedFlightPositionHistory[json.flight.local_file];
+            if (targetHistoryArray == null) {
+                targetHistoryArray = [];
+            }
+            targetHistoryArray.push(json.position);
+            DroneHistoryMap.cachedFlightPositionHistory[json.flight.local_file] = targetHistoryArray;
+        });
+    }
+
+    static fillCachedPositionHistory(flights, current) {
+        DroneHistoryMap.currentFlight = current != FLIGHT_DEFAULT_UNKNOWN_NAME ? current : null;
+
+        for (let flight of flights) {
+            let name = flight.name;
+            let local_file = flight.local_file;
+            let positions = flight.positions;
+
+            DroneHistoryMap.cachedFlightPositionHistory[local_file] = positions;
+            console.log("Map: Cached " + positions.length + " position(s) for flight \"" + name + "\" (local file: " + local_file + ")");
+
+            if (current == local_file) {
+                DroneHistoryMap.displayHistory(local_file);
+            }
+        }
+    }
+
+    static displayHistory(flightLocalFile, clearBefore = true) {
+        let positions = DroneHistoryMap.cachedFlightPositionHistory[flightLocalFile];
+
+        if (positions != null) {
+            if (clearBefore) {
+                DroneMap.clearFlightPlanCoordinates();
+            }
+
+            for (let position of positions) {
+                DroneMap.appendFlightPlanCoordinates(DroneMap.createPositionObject(position.latitude, position.longitude));
+            }
+
+            DroneHistoryMap.run();
+        } else {
+            console.warn("Map: Tried to show history of a flight without an history.");
+        }
+    }
+
+    static run() {
+        DroneHistoryMap.running = true;
+
+        if (DroneHistoryMap.currentFlight != null) {
+            DroneHistoryMap.changeIconLinkVisibilityState(true);
+        }
+
+        // TODO Carousel
+    }
+
+    static backToCurrent() {
+        if (!DroneHistoryMap.running) {
+            console.warn("Map History: Tried to went back to current but history is not running.");
+            return;
+        }
+        DroneHistoryMap.running = false;
+        DroneHistoryMap.changeIconLinkVisibilityState(false);
+    }
+
+    static changeIconLinkVisibilityState(state) {
+        DroneHistoryMap.DIVS.BACK_TO_CURRENT_ICON_LINK.style.display = state === true ? "block" : "none";
+    }
+
+    static createPictureMarker(label, callback = null) {
+        let marker = new google.maps.Marker({
+            //position: latlng,
+            map: DroneMap.map,
+            label: label
+        });
+
+        if (callback != null) {
+            marker.addListener('click', callback);
+        }
+
+        DroneHistoryMap.cachedPictureMarkers.push(marker);
+
+        return marker;
     }
 
 }

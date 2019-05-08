@@ -25,3 +25,5 @@ const MAP_START_POSITION = [47.1920857, 2.3766726];
 
 const MAPS_VIEW_TYPE_ARRAY = ["roadmap", "satellite", "hybrid", "terrain"];
 const MAPS_VIEW_TYPE_IMAGE_URL = "assets/images/map-type/%type%.png";
+
+const FLIGHT_DEFAULT_UNKNOWN_NAME = "unknown";
