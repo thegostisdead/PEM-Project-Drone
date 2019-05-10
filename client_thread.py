@@ -155,6 +155,8 @@ class Transactor(threading.Thread):
 class DataSender(threading.Thread):
 
     def __init__(self, sourceTransactor):
+        threading.Thread.__init__(self)
+
         self.transactor = sourceTransactor
         self.running = False
 
