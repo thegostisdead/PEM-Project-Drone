@@ -116,7 +116,7 @@ class DroneSocket {
 class DroneApi {
 
     static initialize() {
-
+        DroneApi.listeners = {};
     }
 
     static call(endpoint, callback, payload = null) {
@@ -126,7 +126,12 @@ class DroneApi {
             if (this.readyState === XMLHttpRequest.DONE) {
                 let json = JSON.parse(this.responseText);
 
-                if (callback(json, this.status === 200) === true) {
+                let success = this.status === 200;
+                let restartWanted = callback(json, success) === true;
+
+                DroneApi.fire(endpoint, json, success, restartWanted);
+
+                if (restartWanted) {
                     setTimeout(function() {
                         DroneApi.call(endpoint, callback, payload);
                     }, API_CALL_FAILED_RETRY_WAIT);
@@ -136,6 +141,66 @@ class DroneApi {
 
         request.open("GET", API_URL + "/" + endpoint, true);
         request.send(payload);
+    }
+
+    static listen(endpoint, listener) {
+        let array = DroneApi.listeners[endpoint];
+
+        if (array == undefined) {
+            array = [];
+            DroneApi.listeners[endpoint] = array;
+        }
+
+        array.push(listener);
+        console.log("DroneApi: Registered listener on endpoint: /" + endpoint);
+    }
+
+    static fire(endpoint, json, success, restartWanted) {
+        let array = DroneApi.listeners[endpoint];
+
+        if (array != undefined) {
+            for (let listener of array) {
+                try {
+                    listener(endpoint, json, success, restartWanted);
+                } catch (exception) {
+                    console.error(exception);
+                }
+            }
+        }
+    }
+
+}
+
+class DroneEvent {
+
+    static initialize() {
+        DroneEvent.listeners = [];
+    }
+
+    static listen(event, listener) {
+        let array = DroneEvent.listeners[event];
+
+        if (array == undefined) {
+            array = [];
+            DroneEvent.listeners[event] = array;
+        }
+
+        array.push(listener);
+        console.log("DroneEvent: Registered listener on event: " + event);
+    }
+
+    static fire(event, data) {
+        let array = DroneEvent.listeners[event];
+
+        if (array != undefined) {
+            for (let listener of array) {
+                try {
+                    listener(data);
+                } catch (exception) {
+                    console.error(exception);
+                }
+            }
+        }
     }
 
 }

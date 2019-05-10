@@ -25,6 +25,20 @@ function randomString(length) {
     return text;
 }
 
+function safeWalk(object, steps, defaultValue) {
+    try {
+        let currentObject = object;
+        
+        for (step of steps) {
+            currentObject = currentObject[step];
+        }
+
+        return currentObject;
+    } catch {
+        return defaultValue;
+    }
+}
+
 if (!Date.prototype.correctTimezoneOffset) {
     Date.prototype.correctTimezoneOffset = function() {
         let timestamp = this.getTime();

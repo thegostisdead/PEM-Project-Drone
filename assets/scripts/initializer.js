@@ -10,6 +10,8 @@ window.addEventListener("load", function(event) {
 
     SettingsManager.initialize();
 
+    FlightDashboard.initialize();
+
     Statistics.initialize();
 
     Gallery.initialize();
