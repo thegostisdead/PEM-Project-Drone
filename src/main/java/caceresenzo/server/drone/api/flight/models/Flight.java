@@ -29,6 +29,7 @@ public class Flight {
 	public static final String JSON_KEY_POSITIONS_ITEM_POSITION = "position";
 	public static final String JSON_KEY_POSITIONS_ITEM_LATITUDE = "latitude";
 	public static final String JSON_KEY_POSITIONS_ITEM_LONGITUDE = "longitude";
+	public static final String JSON_KEY_POSITIONS_ITEM_ALTITUDE = "altitude";
 	
 	/* Managers */
 	private FlightController controller;
@@ -186,8 +187,9 @@ public class Flight {
 			long time = ParseUtils.parseInt(positionJsonObject.get(JSON_KEY_POSITIONS_ITEM_TIME), 0);
 			String latitude = positionJsonObject.getString(JSON_KEY_POSITIONS_ITEM_LATITUDE);
 			String longitude = positionJsonObject.getString(JSON_KEY_POSITIONS_ITEM_LONGITUDE);
+			String altitude = positionJsonObject.getString(JSON_KEY_POSITIONS_ITEM_ALTITUDE);
 			
-			flight.getPoints().add(new FlightPoint(latitude, longitude, time, id));
+			flight.getPoints().add(new FlightPoint(latitude, longitude, altitude, time, id));
 		}
 		
 		return flight;

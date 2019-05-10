@@ -173,7 +173,7 @@ public class DroneApi {
 							double maxLon = 180.00;
 							double longitude = minLon + (double) (Math.random() * ((maxLon - minLon) + 1));
 							
-							flight.addPoint(new FlightPoint(String.valueOf(latitude), String.valueOf(longitude)));
+							flight.addPoint(new FlightPoint(String.valueOf(latitude), String.valueOf(longitude), String.valueOf(Math.random())));
 							
 							ThreadUtils.sleep(2000);
 						}

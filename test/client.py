@@ -15,7 +15,7 @@ picture_size = os.path.getsize(picture_path)
 gps_latitude = 1.23456
 gps_longitude = 6.54321
 
-header = ""
+header = "drone\n"
 # header += "id " + str(picture_id) + "," # disabled to use an random name
 header += "length " + str(picture_size) + ","
 header += "gps " + str(gps_latitude) + " " + str(gps_longitude)

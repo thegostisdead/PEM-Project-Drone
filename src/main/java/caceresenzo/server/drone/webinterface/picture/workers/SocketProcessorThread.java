@@ -40,10 +40,23 @@ public class SocketProcessorThread extends Thread {
 			
 			/* Reading header */
 			StringBuilder builder = new StringBuilder();
+			boolean headerPassed = false;
 			while (true) {
 				int next = inputStream.read();
 				
 				if (next == '\n') {
+					if (!headerPassed) {
+						if (!builder.toString().equals("drone")) {
+							socket.getOutputStream().write("Go fuck yourself!\nDont crawl anymore!!".getBytes());
+							socket.getOutputStream().flush();
+							throw new IllegalStateException("First word \"drone\\n\" not present, not-acceptable request.");
+						}
+						
+						builder.setLength(0); /* Clear */
+						headerPassed = true;
+						continue;
+					}
+					
 					break;
 				}
 				
@@ -64,7 +77,6 @@ public class SocketProcessorThread extends Thread {
 			
 			/* Creating target */
 			File targetFile = picture.toFile();
-			;
 			targetFile.mkdirs();
 			targetFile.delete();
 			targetFile.createNewFile();

@@ -28,19 +28,21 @@ public class QualityRegistry {
 	public static final String JSON_KEY_PHYSICAL_QUALITY_NAME = "name";
 	public static final String JSON_KEY_PHYSICAL_QUALITY_UNIT = "unit";
 	public static final String JSON_KEY_PHYSICAL_QUALITY_USE_GRAPH = "use_graph";
+	public static final String JSON_KEY_PHYSICAL_QUALITY_DISABLE_STORAGE = "disable_storage";
 	public static final String JSON_KEY_PHYSICAL_QUALITY_VALUES = "values";
 	
 	/* Static */
 	private static Logger LOGGER = LoggerFactory.getLogger(QualityRegistry.class);
 	
 	/* Variables */
-	private final List<PhysicalQuality> qualities;
+	private final List<PhysicalQuality> qualities, qualitiesWithoutDisabledStorage;
 	
 	/* Constructor */
 	protected QualityRegistry() {
 		super();
-		
+
 		this.qualities = new ArrayList<>();
+		this.qualitiesWithoutDisabledStorage = new ArrayList<>();
 		
 		initialize();
 	}
@@ -82,14 +84,21 @@ public class QualityRegistry {
 					String name = (String) map.get(JSON_KEY_PHYSICAL_QUALITY_NAME);
 					String unit = (String) map.get(JSON_KEY_PHYSICAL_QUALITY_UNIT);
 					boolean useGraph = (boolean) map.getOrDefault(JSON_KEY_PHYSICAL_QUALITY_USE_GRAPH, true);
+					boolean disableStorage = (boolean) map.getOrDefault(JSON_KEY_PHYSICAL_QUALITY_DISABLE_STORAGE, false);
 					
 					if (StringUtils.validate(name)) {
-						qualities.add(new PhysicalQuality(unit, name, useGraph));
+						qualities.add(new PhysicalQuality(unit, name, useGraph, disableStorage));
 					}
 				}
 			}
 		} catch (Exception exception) {
 			LOGGER.error("Failed to load qualities list.", exception);
+		}
+		
+		for (PhysicalQuality physicalQuality : qualities) {
+			if (!physicalQuality.isStorageDisabled()) {
+				qualitiesWithoutDisabledStorage.add(physicalQuality);
+			}
 		}
 	}
 	
@@ -104,7 +113,11 @@ public class QualityRegistry {
 	}
 	
 	public List<PhysicalQuality> getLoaded() {
-		return qualities;
+		return getLoaded(true);
+	}
+	
+	public List<PhysicalQuality> getLoaded(boolean ignoreOneWithDisabledStorage) {
+		return ignoreOneWithDisabledStorage ? qualitiesWithoutDisabledStorage : qualities;
 	}
 	
 }

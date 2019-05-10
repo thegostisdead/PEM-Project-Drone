@@ -54,12 +54,13 @@ public class QualityRestController {
 		JsonObject allflightsPart = new JsonObject();
 		flightsPart.put("all", allflightsPart);
 		
-		for (PhysicalQuality physicalQuality : qualityManager.getRegistry().getLoaded()) {
+		for (PhysicalQuality physicalQuality : qualityManager.getRegistry().getLoaded(false)) {
 			Map<String, Object> qualityMap = new HashMap<>();
 			
 			qualityMap.put(QualityRegistry.JSON_KEY_PHYSICAL_QUALITY_NAME, physicalQuality.getName());
 			qualityMap.put(QualityRegistry.JSON_KEY_PHYSICAL_QUALITY_UNIT, physicalQuality.getUnit());
 			qualityMap.put(QualityRegistry.JSON_KEY_PHYSICAL_QUALITY_USE_GRAPH, physicalQuality.isUseGraph());
+			qualityMap.put(QualityRegistry.JSON_KEY_PHYSICAL_QUALITY_DISABLE_STORAGE, physicalQuality.isStorageDisabled());
 			
 			qualitiesPart.put(physicalQuality.getName(), qualityMap);
 		}
@@ -103,7 +104,7 @@ public class QualityRestController {
 				
 				PhysicalQuality correspondingPhysicalQuality = null;
 				
-				for (PhysicalQuality physicalQuality : qualityManager.getRegistry().getLoaded()) {
+				for (PhysicalQuality physicalQuality : qualityManager.getRegistry().getLoaded(false)) {
 					if (physicalQuality.getName().equals(targetQuality)) {
 						correspondingPhysicalQuality = physicalQuality;
 						break;
@@ -138,7 +139,7 @@ public class QualityRestController {
 	private Map<String, Object> createQualityMap(Flight flight) {
 		Map<String, Object> map = new HashMap<>();
 		
-		for (PhysicalQuality physicalQuality : qualityManager.getRegistry().getLoaded()) {
+		for (PhysicalQuality physicalQuality : qualityManager.getRegistry().getLoaded(false)) {
 			List<ValueHolder> values = qualityManager.getCache(flight).get(physicalQuality);
 			
 			map.put(physicalQuality.getName(), values);

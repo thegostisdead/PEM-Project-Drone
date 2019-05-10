@@ -12,7 +12,8 @@
 		"unit": "hPa"
 	},
 	{
-		"name": "position",
-		"use_graph": false
+		"name": "gps_position",
+		"use_graph": false,
+		"disable_storage": true
 	}
 ]

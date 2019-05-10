@@ -13,23 +13,24 @@ import caceresenzo.server.drone.api.flight.FlightController;
 public class FlightPoint implements Comparable<FlightPoint> {
 	
 	/* Variables */
-	private final String latitude, longitude;
+	private final String latitude, longitude, altitude;
 	private final long time, id;
 	
 	/* Constructor */
 	public FlightPoint() {
-		this(null, null);
+		this(null, null, null);
 	}
 	
 	/* Constructor */
-	public FlightPoint(String latitude, String longitude) {
-		this(latitude, longitude, new Date().getTime(), FlightController.getFlightController().getCurrentFlight().getPoints().size() + 1);
+	public FlightPoint(String latitude, String longitude, String altitude) {
+		this(latitude, longitude, altitude, new Date().getTime(), FlightController.getFlightController().getCurrentFlight().getPoints().size() + 1);
 	}
 	
 	/* Constructor */
-	public FlightPoint(String latitude, String longitude, long time, long id) {
+	public FlightPoint(String latitude, String longitude, String altitude, long time, long id) {
 		this.latitude = latitude;
 		this.longitude = longitude;
+		this.altitude = altitude;
 		this.time = time;
 		this.id = id;
 	}
@@ -51,6 +52,11 @@ public class FlightPoint implements Comparable<FlightPoint> {
 	/** @return Point's longitude. */
 	public String getLongitude() {
 		return longitude;
+	}
+	
+	/** @return Point's altitude. */
+	public String getAltitude() {
+		return altitude;
 	}
 	
 	/** @return Point's time when he has been taked. */
