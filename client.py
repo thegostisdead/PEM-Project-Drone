@@ -107,7 +107,7 @@ def send_picture(file, gps_position, name = None):
 
     size = os.path.getsize(file)
 
-    header = ""
+    header = "drone\n"
 
     header += "length " + str(size)
     header += ","

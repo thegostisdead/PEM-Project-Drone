@@ -230,7 +230,7 @@ class Camera(threading.Thread):
 
         size = os.path.getsize(file)
 
-        header = ""
+        header = "drone\n"
 
         header += "length " + str(size)
         header += ","
