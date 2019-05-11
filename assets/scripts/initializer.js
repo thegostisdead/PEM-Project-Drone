@@ -3,6 +3,8 @@ window.addEventListener("load", function(event) {
 
     i18n.initialize();
 
+    DroneEvent.initialize();
+
     DroneSocket.initialize();
     DroneSocket.connect();
 
@@ -10,7 +12,7 @@ window.addEventListener("load", function(event) {
 
     SettingsManager.initialize();
 
-    FlightDashboard.initialize();
+    Dashboard.initialize();
 
     Statistics.initialize();
 

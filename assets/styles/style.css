@@ -199,6 +199,7 @@ body {
 }
 
 .slideshow-container {
+    width: 100%;
     position: absolute;
     bottom: 0;
 }
@@ -229,4 +230,12 @@ body {
     margin: 0px;
     font-family: 'Montserrat', sans-serif;
     font-size: 26px;
+}
+
+#dashboard-message {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    top: 25%;
+    color: white;
 }

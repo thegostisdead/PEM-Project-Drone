@@ -177,7 +177,7 @@ class DroneEvent {
         DroneEvent.listeners = [];
     }
 
-    static listen(event, listener) {
+    static on(event, listener) {
         let array = DroneEvent.listeners[event];
 
         if (array == undefined) {
@@ -189,13 +189,13 @@ class DroneEvent {
         console.log("DroneEvent: Registered listener on event: " + event);
     }
 
-    static fire(event, data) {
+    static fire(event) {
         let array = DroneEvent.listeners[event];
 
         if (array != undefined) {
             for (let listener of array) {
                 try {
-                    listener(data);
+                    listener.apply(arguments);
                 } catch (exception) {
                     console.error(exception);
                 }

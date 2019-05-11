@@ -50,6 +50,8 @@ class i18n {
         english.set("settings.maps.view-type.hybrid", "Hybrid");
         english.set("settings.maps.view-type.terrain", "Terrain");
         english.set("settings.x.button.apply", "Apply");
+        english.set("history.picture.show", "SHOW");
+        english.set("history.picture.move-to", "MOVE TO");
 
         let french = i18n.registerLanguage("fr", "Français");
         french.set("date.at", "à");
@@ -80,6 +82,8 @@ class i18n {
         french.set("settings.maps.view-type.hybrid", "Hybride");
         french.set("settings.maps.view-type.terrain", "Terrain");
         french.set("settings.x.button.apply", "Appliquer");
+        french.set("history.picture.show", "AFFICHER");
+        french.set("history.picture.move-to", "ALLER A");
     }
 
     static prepareSettingsSection() {

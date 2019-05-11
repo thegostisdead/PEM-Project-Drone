@@ -11,6 +11,8 @@ class Gallery {
         Gallery.cachedPictures = null;
 
         Gallery.subscribeToSocket();
+
+        PictureViewer.initialize();
     }
 
     static subscribeToSocket() {
@@ -188,6 +190,7 @@ class Gallery {
 
         if (flightLocalFile != FLIGHT_DEFAULT_UNKNOWN_NAME) {
             DroneHistoryMap.displayHistory(flightLocalFile);
+            HistoryDashboard.displayCarousel(Gallery.cachedPictures[flightLocalFile]);
         } else { /* A "lost" picture */
             DroneMap.clearFlightPlanCoordinates();
         }
@@ -206,5 +209,35 @@ class Gallery {
 
         modal.style.display = display;
     }
+
+}
+
+class PictureViewer {
+
+    static initialize() {
+        PictureViewer.MODAL = {
+            "VIEWER": document.getElementById("modal-picture-viewer")
+        }
+
+        PictureViewer.DIVS = {
+            "ELEMENT": document.getElementById("picture-viewer-image-element")
+        }
+    }
+
+    static show(imageUrl) {
+        if (imageUrl == null) {
+            console.warn("PictureViewer: Tried to show a picture without a valid image url.");
+            return;
+        }
+
+        PictureViewer.DIVS.ELEMENT.src = imageUrl;
+        PictureViewer.display(true);
+    }
+
+
+    static display(state) {
+        PictureViewer.MODAL.VIEWER.style.display = (state === true ? "block" : "none");
+    }
+
 
 }

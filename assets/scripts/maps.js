@@ -244,6 +244,10 @@ class DroneMap {
         return new google.maps.LatLng(latitude, longitude);
     }
 
+    static createPositionObjectFromJson(json) {
+        return DroneMap.createPositionObject(json.latitude, json.longitude);
+    }
+
     static moveDroneMarker(latLng) {
         DroneMap.askSetMapCenter(latLng);
         DroneMap.MARKERS.DRONE.setPosition(latLng);
@@ -267,11 +271,11 @@ class DroneMap {
         console.log("Map: Cleared flight plan.");
     }
 
-    static displayCoordinates(position) {
+    static formatCoordinates(position) {
         var lat = position.lat().toFixed(4);
         var lng = position.lng().toFixed(4);
 
-        console.log("Latitude: " + lat + " // Longitude: " + lng);
+        return [lat, lng];
     }
 
     static toggleLock() {
@@ -328,6 +332,7 @@ class DroneHistoryMap {
         };
 
         DroneHistoryMap.subscribeToSocket();
+        DroneHistoryMap.changeIconLinkVisibilityState(false);
     }
 
     static subscribeToSocket() {
@@ -353,12 +358,12 @@ class DroneHistoryMap {
             console.log("Map: Cached " + positions.length + " position(s) for flight \"" + name + "\" (local file: " + local_file + ")");
 
             if (current == local_file) {
-                DroneHistoryMap.displayHistory(local_file);
+                DroneHistoryMap.displayHistory(local_file, true, true);
             }
         }
     }
 
-    static displayHistory(flightLocalFile, clearBefore = true) {
+    static displayHistory(flightLocalFile, clearBefore = true, restorationOnly = false) {
         let positions = DroneHistoryMap.cachedFlightPositionHistory[flightLocalFile];
 
         if (positions != null) {
@@ -370,13 +375,16 @@ class DroneHistoryMap {
                 DroneMap.appendFlightPlanCoordinates(DroneMap.createPositionObject(position.latitude, position.longitude));
             }
 
-            DroneHistoryMap.run();
+            if (!restorationOnly) {
+                DroneHistoryMap.run();
+            }
         } else {
             console.warn("Map: Tried to show history of a flight without an history.");
         }
     }
 
     static run() {
+        DroneEvent.fire(EVENT_HISTORY_MODE_OPEN);
         DroneHistoryMap.running = true;
 
         if (DroneHistoryMap.currentFlight != null) {
@@ -391,6 +399,8 @@ class DroneHistoryMap {
             console.warn("Map History: Tried to went back to current but history is not running.");
             return;
         }
+
+        DroneEvent.fire(EVENT_HISTORY_MODE_CLOSE);
         DroneHistoryMap.running = false;
         DroneHistoryMap.changeIconLinkVisibilityState(false);
     }

@@ -2,7 +2,7 @@ const DATE_TIMEZONE_HOUR_OFFSET = 1;
 
 const API_CALL_FAILED_RETRY_WAIT = 1000;
 
-const REMOTE_URL = "88.125.214.43";
+const REMOTE_URL = "boxplay.io";
 
 const API_URL = "http://" + REMOTE_URL + ":8080";
 
@@ -29,3 +29,6 @@ const MAPS_VIEW_TYPE_IMAGE_URL = "assets/images/map-type/%type%.png";
 const FLIGHT_DEFAULT_UNKNOWN_NAME = "unknown";
 
 const ORIENTATION_PHYSICAL_QUALITY_NAME = "orientation_axis";
+
+const EVENT_HISTORY_MODE_OPEN = "history.mode.open";
+const EVENT_HISTORY_MODE_CLOSE = "history.mode.close";

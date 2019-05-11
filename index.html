@@ -13,7 +13,7 @@
     <script src="assets/libraries/js-cookie/js.cookie.min.js"></script>
     <script src="assets/libraries/chart.js/Chart.min.js"></script>
     <script src="assets/libraries/logger/Logger.js"></script>
-    <!-- <script src="assets/libraries/p5/p5.min.js" defer onload="myInit()"></script> -->
+    <script src="assets/libraries/p5/p5.min.js"></script>
 
     <!-- Libraries CSS -->
     <link rel="stylesheet" href="assets/libraries/bootstrap/bootstrap.min.css">
@@ -31,7 +31,7 @@
     <script src="assets/scripts/maps.js"></script>
     <script src="assets/scripts/gallery.js"></script>
     <script src="assets/scripts/statistics.js"></script>
-    <script src="assets/scripts/flight-dashboard.js"></script>
+    <script src="assets/scripts/dashboard.js"></script>
 
     <!-- Project CSS -->
     <link rel="stylesheet" href="assets/styles/utils.css">
@@ -80,6 +80,10 @@
         </div>
 
         <div class="right-fixed-overview">
+            <div id="dashboard-message">
+                <p>Nothing to display.</p>
+            </div>
+
             <div id="flight-dashboard">
                 <div class="gps">
                     <div class="lon-lat-alt">
@@ -97,11 +101,11 @@
                     <span>
                         <i class="fal fa-location-arrow fa-2x"></i>
                     </span>
-                    
+
                 </div>
 
-                <div class="3d-container">
-                    <canvas id="myCanvas" width="450px" height="300px" style="background-color: #ffffff;"></canvas>
+                <div id="myContainer" class="3d-container">
+                    <!--<canvas id="myCanvas" width="450px" height="300px" style="background-color: #ffffff;"></canvas>-->
                 </div>
 
                 <div class="examples">
@@ -114,41 +118,7 @@
                 </div>
             </div>
 
-            <div id="history-dashboard">
-                <div class="slideshow-container" style="visibility:hidden;">
-                    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" style="">
-                        <ol class="carousel-indicators">
-                            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                            <li data-target="#carouselExampleIndicators" data-slide-to="1" class=""></li>
-                            <li data-target="#carouselExampleIndicators" data-slide-to="2" class=""></li>
-                        </ol>
-                        <div class="carousel-inner">
-                            <div class="carousel-item">
-                                <img class="d-block w-100" src="xhttp://test.boxplay.io:8080/storage/pictures/jj4gj0YERoBOOHD9aYAMzeY2h1BmEa57ZTKVO413wrpxR3af10" alt="First slide">
-                                <div class="carousel-caption d-none d-md-block">
-                                    <h5>Tu est vraiment mauvais</h5>
-                                    <p>franchement dorian....</p>
-                                </div>
-                            </div>
-                            <div class="carousel-item active">
-                                <img class="d-block w-100" src="xhttp://test.boxplay.io:8080/storage/pictures/4pu0CA6pF1DBlm8Pxo8M6pegIJJEyhlFZmbS01HIooeYzr45P6" alt="Second slide">
-                                <div class="carousel-caption d-none d-md-block">
-                                    <h5>Moi ca marche nickel</h5>
-                                    <p>je sais pas pourquoi tu y est pas arriver</p>
-                                </div>
-                            </div>
-                        </div>
-                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
+            <div id="history-dashboard"></div>
         </div>
     </div>
 
@@ -242,6 +212,14 @@
         </div>
     </div>
 
+    <div class="modal" id="modal-picture-viewer" onclick="PictureViewer.display(false);">
+        <div class="modal-box">
+            <div class="modal-body" style="text-align: center;">
+                <img id="picture-viewer-image-element" style="position: relative; max-height: 100%; max-width: 100%;">
+            </div>
+        </div>
+    </div>
+
     <div class="modal" id="modal-disconnected">
         <div class="modal-box">
             <div class="modal-body" style="text-align: center;">
@@ -255,6 +233,29 @@
     <script src="assets/scripts/initializer.js"></script>
     <script src="assets/scripts/debug.js"></script>
     <script src="assets/scripts/test.js"></script>
+    <script>
+        let img;
+        let theta = 0;
+
+        function setup() {
+            let cnv = createCanvas(450, 300, WEBGL);
+            cnv.parent('myContainer');
+            img = loadImage('assets/images/cat.jpg');
+        }
+
+        function draw() {
+            background(0);
+            //translate(width / 8, 0, 0);
+            push();
+            rotateZ(theta * 0.1);
+            rotateX(theta * 0.1);
+            rotateY(theta * 0.1);
+            texture(img);
+            box(100, 100, 100);
+            pop();
+            theta += 0.05;
+        }
+    </script>
 </body>
 
 </html>
