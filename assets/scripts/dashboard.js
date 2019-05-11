@@ -148,18 +148,20 @@ class HistoryDashboard {
         });
     }
 
-    static displayCarousel(pictures) {
+    static displayCarousel(pictures, startPicture) {
         if (pictures == null || pictures.length == 0) {
             // TODO
             console.warn("Dashboard/History: Tried to display a carousel without any picture.");
             return;
         }
 
-        HistoryDashboard.DIVS.CONTAINER.innerHTML = HistoryDashboard.createCarousel(pictures);
+        HistoryDashboard.DIVS.CONTAINER.innerHTML = HistoryDashboard.createCarousel(pictures, startPicture);
         i18n.applyOn(HistoryDashboard.DIVS.CONTAINER);
     }
 
-    static createCarousel(pictures) {
+    static createCarousel(pictures, startPicture) {
+        DroneHistoryMap.clearMarkers();
+
         let html = "";
 
         html += "                <div id=\"picture-history-carousel\" class=\"slideshow-container\">\n";
@@ -169,7 +171,12 @@ class HistoryDashboard {
         for (let i = 0; i < pictures.length; i++) {
             let picture = pictures[i];
 
-            html += "                            <li data-target=\"#history-carousel\" data-slide-to=\"" + i + "\" class=\"" + (i == 0 ? "active" : "")  + "\"></li>\n";
+            let isActive = (i == 0);
+            if (startPicture != null) {
+                isActive = (startPicture == picture.name)
+            }
+
+            html += "                            <li data-target=\"#history-carousel\" data-slide-to=\"" + i + "\" class=\"" + (isActive ? "active" : "")  + "\"></li>\n";
         }
         html += "                        </ol>\n";
 
@@ -177,16 +184,27 @@ class HistoryDashboard {
         for (let i = 0; i < pictures.length; i++) {
             let picture = pictures[i];
 
-            let remote = API_URL + picture.remote;
+            let isActive = (i == 0);
+            if (startPicture != null) {
+                isActive = (startPicture == picture.name)
+            }
 
-            let position = DroneMap.formatCoordinates(DroneMap.createPositionObjectFromJson(picture.position));
+            const remote = API_URL + picture.remote;
+
+            let latlng = DroneMap.createPositionObjectFromJson(picture.position);
+            let position = DroneMap.formatCoordinates(latlng);
             let title = position[0] + "/" + position[1] + " - ~" + formatBytes(picture.length);
 
-            html += "                            <div class=\"carousel-item" + (i == 0 ? " active" : "")  + "\">\n";
+            let markerObject = DroneHistoryMap.createPictureMarker("" + i, latlng, function() {
+                PictureViewer.show(remote);
+            });
+            let markerIndex = markerObject.index;
+
+            html += "                            <div class=\"carousel-item" + (isActive ? " active" : "")  + "\">\n";
             html += "                                <img class=\"d-block w-100\" src=\"" + remote + "\" alt=\"slide #" + i + "\">\n";
             html += "                                <div class=\"carousel-caption d-none d-md-block\">\n";
             html += "                                    <button onclick=\"PictureViewer.show('" + remote + "');\" class=\"btn btn-success translatable\" style=\"width: 120px; display: inline;\" data-i18n=\"history.picture.show\">?</button>\n";
-            html += "                                    <button class=\"btn btn-success translatable\" style=\"width: 120px; display: inline;\" data-i18n=\"history.picture.move-to\">?</button>\n";
+            html += "                                    <button onclick=\"DroneHistoryMap.centerOnMarkerIndex(" + markerIndex + ");\" class=\"btn btn-success translatable\" style=\"width: 120px; display: inline;\" data-i18n=\"history.picture.move-to\">?</button>\n";
             html += "                                    <h6 style=\"margin: 5px; background-color: rgba(0, 0, 0, 0.4); font-family: Consolas;\">" + title + "</h6>\n";
             html += "                                </div>\n";
             html += "                            </div>\n";

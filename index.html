@@ -234,25 +234,24 @@
     <script src="assets/scripts/debug.js"></script>
     <script src="assets/scripts/test.js"></script>
     <script>
-        let img;
         let theta = 0;
 
         function setup() {
-            let cnv = createCanvas(450, 300, WEBGL);
-            cnv.parent('myContainer');
-            img = loadImage('assets/images/cat.jpg');
+            createCanvas(450, 300, WEBGL).parent('myContainer');
+
+            texture(loadImage('assets/images/cat.jpg'));
         }
 
         function draw() {
             background(0);
-            //translate(width / 8, 0, 0);
+
             push();
             rotateZ(theta * 0.1);
             rotateX(theta * 0.1);
             rotateY(theta * 0.1);
-            texture(img);
             box(100, 100, 100);
             pop();
+            
             theta += 0.05;
         }
     </script>

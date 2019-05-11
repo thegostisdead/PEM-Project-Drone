@@ -17,10 +17,7 @@ class DroneMap {
                 //position: latlng,
                 map: DroneMap.map,
                 icon: {
-                    url: "./assets/images/drone-marker.png",
-                    scaledSize: new google.maps.Size(50, 50),
-                    origin: new google.maps.Point(0, 0),
-                    anchor: new google.maps.Point(25, 50)
+                    url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
                 }
             })
         };
@@ -51,6 +48,7 @@ class DroneMap {
         DroneMap.initializeFlighPlan();
         DroneMap.registerListeners();
         DroneMap.subscribeToSocket();
+        DroneMap.subscribeToEvent();
         DroneMap.restoreLockState();
 
         DroneHistoryMap.initialize();
@@ -226,6 +224,16 @@ class DroneMap {
         });
     }
 
+    static subscribeToEvent() {
+        DroneEvent.on(EVENT_HISTORY_MODE_OPEN, function() {
+            DroneMap.MARKERS.DRONE.setMap(null);
+        });
+
+        DroneEvent.on(EVENT_HISTORY_MODE_CLOSE, function() {
+            DroneMap.MARKERS.DRONE.setMap(DroneMap.map);
+        });
+    }
+
     static restoreLockState() {
         let cookieLockedState = Cookies.get(DroneMap.COOKIES.LOCKED_STATE.name);
 
@@ -253,10 +261,18 @@ class DroneMap {
         DroneMap.MARKERS.DRONE.setPosition(latLng);
     }
 
-    static askSetMapCenter(latLng) {
+    static askSetMapCenter(latlng) {
         if (DroneMap.locked) {
-            DroneMap.map.setCenter(latLng);
+            DroneMap.forceMapCenter(latlng);
         }
+    }
+
+    static forceMapCenter(latlng) {
+        if (isNaN(latlng.lat()) || isNaN(latlng.lng())) {
+            console.error("Maps: Tried to move the map's center to a NaN latitude (" + latlng.lat() + ") or longitude (" + latlng.lng() + ").");
+        }
+
+        DroneMap.map.setCenter(latlng);
     }
 
     static appendFlightPlanCoordinates(latLng) {
@@ -336,6 +352,10 @@ class DroneHistoryMap {
     }
 
     static subscribeToSocket() {
+        DroneSocket.subscribe(["flight.starting"], function(identifier, json) {
+            DroneHistoryMap.backToCurrent();
+        });
+
         DroneSocket.subscribe(["flight.point.new"], function(identifier, json) {
             let targetHistoryArray = DroneHistoryMap.cachedFlightPositionHistory[json.flight.local_file];
             if (targetHistoryArray == null) {
@@ -355,7 +375,7 @@ class DroneHistoryMap {
             let positions = flight.positions;
 
             DroneHistoryMap.cachedFlightPositionHistory[local_file] = positions;
-            console.log("Map: Cached " + positions.length + " position(s) for flight \"" + name + "\" (local file: " + local_file + ")");
+            console.log("Map/History: Cached " + positions.length + " position(s) for flight \"" + name + "\" (local file: " + local_file + ")");
 
             if (current == local_file) {
                 DroneHistoryMap.displayHistory(local_file, true, true);
@@ -379,7 +399,7 @@ class DroneHistoryMap {
                 DroneHistoryMap.run();
             }
         } else {
-            console.warn("Map: Tried to show history of a flight without an history.");
+            console.warn("Map/History: Tried to show history of a flight without an history.");
         }
     }
 
@@ -396,33 +416,65 @@ class DroneHistoryMap {
 
     static backToCurrent() {
         if (!DroneHistoryMap.running) {
-            console.warn("Map History: Tried to went back to current but history is not running.");
+            console.warn("Map/History: Tried to went back to current but history is not running.");
             return;
         }
 
         DroneEvent.fire(EVENT_HISTORY_MODE_CLOSE);
         DroneHistoryMap.running = false;
         DroneHistoryMap.changeIconLinkVisibilityState(false);
+        DroneHistoryMap.clearMarkers();
+
+        if (DroneHistoryMap.currentFlight != null) {
+            DroneHistoryMap.displayHistory(DroneHistoryMap.currentFlight, true, true);
+        } else {
+            DroneMap.clearFlightPlanCoordinates();
+        }
+    }
+
+    static centerOnMarkerIndex(index) {
+        let marker = DroneHistoryMap.cachedPictureMarkers[index];
+
+        if (marker == null) {
+            console.warn("Map/History: Marker at index \"" + index + "\" is invalid.");
+            return;
+        }
+
+        DroneMap.forceMapCenter(marker.getPosition());
     }
 
     static changeIconLinkVisibilityState(state) {
         DroneHistoryMap.DIVS.BACK_TO_CURRENT_ICON_LINK.style.display = state === true ? "block" : "none";
     }
 
-    static createPictureMarker(label, callback = null) {
+    static createPictureMarker(label, latlng = null, callback = null) {
         let marker = new google.maps.Marker({
-            //position: latlng,
             map: DroneMap.map,
             label: label
         });
+
+        if (latlng != null) {
+            marker.setPosition(latlng)
+        }
 
         if (callback != null) {
             marker.addListener('click', callback);
         }
 
-        DroneHistoryMap.cachedPictureMarkers.push(marker);
+        let index = DroneHistoryMap.cachedPictureMarkers.push(marker);
 
-        return marker;
+        return {
+            index: index,
+            marker: marker
+        };
+    }
+
+    static clearMarkers() {
+        for (let marker of DroneHistoryMap.cachedPictureMarkers) {
+            marker.setMap(null);
+        }
+
+        DroneHistoryMap.cachedPictureMarkers.length = 0; /* Clear */
     }
 
 }

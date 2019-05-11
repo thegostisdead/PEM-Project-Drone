@@ -166,7 +166,7 @@ class Gallery {
         elementHtml += "<div class=\"picture-container\">\n";
         elementHtml += "	<img class=\"picture\" src=\"" + API_URL + picture.remote + "\">\n";
         elementHtml += "	<div class=\"middle\">\n";
-        elementHtml += "		<a data-latitude=\"" + picture.position.latitude + "\" data-longitude=\"" + picture.position.longitude + "\" " + (flightLocalFile != null ? "data-flight=\"" + flightLocalFile + "\"" : "") + " onclick=\"Gallery.showOnMap(this);\" href=\"#\">\n";
+        elementHtml += "		<a data-latitude=\"" + picture.position.latitude + "\" data-longitude=\"" + picture.position.longitude + "\" " + (flightLocalFile != null ? "data-flight=\"" + flightLocalFile + "\"" : "") + " data-picture=\"" + picture.name + "\" onclick=\"Gallery.showOnMap(this);\" href=\"#\">\n";
         elementHtml += "			<button type=\"button\" class=\"btn btn-success translatable\" data-i18n=\"gallery.picture.show-position\">Success</button>\n";
         elementHtml += "		</a>\n";
         elementHtml += "	</div>\n";
@@ -183,6 +183,7 @@ class Gallery {
         let longitude = element.dataset.longitude;
 
         let flightLocalFile = element.dataset.flight;
+        let pictureFilename = element.dataset.picture;
         
         let lngLat = DroneMap.createPositionObject(latitude, longitude);
         DroneMap.askSetMapCenter(lngLat);
@@ -190,7 +191,7 @@ class Gallery {
 
         if (flightLocalFile != FLIGHT_DEFAULT_UNKNOWN_NAME) {
             DroneHistoryMap.displayHistory(flightLocalFile);
-            HistoryDashboard.displayCarousel(Gallery.cachedPictures[flightLocalFile]);
+            HistoryDashboard.displayCarousel(Gallery.cachedPictures[flightLocalFile], pictureFilename);
         } else { /* A "lost" picture */
             DroneMap.clearFlightPlanCoordinates();
         }

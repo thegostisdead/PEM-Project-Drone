@@ -212,11 +212,11 @@ body {
 
 .lon-lat-alt {
     display: inline-block;
-    width: 100px;
+    /* width: 100px; */
     height: 80px;
     margin-top: 20px;
-    margin-right: 25px;
-    margin-left: 20px;
+    margin-right: 12px;
+    margin-left: 12px;
 }
 
 .gps-values {
