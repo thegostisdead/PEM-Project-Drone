@@ -187,7 +187,6 @@ class Gallery {
         
         let lngLat = DroneMap.createPositionObject(latitude, longitude);
         DroneMap.askSetMapCenter(lngLat);
-        DroneHistoryMap.MARKERS.PICTURE.setPosition(lngLat); // TODO
 
         if (flightLocalFile != FLIGHT_DEFAULT_UNKNOWN_NAME) {
             DroneHistoryMap.displayHistory(flightLocalFile);

@@ -52,6 +52,13 @@ class i18n {
         english.set("settings.x.button.apply", "Apply");
         english.set("history.picture.show", "SHOW");
         english.set("history.picture.move-to", "MOVE TO");
+        english.set("gps.latitude", "Latitude");
+        english.set("gps.longitude", "Longitude");
+        english.set("gps.altitude", "Altitude");
+        english.set("gps.value.default", "-");
+        english.set("gps.unit.degree", "°");
+        english.set("gps.unit.meter", "m");
+        english.set("dashboard.message.nothing", "No element to display.");
 
         let french = i18n.registerLanguage("fr", "Français");
         french.set("date.at", "à");
@@ -84,6 +91,13 @@ class i18n {
         french.set("settings.x.button.apply", "Appliquer");
         french.set("history.picture.show", "AFFICHER");
         french.set("history.picture.move-to", "ALLER A");
+        french.set("gps.latitude", "Latitude");
+        french.set("gps.longitude", "Longitude");
+        french.set("gps.altitude", "Altitude");
+        french.set("gps.value.default", "-");
+        french.set("gps.unit.degree", "°");
+        french.set("gps.unit.meter", "m");
+        french.set("dashboard.message.nothing", "Aucun élément à afficher.");
     }
 
     static prepareSettingsSection() {

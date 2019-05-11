@@ -81,27 +81,23 @@
 
         <div class="right-fixed-overview">
             <div id="dashboard-message">
-                <p>Nothing to display.</p>
+                <p class="translatable" data-i18n="dashboard.message.nothing">?</p>
             </div>
 
             <div id="flight-dashboard">
                 <div class="gps">
                     <div class="lon-lat-alt">
-                        <p class="gps-text">Latitude</p>
-                        <p class="gps-values">2.515°</p>
+                        <p class="gps-text translatable" data-i18n="gps.latitude">?</p>
+                        <p class="gps-values" id="gps-value-latitude">2.515°</p>
                     </div>
                     <div class="lon-lat-alt">
-                        <p class="gps-text">Longitude</p>
-                        <p class="gps-values">7.856°</p>
+                        <p class="gps-text translatable" data-i18n="gps.longitude">?</p>
+                        <p class="gps-values" id="gps-value-longitude">-</p>
                     </div>
                     <div class="lon-lat-alt">
-                        <p class="gps-text">Altitude</p>
-                        <p class="gps-values">15m</p>
+                        <p class="gps-text translatable" data-i18n="gps.altitude">?</p>
+                        <p class="gps-values" id="gps-value-altitude">15m</p>
                     </div>
-                    <span>
-                        <i class="fal fa-location-arrow fa-2x"></i>
-                    </span>
-
                 </div>
 
                 <div id="myContainer" class="3d-container">
@@ -251,7 +247,7 @@
             rotateY(theta * 0.1);
             box(100, 100, 100);
             pop();
-            
+
             theta += 0.05;
         }
     </script>

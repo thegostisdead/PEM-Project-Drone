@@ -211,10 +211,12 @@ class DroneMap {
         DroneSocket.subscribe(["flight.point.new"], function(identifier, json) {
             let latLng = DroneMap.createPositionObject(json.position.latitude, json.position.longitude);
 
-            DroneMap.moveDroneMarker(latLng);
-            DroneMap.appendFlightPlanCoordinates(latLng);
+            if (!DroneHistoryMap.running) {
+                DroneMap.moveDroneMarker(latLng);
+                DroneMap.appendFlightPlanCoordinates(latLng);
 
-            console.log("Flight: received new position (lat/lon): " + latLng.lat() + "/" + latLng.lng() + " (" + new Date(json.position.time) + ")");
+                console.log("Map: received new position (lat/lon): " + latLng.lat() + "/" + latLng.lng() + " (" + new Date(json.position.time) + ")");
+            }
         });
 
         DroneSocket.subscribe(["flight.starting"], function(identifier, json) {
@@ -333,19 +335,6 @@ class DroneHistoryMap {
         DroneHistoryMap.DIVS = {
             "BACK_TO_CURRENT_ICON_LINK": document.getElementById("map-lock-toggle-icon-link")
         }
-
-        DroneHistoryMap.MARKERS = {
-            "PICTURE": new google.maps.Marker({
-                //position: latlng,
-                map: DroneMap.map,
-                icon: {
-                    url: "https://www.pilotpen.fr/pub/media/catalog/product/cache/image/755x566/beff4985b56e3afdbeabfc89641a4582/4/9/4902505511097-4902505511097_zoom_01.jpg",
-                    scaledSize: new google.maps.Size(50, 50),
-                    origin: new google.maps.Point(0, 0),
-                    anchor: new google.maps.Point(25, 50)
-                }
-            }),
-        };
 
         DroneHistoryMap.subscribeToSocket();
         DroneHistoryMap.changeIconLinkVisibilityState(false);

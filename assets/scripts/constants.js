@@ -32,3 +32,5 @@ const ORIENTATION_PHYSICAL_QUALITY_NAME = "orientation_axis";
 
 const EVENT_HISTORY_MODE_OPEN = "history.mode.open";
 const EVENT_HISTORY_MODE_CLOSE = "history.mode.close";
+
+const GPS_ROUND_DIGIT = 3;

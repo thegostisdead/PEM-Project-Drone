@@ -1,8 +1,50 @@
 class Dashboard {
 
     static initialize() {
+        Dashboard.DIVS = {
+            "MESSAGE": document.getElementById("dashboard-message")
+        }
+
         FlightDashboard.initialize();
         HistoryDashboard.initialize();
+
+        Dashboard.subscribeToApi();
+        Dashboard.subscribeToSocket();
+        Dashboard.subscribeToEvent();
+
+        Dashboard.displayMessage(false);
+    }
+
+    static subscribeToApi() {
+        DroneApi.listen(ENDPOINT_FLIGHTS, function(endpoint, json, success, restartWanted) {
+            let running = safeWalk(json, ["current", "active"], false);
+
+            Dashboard.displayMessage(!running);
+        });
+    }
+    
+    static subscribeToSocket() {
+        DroneSocket.subscribe(["flight.starting"], function(identifier, json) {
+            Dashboard.displayMessage(false);
+        });
+
+        DroneSocket.subscribe(["flight.finished"], function(identifier, json) {
+            Dashboard.displayMessage(true);
+        });
+    }
+
+    static subscribeToEvent() {
+        DroneEvent.on(EVENT_HISTORY_MODE_OPEN, function() {
+            Dashboard.displayMessage(true);
+        });
+
+        DroneEvent.on(EVENT_HISTORY_MODE_CLOSE, function() {
+            Dashboard.displayMessage(!FlightDashboard.running);
+        });
+    }
+
+    static displayMessage(state) {
+        Dashboard.DIVS.MESSAGE.style.display = (state === true ? "" : "none");
     }
 
 }
@@ -12,6 +54,9 @@ class FlightDashboard {
     static initialize() {
         FlightDashboard.DIVS = {
             "CONTAINER": document.getElementById("flight-dashboard"),
+            "GPS_VALUE_LATITUDE": document.getElementById("gps-value-latitude"),
+            "GPS_VALUE_LONGITUDE": document.getElementById("gps-value-longitude"),
+            "GPS_VALUE_ALTITUDE": document.getElementById("gps-value-altitude"),
             "ATTITUDE": document.getElementById("orientation-widget-attitude"),
             "ORIENTATION": document.getElementById("orientation-widget-orientation")
         }
@@ -34,6 +79,8 @@ class FlightDashboard {
         FlightDashboard.subscribeToApi();
         FlightDashboard.subscribeToSocket();
         FlightDashboard.subscribeToEvent();
+
+        FlightDashboard.updateLatLngAlt(null, null, null);
     }
 
     static subscribeToApi() {
@@ -50,10 +97,19 @@ class FlightDashboard {
 
             FlightDashboard.display(true);
         });
+
         DroneSocket.subscribe(["flight.finished"], function(identifier, json) {
             FlightDashboard.running = false;
 
             FlightDashboard.display(false);
+        });
+
+        DroneSocket.subscribe(["flight.point.new"], function(identifier, json) {
+            let latitude = safeWalk(json, ["position", "latitude"], null);
+            let longitude = safeWalk(json, ["position", "longitude"], null);
+            let altitude = safeWalk(json, ["position", "altitude"], null);
+
+            FlightDashboard.updateLatLngAlt(latitude, longitude, altitude);
         });
 
         DroneSocket.subscribe(["qualities.new"], function(identifier, json) {
@@ -106,6 +162,34 @@ class FlightDashboard {
 
             FlightDashboard.JQELEMENT.HEADING.setHeading(increment);
         }, 50);
+    }
+
+    static updateLatLngAlt(latitude, longitude, altitude) {
+        let defaultValue = i18n.get("gps.value.default");
+        let degreeUnit = i18n.get("gps.unit.degree");
+        let meterUnit = i18n.get("gps.unit.meter");
+
+        latitude = parseFloat(latitude) || null;
+        longitude = parseFloat(longitude) || null;
+        altitude = parseFloat(altitude) || null;
+
+        if (latitude != null) {
+            FlightDashboard.DIVS.GPS_VALUE_LATITUDE.innerHTML = latitude.toFixed(GPS_ROUND_DIGIT) + degreeUnit;
+        } else {
+            FlightDashboard.DIVS.GPS_VALUE_LATITUDE.innerHTML = defaultValue;
+        }
+
+        if (longitude != null) {
+            FlightDashboard.DIVS.GPS_VALUE_LONGITUDE.innerHTML = longitude.toFixed(GPS_ROUND_DIGIT) + degreeUnit;
+        } else {
+            FlightDashboard.DIVS.GPS_VALUE_LONGITUDE.innerHTML = defaultValue;
+        }
+
+        if (altitude != null) {
+            FlightDashboard.DIVS.GPS_VALUE_ALTITUDE.innerHTML = altitude.toFixed(GPS_ROUND_DIGIT) + meterUnit;
+        } else {
+            FlightDashboard.DIVS.GPS_VALUE_ALTITUDE.innerHTML = defaultValue;
+        }
     }
 
     static display(state) {
@@ -176,7 +260,7 @@ class HistoryDashboard {
                 isActive = (startPicture == picture.name)
             }
 
-            html += "                            <li data-target=\"#history-carousel\" data-slide-to=\"" + i + "\" class=\"" + (isActive ? "active" : "")  + "\"></li>\n";
+            html += "                            <li data-target=\"#history-carousel\" data-slide-to=\"" + i + "\" class=\"" + (isActive ? "active" : "") + "\"></li>\n";
         }
         html += "                        </ol>\n";
 
@@ -200,7 +284,7 @@ class HistoryDashboard {
             });
             let markerIndex = markerObject.index;
 
-            html += "                            <div class=\"carousel-item" + (isActive ? " active" : "")  + "\">\n";
+            html += "                            <div class=\"carousel-item" + (isActive ? " active" : "") + "\">\n";
             html += "                                <img class=\"d-block w-100\" src=\"" + remote + "\" alt=\"slide #" + i + "\">\n";
             html += "                                <div class=\"carousel-caption d-none d-md-block\">\n";
             html += "                                    <button onclick=\"PictureViewer.show('" + remote + "');\" class=\"btn btn-success translatable\" style=\"width: 120px; display: inline;\" data-i18n=\"history.picture.show\">?</button>\n";
