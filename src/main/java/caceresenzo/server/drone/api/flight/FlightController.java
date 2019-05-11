@@ -142,6 +142,10 @@ public class FlightController implements Initializable, Destroyable {
 	}
 	
 	public Flight getFlightByLocalFileName(String flightLocalFileName) {
+		if (flightLocalFileName == null) {
+			return null;
+		}
+		
 		return allFlights.get(flightLocalFileName);
 	}
 	

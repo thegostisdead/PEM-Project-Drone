@@ -65,13 +65,13 @@ public class PictureManager implements Initializable {
 					JsonObject filePart = jsonObject.getJsonObject("file");
 					JsonObject flightPart = jsonObject.getJsonObject("flight");
 					
-					if (flightPart == null) {
-						continue;
-					}
-					
-					String flightLocalFileName = flightPart.getString("local_file");
-					if (!StringUtils.validate(flightLocalFileName)) {
-						continue;
+					String flightLocalFileName = null;
+					if (flightPart != null) {
+						flightLocalFileName = flightPart.getString("local_file");
+						
+						if (!StringUtils.validate(flightLocalFileName)) {
+							continue;
+						}
 					}
 					
 					Picture picture = Picture.fromJsonObject(filePart);

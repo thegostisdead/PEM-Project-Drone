@@ -1,6 +1,7 @@
 package caceresenzo.server.drone.webinterface.picture.models;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Objects;
 
 import org.slf4j.Logger;
@@ -26,7 +27,7 @@ public class Picture {
 	/* Variables */
 	private Flight attachedFlight;
 	private String name;
-	private long fileLength;
+	private long fileLength, date;
 	private String latitude, longitude;
 	
 	/* Constructor */
@@ -58,6 +59,16 @@ public class Picture {
 	/** Set new picture's file length in byte. */
 	private void setFileLength(long fileLength) {
 		this.fileLength = fileLength;
+	}
+
+	/** @return Picture's date. */
+	public long getDate() {
+		return date;
+	}
+
+	/** Set new picture's date. */
+	private void setDate(long date) {
+		this.date = date;
 	}
 	
 	/** @return Picture's GPS latitude position of the shot. */
@@ -103,6 +114,7 @@ public class Picture {
 		
 		jsonObject.put("name", getName());
 		jsonObject.put("length", getFileLength());
+		jsonObject.put("date", String.valueOf(getDate()));
 		jsonObject.put("position", filePositionPart);
 		
 		filePositionPart.put("latitude", getLatitude());
@@ -130,6 +142,7 @@ public class Picture {
 		LOGGER.info("Trying to create a Picture object from header \"{}\"...", header);
 		
 		Picture picture = new Picture();
+		picture.setDate(new Date().getTime());
 		
 		for (String part : header.split(HEADER_SEPARATOR)) {
 			String[] arguments = part.split(ARGUMENT_SEPARATOR);
@@ -178,6 +191,7 @@ public class Picture {
 		
 		picture.setName(jsonObject.getString("name"));
 		picture.setFileLength(jsonObject.getLong("length"));
+		picture.setDate(ParseUtils.parseLong(jsonObject.getString("date"), 0));
 		
 		JsonObject positionPart = jsonObject.getJsonObject("position");
 		

@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,6 +50,10 @@ public class PictureRestController {
 			Flight flight = entry.getKey();
 			List<Picture> pictures = entry.getValue();
 			
+			pictures.sort((picture1, picture2) -> {
+				return Long.signum(picture2.getDate() - picture1.getDate());
+			});
+			
 			JsonArray picturesJsonArray = new JsonArray();
 			pictures.forEach(picture -> picturesJsonArray.add(Picture.includeRemote(picture, picture.toJsonObject())));
 			
@@ -76,7 +81,7 @@ public class PictureRestController {
 		byte[] media = IOUtils.toByteArray(inputStream);
 		StreamUtils.close(inputStream);
 		
-		return new ResponseEntity<>(media, HttpStatus.OK);
+		return ResponseEntity.ok().header("Cache-Control", "public, max-age=31536000").body(media);
 	}
 	
 }

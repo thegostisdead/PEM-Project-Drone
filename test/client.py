@@ -5,7 +5,7 @@ import random
 import os
 import time
 
-hote = "boxplay.io"
+hote = "localhost"
 port = 8081
 
 picture_id = random.randint(1, 100);
