@@ -26,6 +26,7 @@ class i18n {
         english.set("socket.error.disconnected", "Socket disconnected.");
         english.set("quality.temperature", "Temperature");
         english.set("quality.pressure", "Pressure");
+        english.set("quality.luminosity", "Luminosity");
         english.set("quality.humidity", "Humidity");
         english.set("flight.list.lasted", "Flight duration");
         english.set("flight.list.lasted.running", "Always running");
@@ -65,6 +66,7 @@ class i18n {
         french.set("socket.error.disconnected", "Flux de données déconnecté.");
         french.set("quality.temperature", "Température");
         french.set("quality.pressure", "Pression");
+        french.set("quality.luminosity", "Luminosité");
         french.set("quality.humidity", "Humidité");
         french.set("flight.list.lasted", "Durée de vol");
         french.set("flight.list.lasted.running", "Toujours en cours");

@@ -152,10 +152,10 @@
         </div>
     </div>
 
-    <div class="modal" id="modal-debug">
+    <div class="modal" id="modal-debug" style="background: rgba(0, 0, 0, 0);">
         <div class="modal-sandbox"></div>
         <div class="modal-box">
-            <div class="modal-body">
+            <div class="modal-body" style="background: rgba(236, 239, 241, 0.7); width: 500px;">
                 <div>
                     <h3>Flight</h3>
                     <button onclick="DroneDebug.startFlight('debug-flight-start-response');" type="button" class="btn btn-primary">Start</button>
@@ -167,6 +167,13 @@
                     <p>
                         response:
                         <a id="debug-flight-stop-response">-/-</a>
+                    </p>
+                    <hr>
+                    <h3>Dashboard</h3>
+                    <button onclick="DroneDebug.toggleRandomOrientationValues('debug-dashboard-toggle-random-orientation-axis-debug');" type="button" class="btn btn-primary">call:: toggleRandomOrientationValues</button>
+                    <p>
+                        response:
+                        <a id="debug-dashboard-toggle-random-orientation-axis-debug">-/-</a>
                     </p>
                 </div>
                 <br>

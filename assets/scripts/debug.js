@@ -23,6 +23,25 @@ class DroneDebug {
         });
     }
 
+    static toggleRandomOrientationValues(responseElementId) {
+        let element = document.getElementById(responseElementId);
+
+        let intervalId = DroneDebug.randomOrientationValueIntervalId;
+
+        if (intervalId == null) {
+            intervalId = FlightDashboard.debug();
+
+            element.innerHTML = "started, interval id: " + intervalId;
+        } else {
+            clearInterval(intervalId);
+            intervalId = null;
+
+            element.innerHTML = "stopped";
+        }
+
+        DroneDebug.randomOrientationValueIntervalId = intervalId;
+    }
+
     static useLogger() {
         Logger.init();
 

@@ -137,6 +137,7 @@ class Gallery {
             if (json[flightLocalFile] != undefined) {
                 pictures.extend(json[flightLocalFile]);
             }
+            pictures.reverse();
 
             //console.log(flightLocalFile);
 

@@ -154,7 +154,7 @@ class FlightDashboard {
     static debug() {
         let increment = 0;
 
-        setInterval(function() {
+        return setInterval(function() {
             increment++;
 
             FlightDashboard.JQELEMENT.ATTITUDE.setRoll(30 * Math.sin(increment / 10));

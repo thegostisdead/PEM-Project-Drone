@@ -2,7 +2,8 @@ const DATE_TIMEZONE_HOUR_OFFSET = 1;
 
 const API_CALL_FAILED_RETRY_WAIT = 1000;
 
-const REMOTE_URL = "boxplay.io";
+//const REMOTE_URL = "boxplay.io";
+const REMOTE_URL = "localhost";
 
 const API_URL = "http://" + REMOTE_URL + ":8080";
 

@@ -450,7 +450,7 @@ class DroneHistoryMap {
             marker.addListener('click', callback);
         }
 
-        let index = DroneHistoryMap.cachedPictureMarkers.push(marker);
+        let index = DroneHistoryMap.cachedPictureMarkers.push(marker) - 1;
 
         return {
             index: index,
