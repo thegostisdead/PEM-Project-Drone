@@ -80,18 +80,6 @@ public class DroneApi {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
-	@GetMapping(value = "/flights/actual")
-	@ResponseBody
-	public ResponseEntity<Map<String, Object>> actualFlight() {
-		return null;
-	}
-	
-	@GetMapping(value = "/flights/detail/{local_file}")
-	@ResponseBody
-	public ResponseEntity<Map<String, Object>> detailFlight() {
-		return null;
-	}
-	
 	@PostMapping(value = "/flight/position/add")
 	@ResponseBody
 	public ResponseEntity<Map<String, Object>> flightAddNewPosition(@RequestBody FlightPoint body) {

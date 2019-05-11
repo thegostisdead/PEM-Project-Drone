@@ -75,6 +75,7 @@ public class FlightPoint implements Comparable<FlightPoint> {
 		
 		jsonObject.put(JSON_KEY_POSITIONS_ITEM_LATITUDE, latitude);
 		jsonObject.put(JSON_KEY_POSITIONS_ITEM_LONGITUDE, longitude);
+		jsonObject.put(JSON_KEY_POSITIONS_ITEM_LATITUDE, latitude);
 		jsonObject.put(JSON_KEY_POSITIONS_ITEM_TIME, time);
 		jsonObject.put(JSON_KEY_POSITIONS_ITEM_ID, id);
 		
