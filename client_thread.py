@@ -165,15 +165,13 @@ class DataSender(threading.Thread):
         orientation_axis = self.transactor.compute_orientation_axis()
         luminosity = self.transactor.compute_luminosity_value()
 
+        # SENDING MAIN DATA
         socket = sockets.socket(sockets.AF_INET, sockets.SOCK_STREAM)
         socket.connect((HOTE, API_SERVER_PORT))
         socket.settimeout(0.5)
 
         payload = ""
         payload += "{"
-
-        if gps_position != None:
-            payload += "\"gps_position\":[{\"content\":" + str(':'.join(str(x) for x in gps_position)) + "}],"
 
         if orientation_axis != None:
             payload += "\"orientation_axis\":[{\"content\":" + str(':'.join(str(x) for x in orientation_axis)) + "}],"
@@ -195,6 +193,30 @@ class DataSender(threading.Thread):
 
         print ("DataSender: Received from API -> " + str(socket.recv(512)))
         socket.close()
+        
+        # SENDING GPS LOCATION
+        if gps_position != None:
+            socket = sockets.socket(sockets.AF_INET, sockets.SOCK_STREAM)
+            socket.connect((HOTE, API_SERVER_PORT))
+            socket.settimeout(0.5)
+    
+            payload = ""
+            payload += "{\"latitude\":\"" + gps_position[0] + "\",\"longitude\":\"" + gps_position[1] + "\",\"altitude\":\"" + gps_position[2] + "\"}"
+    
+            header = ""
+            header += "POST /flight/position/add HTTP/1.1\n"
+            header += "Host: " + str(HOTE) + ":" + str(API_SERVER_PORT) + "\n"
+            header += "content-type: application/json;charset=UTF-8\n"
+            header += "Content-Length: " + str(len(payload)) + "\n"
+            header += "\n"
+    
+            request = header + payload
+    
+            for line in request.split("\n"):
+                socket.send(bytearray(line + "\n", "utf-8"))
+    
+            print ("DataSender: Received from API -> " + str(socket.recv(512)))
+            socket.close()
 
     def run(self):
         self.running = True
