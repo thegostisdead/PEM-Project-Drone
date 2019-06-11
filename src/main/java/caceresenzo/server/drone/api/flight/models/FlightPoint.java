@@ -3,6 +3,7 @@ package caceresenzo.server.drone.api.flight.models;
 import static caceresenzo.server.drone.api.flight.models.Flight.JSON_KEY_POSITIONS_ITEM_ID;
 import static caceresenzo.server.drone.api.flight.models.Flight.JSON_KEY_POSITIONS_ITEM_LATITUDE;
 import static caceresenzo.server.drone.api.flight.models.Flight.JSON_KEY_POSITIONS_ITEM_LONGITUDE;
+import static caceresenzo.server.drone.api.flight.models.Flight.JSON_KEY_POSITIONS_ITEM_ALTITUDE;
 import static caceresenzo.server.drone.api.flight.models.Flight.JSON_KEY_POSITIONS_ITEM_TIME;
 
 import java.util.Date;
@@ -75,7 +76,7 @@ public class FlightPoint implements Comparable<FlightPoint> {
 		
 		jsonObject.put(JSON_KEY_POSITIONS_ITEM_LATITUDE, latitude);
 		jsonObject.put(JSON_KEY_POSITIONS_ITEM_LONGITUDE, longitude);
-		jsonObject.put(JSON_KEY_POSITIONS_ITEM_LATITUDE, latitude);
+		jsonObject.put(JSON_KEY_POSITIONS_ITEM_ALTITUDE, altitude);
 		jsonObject.put(JSON_KEY_POSITIONS_ITEM_TIME, time);
 		jsonObject.put(JSON_KEY_POSITIONS_ITEM_ID, id);
 		
